@@ -103,6 +103,11 @@ public static class UIHelper
         ImGui.TextColored(CFG.Current.ImGui_AliasName_Text, @$"{text}");
     }
 
+    public static void DisplayMetaText(string text)
+    {
+        ImGui.TextColored(CFG.Current.ImGui_AliasName_Text, @$"{text}");
+    }
+
     public static void DisplayColoredText(string text, Vector4 color)
     {
         if (CFG.Current.System_WrapAliasDisplay)

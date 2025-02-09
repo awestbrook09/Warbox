@@ -124,40 +124,11 @@ public static class TableMeta
         return false;
     }
 
-    /// <summary>
-    /// Handler for the action column in all Generic Table Views
-    /// </summary>
-    public static void DisplayActionColumn(XDocument document, XElement element, XAttribute attribute, int i)
+    public static bool HasMetaData(XDocument document, XElement entry, XAttribute attribute, int index, string elementName)
     {
-        // TODO: add check against meta, only display if needed
-        return;
+        var isValid = false;
 
-        if (ImGui.Button($"{ForkAwesome.ArrowDown}##exampleButton{attribute.Name}{i}"))
-        {
-            ImGui.OpenPopup($"examplePopup{attribute.Name}{i}");
-        }
-
-        if (ImGui.BeginPopup($"examplePopup{attribute.Name}{i}"))
-        {
-            ImGui.Text("enum stuff here");
-
-            ImGui.EndPopup();
-        }
-    }
-
-    /// <summary>
-    /// Handler for the info column in all Generic Table Views
-    /// </summary>
-    public static void DisplayInfoColumn(XDocument document, XElement element, XAttribute attribute, int i)
-    {
-        var width = ImGui.GetWindowWidth();
-
-        // TODO: add check against meta, only display if needed
-        return;
-
-        ImGui.AlignTextToFramePadding();
-        ImGui.SetNextItemWidth(width * 0.15f);
-        ImGui.Text("TODO: meta stuff here");
+        return isValid;
     }
 
     /// <summary>

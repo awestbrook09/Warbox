@@ -37,6 +37,8 @@ public class GenericTableView
 
     private bool NoPrimaryKey = false;
 
+    private int childDepth = 0;
+
     public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, string rowNameKey, bool noPrimaryKey)
     {
         Screen = screen;
@@ -164,14 +166,13 @@ public class GenericTableView
                 //-------------------
                 // Names
                 //-------------------
-                if (ImGui.BeginTable($"{ImGuiName}AttributeTable", 4, ImGuiTableFlags.SizingFixedFit))
+                if (ImGui.BeginTable($"{ImGuiName}AttributeTable", 2, ImGuiTableFlags.SizingFixedFit))
                 {
                     ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
                     ImGui.TableSetupColumn("Inputs", ImGuiTableColumnFlags.WidthFixed);
-                    ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthFixed);
-                    ImGui.TableSetupColumn("Meta", ImGuiTableColumnFlags.WidthFixed);
 
-                    HandleElementEntry(currentDocument, entry);
+                    childDepth = 0;
+                    HandleElementEntry(currentDocument, entry, "root");
 
                     ImGui.EndTable();
                 }
@@ -183,9 +184,9 @@ public class GenericTableView
         ImGui.EndChild();
     }
 
-    private void HandleElementEntry(XDocument currentDocument, XElement entry)
+    private void HandleElementEntry(XDocument currentDocument, XElement entry, string elementName)
     {
-        DisplayHeaderRow(currentDocument, entry);
+        DisplayHeaderRow(currentDocument, entry, elementName);
 
         var attributes = entry.Attributes().ToList();
 
@@ -193,18 +194,24 @@ public class GenericTableView
         {
             var attribute = attributes[i];
 
-            DisplayAttributeRow(currentDocument, entry, attribute, i);
+            DisplayAttributeRow(currentDocument, entry, attribute, i, elementName);
+            if(TableMeta.HasMetaData(currentDocument, entry, attribute, i, elementName))
+            {
+                DisplayMetaDataRow(currentDocument, entry, attribute, i, elementName);
+            }
         }
+
+        childDepth += 1;
 
         foreach (var child in entry.Elements().ToList())
         {
             ImGui.Indent();
-            HandleElementEntry(currentDocument, child);
+            HandleElementEntry(currentDocument, child, child.Name.ToString());
             ImGui.Unindent();
         }
     }
 
-    private void DisplayHeaderRow(XDocument currentDocument, XElement entry)
+    private void DisplayHeaderRow(XDocument currentDocument, XElement entry, string elementName)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -234,17 +241,11 @@ public class GenericTableView
 
                 // Inputs Column
                 ImGui.TableSetColumnIndex(1);
-
-                // Action
-                ImGui.TableSetColumnIndex(2);
-
-                // Meta
-                ImGui.TableSetColumnIndex(3);
             }
         }
     }
 
-    private void DisplayAttributeRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i)
+    private void DisplayAttributeRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string elementName)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -292,7 +293,7 @@ public class GenericTableView
                     if (oldValue == "true")
                         tBool = true;
 
-                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{i}", ref tBool))
+                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{i}{elementName}{childDepth}", ref tBool))
                     {
                         isChanged = true;
                     }
@@ -316,7 +317,7 @@ public class GenericTableView
                 // Handling for string type
                 else
                 {
-                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{i}", ref tValue, 255))
+                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{i}{elementName}{childDepth}", ref tValue, 255))
                     {
                         isChanged = true;
                     }
@@ -329,14 +330,34 @@ public class GenericTableView
                         }
                     }
                 }
+            }
+        }
+    }
 
-                // Action
-                ImGui.TableSetColumnIndex(2);
-                TableMeta.DisplayActionColumn(currentDocument, entry, attribute, i);
+    private void DisplayMetaDataRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string elementName)
+    {
+        var width = ImGui.GetWindowWidth();
 
-                // Meta
-                ImGui.TableSetColumnIndex(3);
-                TableMeta.DisplayInfoColumn(currentDocument, entry, attribute, i);
+        if (attribute != null)
+        {
+            if (TextSearchFilters.FilterTableEntry(attribute.Value, SearchValueText))
+            {
+                ImGui.TableNextRow();
+
+                // Name Column
+                ImGui.TableSetColumnIndex(0);
+                ImGui.AlignTextToFramePadding();
+
+                // Name
+                UIHelper.DisplayMetaText("Test");
+
+                // Inputs Column
+                ImGui.TableSetColumnIndex(1);
+                ImGui.AlignTextToFramePadding();
+                ImGui.SetNextItemWidth(width * 0.5f);
+
+                // Input
+                UIHelper.DisplayMetaText("Test");
             }
         }
     }

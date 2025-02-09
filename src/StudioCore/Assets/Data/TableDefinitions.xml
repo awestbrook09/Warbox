@@ -9,8 +9,16 @@
         <entry Name="Character" />
         <entry Name="Combat" />
         <entry Name="Item" />
+        <entry Name="Minigame" />
+        <entry Name="Music" />
+        <entry Name="Prefab" />
+        <entry Name="Random Event" />
         <entry Name="RPG" />
         <entry Name="Sound" />
+        <entry Name="Shop" />
+        <entry Name="Skald" />
+        <entry Name="Text" />
+        <entry Name="UI" />
         <entry Name="Miscellaneous" /> <!-- Catch-all group -->
     </categories>
     
@@ -499,6 +507,187 @@
         <entry Category="Item" 
         Name="item" AliasNameKey="Name" RowNameKey="Id" />
         
+        <entry Category="Item" 
+        Name="item_category" AliasNameKey="item_category_name" RowNameKey="item_category_id" />
+        
+        <entry Category="Item" 
+        Name="item_tag" AliasNameKey="" RowNameKey="item_tag_name" />
+        
+        <entry Category="Item" 
+        Name="item_ui_sound" AliasNameKey="" RowNameKey="item_ui_sound_name" />
+        
+        <entry Category="Item" 
+        Name="ItemManipulationType" AliasNameKey="Tag" RowNameKey="Id" />
+        
+        <entry Category="Item" 
+        Name="key_subtype" AliasNameKey="key_subtype_name" RowNameKey="key_subtype_id" />
+        
+        <entry Category="Item" 
+        Name="key_type" AliasNameKey="key_type_name" RowNameKey="key_type_id" />
+        
+        <entry Category="Item" 
+        Name="misc_subtype" AliasNameKey="misc_subtype_name" RowNameKey="misc_subtype_id" />
+        
+        <entry Category="Item" 
+        Name="misc_type" AliasNameKey="misc_type_name" RowNameKey="misc_type_id" />
+        
+        <entry Category="Item" 
+        Name="npc_tool_subtype" AliasNameKey="npc_tool_subtype_name" RowNameKey="npc_tool_subtype_id" />
+        
+        <entry Category="Item" 
+        Name="npc_tool_type" AliasNameKey="npc_tool_type_name" RowNameKey="npc_tool_type_id" />
+        
+        <entry Category="Item" 
+        Name="ointment_item_subtype" AliasNameKey="ointment_item_subtype_name" RowNameKey="ointment_item_subtype_id" />
+        
+        <entry Category="Item" 
+        Name="ointment_item_type" AliasNameKey="ointment_item_type_name" RowNameKey="ointment_item_type_id" />
+        
+        <entry Category="Item" 
+        Name="pickable_area_desc" AliasNameKey="name" RowNameKey="id" />
+        
+        <entry Category="Item" 
+        Name="pickable_area_material" AliasNameKey="material_name" RowNameKey="pickable_area_id" />
+        
+        <entry Category="Item" 
+        Name="weapon_attachment_slot" AliasNameKey="weapon_attachment_slot_name" RowNameKey="weapon_attachment_slot_id" />
+        
+        <entry Category="Item" 
+        Name="weapon_attachment_slot_category" AliasNameKey="category_name" RowNameKey="category_id" />
+        
+        <entry Category="Item" 
+        Name="weapon_class" AliasNameKey="name" RowNameKey="id" />
+        
+        <entry Category="Item" 
+        Name="weapon_preset" AliasNameKey="weapon_preset_name" RowNameKey="weapon_preset_id" />
+        
+        <entry Category="Item" 
+        Name="weapon_sub_class" AliasNameKey="weapon_sub_class_name" RowNameKey="weapon_sub_class_id" />
+        
+        <!-- Minigame -->
+        <entry Category="Minigame" 
+        Name="AlchemyCrushableSpecialIngredient" AliasNameKey="" RowNameKey="ItemId" />
+        
+        <entry Category="Minigame" 
+        Name="AlchemyFeedback" AliasNameKey="MetaroleId" RowNameKey="Id" />
+        
+        <entry Category="Minigame" 
+        Name="AlchemyPotionBase" AliasNameKey="BaseType" RowNameKey="BaseItemId" />
+        
+        <entry Category="Minigame" 
+        Name="AlchemyRecipe" AliasNameKey="UIName" RowNameKey="RecipeId" />
+        
+        <entry Category="Minigame" 
+        Name="AlchemyRecipeStepType" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Minigame" 
+        Name="BlacksmithRecipe" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="Minigame" 
+        Name="BlacksmithTemperature" AliasNameKey="" RowNameKey="Temperature" />
+        
+        <entry Category="Minigame" 
+        Name="BlacksmithWorkpiece" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_bookmark_group" AliasNameKey="bookmark_group_name" RowNameKey="bookmark_group_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_judgement" AliasNameKey="judgement_name" RowNameKey="judgement_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_modifier" AliasNameKey="modifier_name" RowNameKey="modifier_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_modifier_effect" AliasNameKey="modifier_effect_name" RowNameKey="modifier_effect_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_modifier_effect_resource" AliasNameKey="" RowNameKey="modifier_effect_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_modifier_effect_structure" AliasNameKey="ui_receiving_effect_desc" RowNameKey="modifier_effect_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_modifier_effect_type" AliasNameKey="modifier_effect_type_name" RowNameKey="modifier_effect_type_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_modifier_group" AliasNameKey="modifier_group_name" RowNameKey="modifier_group_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_modifier2modifier_effect" AliasNameKey="" RowNameKey="modifier_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_objective" AliasNameKey="objective_name" RowNameKey="objective_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_parcel" AliasNameKey="parcel_name" RowNameKey="parcel_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_resource" AliasNameKey="resource_name" RowNameKey="resource_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_single_payment" AliasNameKey="single_payment_name" RowNameKey="single_payment_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_structure" AliasNameKey="structure_name" RowNameKey="structure_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_structure_addon" AliasNameKey="structure_addon_name" RowNameKey="structure_addon_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_structure_addon_group" AliasNameKey="structure_addon_group_name" RowNameKey="structure_addon_group_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_structure_addon2modifier" AliasNameKey="" RowNameKey="structure_addon_id" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_structure_tier" AliasNameKey="ui_name" RowNameKey="structure_id" />
+        
+        <entry Category="Minigame" NoPrimaryKey=""
+        Name="new_homes_structure_tier_prerequisity" AliasNameKey="" RowNameKey="" />
+        
+        <entry Category="Minigame" NoPrimaryKey=""
+        Name="new_homes_structure_tier_resource_prerequisity" AliasNameKey="" RowNameKey="" />
+        
+        <entry Category="Minigame" 
+        Name="new_homes_structure2modifier" AliasNameKey="" RowNameKey="structure_id" />
+        
+        <!-- Music -->
+        <entry Category="Music" 
+        Name="blacksmith" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="Music" 
+        Name="music_address_keyword" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Music" 
+        Name="music_matrix" AliasNameKey="" RowNameKey="Address" />
+        
+        <entry Category="Music" 
+        Name="music_world_quantity" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Music" 
+        Name="music_world_state_toggle" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Music" 
+        Name="PostProcessPreset" AliasNameKey="" RowNameKey="Name" />
+        
+        <!-- Prefab -->
+        <entry Category="Prefab" 
+        Name="prefab_phase" AliasNameKey="" RowNameKey="prefab_template_id" />
+        
+        <entry Category="Prefab" 
+        Name="prefab_phase_category" AliasNameKey="prefab_phase_category_name" RowNameKey="prefab_phase_category_id" />
+        
+        <!-- Random Event -->
+        <entry Category="Random Event" 
+        Name="RandomEventOption" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Random Event" 
+        Name="RandomEventOptionSet" AliasNameKey="Options" RowNameKey="Name" />
+        
+        <entry Category="Random Event" 
+        Name="RandomEventTag" AliasNameKey="" RowNameKey="Name" />
+        
         <!-- RPG -->
 		<entry Category="RPG"
         Name="achievement" AliasNameKey="achievement_name" RowNameKey="achievement_id" />
@@ -809,16 +998,187 @@
 		<entry Category="RPG"
         Name="xp_change" AliasNameKey="change" RowNameKey="name" />
         
-        <!-- Sound -->
-        <entry Category="Sound" 
-        Name="SkaldAtlRtpc" AliasNameKey="" RowNameKey="Name" />
+        <!-- Shop -->
+        <entry Category="Shop" 
+        Name="Shop" AliasNameKey="" RowNameKey="shop_name" />
         
-        <entry Category="Sound" 
-        Name="SkaldAtlTrigger" AliasNameKey="" RowNameKey="Name" />
+        <!-- Skald -->
+        <entry Category="Skald" 
+        Name="branch_type" AliasNameKey="branch_type_name" RowNameKey="branch_type_id" />
+        
+        <entry Category="Skald" 
+        Name="dialogue_animation" AliasNameKey="Name" RowNameKey="Guid" />
+        
+        <entry Category="Skald" 
+        Name="dialogue_camera_mode" AliasNameKey="dialogue_camera_mode_name" RowNameKey="dialogue_camera_mode_id" />
+        
+        <entry Category="Skald" 
+        Name="LookAtOffset" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Skald" 
+        Name="response_volume" AliasNameKey="response_volume_name" RowNameKey="response_volume_id" />
+        
+        <entry Category="Skald" 
+        Name="sequence_line_type" AliasNameKey="sequence_line_type_name" RowNameKey="sequence_line_type_id" />
+        
+        <entry Category="Skald" 
+        Name="sequence2objective_action_type" AliasNameKey="sequence2objective_action_type_name" RowNameKey="sequence2objective_action_type_id" />
+        
+        <entry Category="Skald" 
+        Name="skald_character" AliasNameKey="skald_character_name" RowNameKey="skald_character_name" />
+        
+        <entry Category="Skald" 
+        Name="skald_character2profession" AliasNameKey="profession_name" RowNameKey="skald_character_name" />
+        
+        <entry Category="Skald" 
+        Name="skald_character2role" AliasNameKey="role_name" RowNameKey="skald_character_id" />
+        
+        <entry Category="Skald" 
+        Name="skald_location" AliasNameKey="skald_position" RowNameKey="skald_location_id" />
+        
+        <entry Category="Skald" 
+        Name="skald_production_status" AliasNameKey="skald_production_status_name" RowNameKey="skald_production_status_id" />
+        
+        <entry Category="Skald" 
+        Name="skald_profession" AliasNameKey="profession_design_name" RowNameKey="profession_name" />
+        
+        <entry Category="Skald" 
+        Name="topic_priority" AliasNameKey="topic_priority_name" RowNameKey="topic_priority_id" />
+        
+        <entry Category="Skald" 
+        Name="translator" AliasNameKey="translator_name" RowNameKey="translator_id" />
+        
+        <entry Category="Skald" 
+        Name="voice" AliasNameKey="voice_name" RowNameKey="voice_id" />
+        
+        <entry Category="Skald" 
+        Name="voice_category" AliasNameKey="" RowNameKey="name" />
+        
+        <entry Category="Skald" 
+        Name="voice_group" AliasNameKey="" RowNameKey="name" />
+        
+        <entry Category="Skald" 
+        Name="voice_group2voice_category" AliasNameKey="voice_category_name" RowNameKey="voice_group_name" />
+        
+        <!-- Text -->
+        <entry Category="Text" 
+        Name="dialogue_attachment" AliasNameKey="Name" RowNameKey="Guid" />
+        
+        <entry Category="Text" 
+        Name="dialogue_functions" AliasNameKey="" RowNameKey="function_name" />
+        
+        <entry Category="Text" 
+        Name="dialogue_hearing" AliasNameKey="dialogue_hearing_name" RowNameKey="dialogue_hearing_id" />
+        
+        <entry Category="Text" 
+        Name="language" AliasNameKey="crytek_name" RowNameKey="crytek_id" />
+        
+        <entry Category="Text" 
+        Name="PackageString" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Text" 
+        Name="string_package" AliasNameKey="string_package_name" RowNameKey="string_package_id" />
+        
+        <!-- UI -->
+        <entry Category="UI" 
+        Name="achievement_rule_action" AliasNameKey="achievement_rule_action_name" RowNameKey="achievement_rule_action_id" />
+        
+        <entry Category="UI" 
+        Name="codex_ui_layout" AliasNameKey="codex_ui_layout_name" RowNameKey="codex_ui_layout_id" />
+        
+        <entry Category="UI" 
+        Name="codex_ui_page" AliasNameKey="codex_ui_page_name" RowNameKey="codex_ui_page_id" />
+        
+        <entry Category="UI" 
+        Name="compass_mark_type" AliasNameKey="compass_mark_type_name" RowNameKey="compass_mark_type_id" />
+        
+        <entry Category="UI" 
+        Name="credit_layout" AliasNameKey="credit_layout_name" RowNameKey="credit_layout_id" />
+        
+        <entry Category="UI" 
+        Name="credit_people" AliasNameKey="credit_people_name" RowNameKey="credit_people_id" />
+        
+        <entry Category="UI" 
+        Name="credit_role" AliasNameKey="credit_role_name" RowNameKey="credit_role_id" />
+        
+        <entry Category="UI" NoPrimaryKey=""
+        Name="credit_role2language_excl" AliasNameKey="" RowNameKey="" />
+        
+        <entry Category="UI" 
+        Name="cutscene" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="UI" 
+        Name="ExtraRewards" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="UI" 
+        Name="infotext_category" AliasNameKey="" RowNameKey="name" />
+        
+        <entry Category="UI" 
+        Name="menu_buttons" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="UI" 
+        Name="menu_choices" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="UI" 
+        Name="menu_confirmations" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="UI" 
+        Name="menu_pages" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="UI" 
+        Name="skiptime" AliasNameKey="skiptime_name" RowNameKey="skiptime_id" />
+        
+        <entry Category="UI" 
+        Name="trophy_group" AliasNameKey="trophy_group_name" RowNameKey="trophy_group_id" />
+        
+        <entry Category="UI" 
+        Name="tutorial" AliasNameKey="Name" RowNameKey="Text" />
+        
+        <entry Category="UI" 
+        Name="ui_local_maps" AliasNameKey="ui_local_map_name" RowNameKey="ui_local_map_id" />
+        
+        <entry Category="UI" 
+        Name="ui_map_label" AliasNameKey="ui_name" RowNameKey="ui_map_label_id" />
+        
+        <entry Category="UI" NoPrimaryKey=""
+        Name="video_language2audio_track" AliasNameKey="" RowNameKey="" />
         
         <!-- Miscellaneous -->
         <entry Category="Miscellaneous" 
         Name="TriggerEffects" AliasNameKey="" RowNameKey="Action" />
+        
+        <entry Category="Miscellaneous"
+        Name="ContentFilterSubstitution" AliasNameKey="" RowNameKey="OriginalObjectPath" />
+        
+        <entry Category="Miscellaneous" 
+        Name="CVarOverride" AliasNameKey="" RowNameKey="OverrideFile" />
+        
+        <entry Category="Miscellaneous" 
+        Name="dlc" AliasNameKey="dlc_name" RowNameKey="dlc_id" />
+        
+        <entry Category="Miscellaneous" 
+        Name="editor_object" AliasNameKey="name" RowNameKey="id" />
+        
+        <entry Category="Miscellaneous" 
+        Name="editor_object_binding" AliasNameKey="note" RowNameKey="source_id" />
+        
+        <entry Category="Miscellaneous" 
+        Name="game_mode" AliasNameKey="game_mode_name" RowNameKey="game_mode_id" />
+        
+        <entry Category="Miscellaneous" 
+        Name="level" AliasNameKey="LevelName" RowNameKey="LevelId" />
+        
+        <entry Category="Miscellaneous" 
+        Name="LevelSwitch" AliasNameKey="" RowNameKey="Name" />
+        
+        <entry Category="Miscellaneous" 
+        Name="PlatformActivity" AliasNameKey="" RowNameKey="Id" />
+        
+        <entry Category="Miscellaneous" 
+        Name="player" AliasNameKey="GameContext" RowNameKey="PlayerId" />
+        
+        <entry Category="Miscellaneous" 
+        Name="time_of_day_profile" AliasNameKey="" RowNameKey="Name" />
         
 	</tables>
 </database>

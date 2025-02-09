@@ -1,9 +1,8 @@
 #-----------------------------------------------
 # Editors
 #-----------------------------------------------
-FEAT: PTF save (used to export edits as separate file)
-FEAT: add undo/redo support for property changes
 FEAT: copy selected row into table of same type (e.g. buff.xml -> buff__mymod.xml)
+FEAT: PTF export for Table Editor: basically create a PTF folder and replicate the mod structure within it, but diff the edits (tables in memory) with the vanilla tables, and only include a file if there are changes, and only include the edits within said file.
 
 #-----------------------------------------------
 # Text Editor
