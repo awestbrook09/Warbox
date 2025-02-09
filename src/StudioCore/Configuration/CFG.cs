@@ -38,6 +38,12 @@ public class CFG
 #pragma warning restore IDE0051
 
     //**************
+    // Table Editor
+    //**************
+    public bool TableEditor_View_Window_Tools = true;
+    public bool TableEditor_View_Properties_DisplayNames = true;
+
+    //**************
     // Debug
     //**************
     public bool Debug_FireOnce = false;
@@ -114,8 +120,6 @@ public class CFG
     public Vector4 ImGui_ErrorInput_Background = new Vector4(0.8f, 0.2f, 0.2f, 1.0f);
 
     // Text
-    public Vector4 ImGui_Default_Text_Color = new Vector4(0.9f, 0.9f, 0.9f, 1.0f);
-    public Vector4 ImGui_Warning_Text_Color = new Vector4(1.0f, 0f, 0f, 1.0f);
     public Vector4 ImGui_Benefit_Text_Color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
     public Vector4 ImGui_Invalid_Text_Color = new Vector4(1.0f, 0.3f, 0.3f, 1.0f);
 
@@ -140,6 +144,13 @@ public class CFG
     public Vector4 ImGui_PrimaryChanged_Text = new Vector4(0.7f, 1, 0.7f, 1);
     public Vector4 ImGui_ParamRow_Text = new Vector4(0.8f, 0.8f, 0.8f, 1.0f);
     public Vector4 ImGui_AliasName_Text = new Vector4(1.0f, 1.0f, 0.0f, 1.0f);
+
+    public Vector4 ImGui_Default_Text_Color = new Vector4(0.9f, 0.9f, 0.9f, 1.0f);
+    public Vector4 ImGui_Information_Text_Color = new Vector4(1f, 1f, 0f, 1.0f);
+    public Vector4 ImGui_Warning_Text_Color = new Vector4(0.958f, 0.143f, 0.143f, 1.0f);
+    public Vector4 ImGui_Highlight_Text_Color = new Vector4(0.283f, 0.721f, 0.218f, 1.0f);
+    public Vector4 ImGui_Action_Text_Color = new Vector4(0.642f, 0.705f, 1.0f, 1.0f);
+    public Vector4 ImGui_Header_Text_Color = new Vector4(0.848f, 0.740f, 1.0f, 1.0f);
 
     // Misc
     public Vector4 DisplayGroupEditor_Border_Highlight = new Vector4(1.0f, 0.2f, 0.2f, 1.0f);

@@ -70,8 +70,6 @@ namespace StudioCore.Interface
             CFG.Current.ImGui_Input_DiffCompare_Background = CFG.Default.ImGui_Input_DiffCompare_Background;
 
             // Text
-            CFG.Current.ImGui_Default_Text_Color = CFG.Default.ImGui_Default_Text_Color;
-            CFG.Current.ImGui_Warning_Text_Color = CFG.Default.ImGui_Warning_Text_Color;
             CFG.Current.ImGui_Benefit_Text_Color = CFG.Default.ImGui_Benefit_Text_Color;
             CFG.Current.ImGui_Invalid_Text_Color = CFG.Default.ImGui_Invalid_Text_Color;
 
@@ -96,6 +94,13 @@ namespace StudioCore.Interface
             CFG.Current.ImGui_PrimaryChanged_Text = CFG.Default.ImGui_PrimaryChanged_Text;
             CFG.Current.ImGui_ParamRow_Text = CFG.Default.ImGui_ParamRow_Text;
             CFG.Current.ImGui_AliasName_Text = CFG.Default.ImGui_AliasName_Text;
+
+            CFG.Current.ImGui_Default_Text_Color = CFG.Default.ImGui_Default_Text_Color;
+            CFG.Current.ImGui_Information_Text_Color = CFG.Default.ImGui_Information_Text_Color;
+            CFG.Current.ImGui_Warning_Text_Color = CFG.Default.ImGui_Warning_Text_Color;
+            CFG.Current.ImGui_Highlight_Text_Color = CFG.Default.ImGui_Highlight_Text_Color;
+            CFG.Current.ImGui_Action_Text_Color = CFG.Default.ImGui_Action_Text_Color;
+            CFG.Current.ImGui_Header_Text_Color = CFG.Default.ImGui_Header_Text_Color;
 
             // Misc
             CFG.Current.DisplayGroupEditor_Border_Highlight = CFG.Default.DisplayGroupEditor_Border_Highlight;
@@ -231,8 +236,6 @@ namespace StudioCore.Interface
             theme.ImGui_MultipleInput_Background = GetFloatList(CFG.Current.ImGui_MultipleInput_Background);
             theme.ImGui_ErrorInput_Background = GetFloatList(CFG.Current.ImGui_ErrorInput_Background);
 
-            theme.ImGui_Default_Text_Color = GetFloatList(CFG.Current.ImGui_Default_Text_Color);
-            theme.ImGui_Warning_Text_Color = GetFloatList(CFG.Current.ImGui_Warning_Text_Color);
             theme.ImGui_Benefit_Text_Color = GetFloatList(CFG.Current.ImGui_Benefit_Text_Color);
             theme.ImGui_Invalid_Text_Color = GetFloatList(CFG.Current.ImGui_Invalid_Text_Color);
 
@@ -257,6 +260,13 @@ namespace StudioCore.Interface
             theme.ImGui_PrimaryChanged_Text = GetFloatList(CFG.Current.ImGui_PrimaryChanged_Text);
             theme.ImGui_ParamRow_Text = GetFloatList(CFG.Current.ImGui_ParamRow_Text);
             theme.ImGui_AliasName_Text = GetFloatList(CFG.Current.ImGui_AliasName_Text);
+
+            theme.ImGui_Default_Text_Color = GetFloatList(CFG.Current.ImGui_Default_Text_Color);
+            theme.ImGui_Information_Text_Color = GetFloatList(CFG.Current.ImGui_Information_Text_Color);
+            theme.ImGui_Warning_Text_Color = GetFloatList(CFG.Current.ImGui_Warning_Text_Color);
+            theme.ImGui_Highlight_Text_Color = GetFloatList(CFG.Current.ImGui_Highlight_Text_Color);
+            theme.ImGui_Action_Text_Color = GetFloatList(CFG.Current.ImGui_Action_Text_Color);
+            theme.ImGui_Header_Text_Color = GetFloatList(CFG.Current.ImGui_Header_Text_Color);
 
             theme.DisplayGroupEditor_Border_Highlight = GetFloatList(CFG.Current.DisplayGroupEditor_Border_Highlight);
             theme.DisplayGroupEditor_DisplayActive_Frame = GetFloatList(CFG.Current.DisplayGroupEditor_DisplayActive_Frame);
@@ -375,8 +385,6 @@ namespace StudioCore.Interface
             CFG.Current.ImGui_Input_DiffCompare_Background = GetVectorValue(theme.ImGui_Input_DiffCompare_Background);
 
             // Text
-            CFG.Current.ImGui_Default_Text_Color = GetVectorValue(theme.ImGui_Default_Text_Color);
-            CFG.Current.ImGui_Warning_Text_Color = GetVectorValue(theme.ImGui_Warning_Text_Color);
             CFG.Current.ImGui_Benefit_Text_Color = GetVectorValue(theme.ImGui_Benefit_Text_Color);
             CFG.Current.ImGui_Invalid_Text_Color = GetVectorValue(theme.ImGui_Invalid_Text_Color);
 
@@ -401,6 +409,13 @@ namespace StudioCore.Interface
             CFG.Current.ImGui_PrimaryChanged_Text = GetVectorValue(theme.ImGui_PrimaryChanged_Text);
             CFG.Current.ImGui_ParamRow_Text = GetVectorValue(theme.ImGui_ParamRow_Text);
             CFG.Current.ImGui_AliasName_Text = GetVectorValue(theme.ImGui_AliasName_Text);
+
+            CFG.Current.ImGui_Default_Text_Color = GetVectorValue(theme.ImGui_Default_Text_Color);
+            CFG.Current.ImGui_Information_Text_Color = GetVectorValue(theme.ImGui_Information_Text_Color);
+            CFG.Current.ImGui_Warning_Text_Color = GetVectorValue(theme.ImGui_Warning_Text_Color);
+            CFG.Current.ImGui_Highlight_Text_Color = GetVectorValue(theme.ImGui_Highlight_Text_Color);
+            CFG.Current.ImGui_Action_Text_Color = GetVectorValue(theme.ImGui_Action_Text_Color);
+            CFG.Current.ImGui_Header_Text_Color = GetVectorValue(theme.ImGui_Header_Text_Color);
 
             // Misc
             CFG.Current.DisplayGroupEditor_Border_Highlight = GetVectorValue(theme.DisplayGroupEditor_Border_Highlight);
@@ -487,8 +502,6 @@ namespace StudioCore.Interface
         public List<float> ImGui_Input_DiffCompare_Background { get; set; }
         public List<float> ImGui_MultipleInput_Background { get; set; }
         public List<float> ImGui_ErrorInput_Background { get; set; }
-        public List<float> ImGui_Default_Text_Color { get; set; }
-        public List<float> ImGui_Warning_Text_Color { get; set; }
         public List<float> ImGui_Benefit_Text_Color { get; set; }
         public List<float> ImGui_Invalid_Text_Color { get; set; }
 
@@ -514,6 +527,14 @@ namespace StudioCore.Interface
         public List<float> ImGui_PrimaryChanged_Text { get; set; }
         public List<float> ImGui_ParamRow_Text { get; set; }
         public List<float> ImGui_AliasName_Text { get; set; }
+
+        public List<float> ImGui_Default_Text_Color { get; set; }
+        public List<float> ImGui_Information_Text_Color { get; set; }
+        public List<float> ImGui_Warning_Text_Color { get; set; }
+        public List<float> ImGui_Highlight_Text_Color { get; set; }
+        public List<float> ImGui_Action_Text_Color { get; set; }
+        public List<float> ImGui_Header_Text_Color { get; set; }
+
         public List<float> DisplayGroupEditor_Border_Highlight { get; set; }
         public List<float> DisplayGroupEditor_DisplayActive_Frame { get; set; }
         public List<float> DisplayGroupEditor_DisplayActive_Checkbox { get; set; }

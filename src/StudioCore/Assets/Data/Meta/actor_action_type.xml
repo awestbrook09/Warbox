@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <actor_action_type 
+        Name="Actor Action Type" 
+        Description="" />
+    </headers>
+	<entries>
+        <actor_action_type_id
+        Name="ID"
+        Description="" />
+        
+        <actor_action_type_name
+        Name="Name"
+        Description="" />
+        
+	</entries>
+</meta>

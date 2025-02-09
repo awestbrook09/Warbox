@@ -93,19 +93,26 @@ public static class UIHelper
         }
     }
 
-    public static void DisplayYellowText(string text)
-    {
-        DisplayColoredText(@$"{text}", CFG.Current.ImGui_AliasName_Text);
-    }
-
     public static void DisplayHeaderText(string text)
     {
-        ImGui.TextColored(CFG.Current.ImGui_AliasName_Text, @$"{text}");
+        ImGui.TextColored(CFG.Current.ImGui_Header_Text_Color, @$"{text}");
     }
 
-    public static void DisplayMetaText(string text)
+    public static void DisplayInformationText(string text)
     {
-        ImGui.TextColored(CFG.Current.ImGui_AliasName_Text, @$"{text}");
+        ImGui.TextColored(CFG.Current.ImGui_Information_Text_Color, @$"{text}");
+    }
+    public static void DisplayWarningText(string text)
+    {
+        ImGui.TextColored(CFG.Current.ImGui_Warning_Text_Color, @$"{text}");
+    }
+    public static void DisplayHighlightText(string text)
+    {
+        ImGui.TextColored(CFG.Current.ImGui_Highlight_Text_Color, @$"{text}");
+    }
+    public static void DisplayActionText(string text)
+    {
+        ImGui.TextColored(CFG.Current.ImGui_Action_Text_Color, @$"{text}");
     }
 
     public static void DisplayColoredText(string text, Vector4 color)

@@ -56,7 +56,7 @@
         Name="dog_action" AliasNameKey="mn_fragment_id" RowNameKey="mn_fragment_guid" />
         
 		<entry Category="Action"
-        Name="hit_reaction" AliasNameKey="mn_fragment_id" RowNameKey="mn_fragment_guid" />
+        Name="hit_reaction" AliasNameKey="mn_tags" RowNameKey="mn_fragment_guid" />
         
 		<entry Category="Action"
         Name="hit_reaction_type" AliasNameKey="hit_reaction_type_name" RowNameKey="hit_reaction_type_id" />

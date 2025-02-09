@@ -80,8 +80,13 @@ public class TableFileSelectionView
         var status = entry.Key;
         var name = entry.Key.Name;
 
+        var displayName = name;
+
         // Typically the name of the file is one of the headers, so just do this
-        var displayName = TableMeta.GetHeaderName(EditorState, "Name", $"{name}", true);
+        if (CFG.Current.TableEditor_View_Properties_DisplayNames)
+        {
+            displayName = TableMeta.GetElementNameValue(EditorState, "Name", $"{name}", true);
+        }
 
         if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", EditorState.SelectedStatus == status))
         {

@@ -229,26 +229,11 @@ public class InterfaceTab
             if (ImGui.CollapsingHeader("Text", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 ImGui.ColorEdit4("Default Text", ref CFG.Current.ImGui_Default_Text_Color);
+                ImGui.ColorEdit4("Informational Text", ref CFG.Current.ImGui_Information_Text_Color);
                 ImGui.ColorEdit4("Warning Text", ref CFG.Current.ImGui_Warning_Text_Color);
-                ImGui.ColorEdit4("Beneficial Text", ref CFG.Current.ImGui_Benefit_Text_Color);
-                ImGui.ColorEdit4("Invalid Text", ref CFG.Current.ImGui_Invalid_Text_Color);
-
-                ImGui.ColorEdit4("Param Reference Text", ref CFG.Current.ImGui_ParamRef_Text);
-                ImGui.ColorEdit4("Param Reference Missing Text", ref CFG.Current.ImGui_ParamRefMissing_Text);
-                ImGui.ColorEdit4("Param Reference Inactive Text", ref CFG.Current.ImGui_ParamRefInactive_Text);
-                ImGui.ColorEdit4("Enum Name Text", ref CFG.Current.ImGui_EnumName_Text);
-                ImGui.ColorEdit4("Enum Value Text", ref CFG.Current.ImGui_EnumValue_Text);
-                ImGui.ColorEdit4("FMG Link Text", ref CFG.Current.ImGui_FmgLink_Text);
-                ImGui.ColorEdit4("FMG Reference Text", ref CFG.Current.ImGui_FmgRef_Text);
-                ImGui.ColorEdit4("FMG Reference Inactive Text", ref CFG.Current.ImGui_FmgRefInactive_Text);
-                ImGui.ColorEdit4("Is Reference Text", ref CFG.Current.ImGui_IsRef_Text);
-                ImGui.ColorEdit4("Virtual Reference Text", ref CFG.Current.ImGui_VirtualRef_Text);
-                ImGui.ColorEdit4("Reference Text", ref CFG.Current.ImGui_Ref_Text);
-                ImGui.ColorEdit4("Auxiliary Conflict Text", ref CFG.Current.ImGui_AuxConflict_Text);
-                ImGui.ColorEdit4("Auxiliary Added Text", ref CFG.Current.ImGui_AuxAdded_Text);
-                ImGui.ColorEdit4("Primary Changed Text", ref CFG.Current.ImGui_PrimaryChanged_Text);
-                ImGui.ColorEdit4("Param Row Text", ref CFG.Current.ImGui_ParamRow_Text);
-                ImGui.ColorEdit4("Aliased Name Text", ref CFG.Current.ImGui_AliasName_Text);
+                ImGui.ColorEdit4("Highlight Text", ref CFG.Current.ImGui_Highlight_Text_Color);
+                ImGui.ColorEdit4("Action Text", ref CFG.Current.ImGui_Action_Text_Color);
+                ImGui.ColorEdit4("Header Text", ref CFG.Current.ImGui_Header_Text_Color);
             }
 
             if (ImGui.CollapsingHeader("Miscellaneous", ImGuiTreeNodeFlags.DefaultOpen))

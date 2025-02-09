@@ -6,11 +6,11 @@
         Description="" />
     </headers>
 	<entries>
-		<rpg_param-rpg_param_key 
+		<rpg_param_key 
         Name="Parameter"
         Description="The name of this parameter." />
         
-		<rpg_param-rpg_param_value
+		<rpg_param_value
         Name="Value"
         Description="The value this parameter is set to." />
 	</entries>

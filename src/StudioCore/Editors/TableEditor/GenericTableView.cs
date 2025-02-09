@@ -1,9 +1,11 @@
 ﻿using Assimp;
 using ImGuiNET;
+using Newtonsoft.Json.Linq;
 using StudioCore.Configuration;
 using StudioCore.Editors.TableEditor.Actions;
 using StudioCore.Editors.TextEditor;
 using StudioCore.Interface;
+using StudioCore.Platform;
 using StudioCore.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static Assimp.Metadata;
 
 namespace StudioCore.Editors.TableEditor;
 
@@ -178,188 +181,10 @@ public class GenericTableView
                 }
             }
 
-            TableMeta.DisplayAttributeAddSection(currentDocument, entry);
+            DisplayMissingElementOptions(entry);
         }
 
         ImGui.EndChild();
-    }
-
-    private void HandleElementEntry(XDocument currentDocument, XElement entry, string elementName)
-    {
-        DisplayHeaderRow(currentDocument, entry, elementName);
-
-        var attributes = entry.Attributes().ToList();
-
-        for (int i = 0; i < attributes.Count; i++)
-        {
-            var attribute = attributes[i];
-
-            DisplayAttributeRow(currentDocument, entry, attribute, i, elementName);
-            if(TableMeta.HasMetaData(currentDocument, entry, attribute, i, elementName))
-            {
-                DisplayMetaDataRow(currentDocument, entry, attribute, i, elementName);
-            }
-        }
-
-        childDepth += 1;
-
-        foreach (var child in entry.Elements().ToList())
-        {
-            ImGui.Indent();
-            HandleElementEntry(currentDocument, child, child.Name.ToString());
-            ImGui.Unindent();
-        }
-    }
-
-    private void DisplayHeaderRow(XDocument currentDocument, XElement entry, string elementName)
-    {
-        var width = ImGui.GetWindowWidth();
-
-        if (entry != null)
-        {
-            if (TextSearchFilters.FilterTableEntry(entry.Name.ToString(), SearchValueText))
-            {
-                ImGui.TableNextRow();
-
-                // Name Column
-                ImGui.TableSetColumnIndex(0);
-                ImGui.AlignTextToFramePadding();
-
-                var displayName = TableMeta.GetHeaderName(
-                    EditorState,
-                    "Name",
-                    $"{entry.Name}");
-
-                var description = TableMeta.GetHeaderName(
-                    EditorState,
-                    "Description",
-                    $"{entry.Name}");
-
-                ImGui.SetNextItemWidth(width * 0.25f);
-                UIHelper.DisplayHeaderText(displayName);
-                UIHelper.ShowHoverTooltip(description);
-
-                // Inputs Column
-                ImGui.TableSetColumnIndex(1);
-            }
-        }
-    }
-
-    private void DisplayAttributeRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string elementName)
-    {
-        var width = ImGui.GetWindowWidth();
-
-        if (attribute != null)
-        {
-            if (TextSearchFilters.FilterTableEntry(attribute.Value, SearchValueText))
-            {
-                ImGui.TableNextRow();
-
-                // Name Column
-                ImGui.TableSetColumnIndex(0);
-                ImGui.AlignTextToFramePadding();
-
-                var displayName = TableMeta.GetAttributeName(
-                    EditorState,
-                    "Name",
-                    $"{entry.Name}",
-                    $"{attribute.Name}");
-
-                var description = TableMeta.GetAttributeName(
-                    EditorState,
-                    "Description",
-                    $"{entry.Name}",
-                    $"{attribute.Name}");
-
-                ImGui.SetNextItemWidth(width * 0.25f);
-                ImGui.Text(displayName);
-                UIHelper.ShowHoverTooltip(description);
-
-                // Inputs Column
-                ImGui.TableSetColumnIndex(1);
-
-                var oldValue = attribute.Value;
-                var tValue = attribute.Value;
-                var isChanged = false;
-
-                ImGui.AlignTextToFramePadding();
-                ImGui.SetNextItemWidth(width * 0.5f);
-
-                // Handling for bool type
-                if(TableMeta.IsBoolAttribute(EditorState,"IsBool",$"{entry.Name}",$"{attribute.Name}"))
-                {
-                    var tBool = false;
-
-                    if (oldValue == "true")
-                        tBool = true;
-
-                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{i}{elementName}{childDepth}", ref tBool))
-                    {
-                        isChanged = true;
-                    }
-                    if (ImGui.IsItemDeactivatedAfterEdit() || !ImGui.IsAnyItemActive())
-                    {
-                        if (isChanged)
-                        {
-                            if (tBool)
-                            {
-                                var action = new ChangeAttributeValue(attribute, oldValue, "true");
-                                Screen.EditorActionManager.ExecuteAction(action);
-                            }
-                            else
-                            {
-                                var action = new ChangeAttributeValue(attribute, oldValue, "false");
-                                Screen.EditorActionManager.ExecuteAction(action);
-                            }
-                        }
-                    }
-                }
-                // Handling for string type
-                else
-                {
-                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{i}{elementName}{childDepth}", ref tValue, 255))
-                    {
-                        isChanged = true;
-                    }
-                    if (ImGui.IsItemDeactivatedAfterEdit() || !ImGui.IsAnyItemActive())
-                    {
-                        if (isChanged)
-                        {
-                            var action = new ChangeAttributeValue(attribute, oldValue, tValue);
-                            Screen.EditorActionManager.ExecuteAction(action);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void DisplayMetaDataRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string elementName)
-    {
-        var width = ImGui.GetWindowWidth();
-
-        if (attribute != null)
-        {
-            if (TextSearchFilters.FilterTableEntry(attribute.Value, SearchValueText))
-            {
-                ImGui.TableNextRow();
-
-                // Name Column
-                ImGui.TableSetColumnIndex(0);
-                ImGui.AlignTextToFramePadding();
-
-                // Name
-                UIHelper.DisplayMetaText("Test");
-
-                // Inputs Column
-                ImGui.TableSetColumnIndex(1);
-                ImGui.AlignTextToFramePadding();
-                ImGui.SetNextItemWidth(width * 0.5f);
-
-                // Input
-                UIHelper.DisplayMetaText("Test");
-            }
-        }
     }
 
     public void Shortcuts()
@@ -387,5 +212,368 @@ public class GenericTableView
         var elementList = EditorState.GetCurrentEntries();
         var action = new RemoveTableRow(elementList, rowIndex);
         Screen.EditorActionManager.ExecuteAction(action);
+    }
+
+    private void DisplayMissingElementOptions(XElement entry)
+    {
+        var currentDocument = EditorState.SelectedDocument;
+        var allAttributes = TableMeta.GetAttributeList(EditorState, currentDocument, entry);
+        var curAttributes = entry.Attributes();
+
+        var missingAttributes = new List<XElement>();
+
+        foreach (var aAttribute in allAttributes)
+        {
+            var isMissing = true;
+
+            foreach (var cAttribute in curAttributes)
+            {
+                if(aAttribute.Name == cAttribute.Name)
+                {
+                    isMissing = false;
+                    break;
+                }
+            }
+
+            if(isMissing)
+            {
+                missingAttributes.Add(aAttribute);
+            }
+        }
+
+        foreach(var attrEntry in missingAttributes)
+        {
+            ImGui.AlignTextToFramePadding();
+            if(ImGui.Button($"{ForkAwesome.Plus}"))
+            {
+
+            }
+            UIHelper.ShowHoverTooltip("Add this property as it is not currently present.");
+
+            ImGui.SameLine();
+
+            var displayName = attrEntry.Name.ToString();
+
+            if (CFG.Current.TableEditor_View_Properties_DisplayNames)
+            {
+                displayName = TableMeta.GetAttributeNameValue(
+                EditorState,
+                "Name",
+                $"{entry.Name}",
+                $"{attrEntry.Name}");
+            }
+
+            ImGui.AlignTextToFramePadding();
+            UIHelper.DisplayActionText($"{displayName}");
+        }
+    }
+
+    private void HandleElementEntry(XDocument currentDocument, XElement entry, string imguiElementName)
+    {
+        DisplayHeaderRow(currentDocument, entry, imguiElementName);
+
+        var attributes = entry.Attributes().ToList();
+
+        for (int i = 0; i < attributes.Count; i++)
+        {
+            var attribute = attributes[i];
+
+            DisplayAttributeRow(currentDocument, entry, attribute, i, imguiElementName);
+            if(TableMeta.HasMetaData(EditorState, currentDocument, entry, attribute, i, imguiElementName))
+            {
+                DisplayMetaDataRow(currentDocument, entry, attribute, i, imguiElementName);
+            }
+        }
+
+        childDepth += 1;
+
+        foreach (var child in entry.Elements().ToList())
+        {
+            ImGui.Indent();
+            HandleElementEntry(currentDocument, child, child.Name.ToString());
+            ImGui.Unindent();
+        }
+    }
+
+    private void DisplayHeaderRow(XDocument currentDocument, XElement entry, string imguiElementName)
+    {
+        var width = ImGui.GetWindowWidth();
+
+        if (entry != null)
+        {
+            if (TextSearchFilters.FilterTableEntry(entry.Name.ToString(), SearchValueText))
+            {
+                ImGui.TableNextRow();
+
+                // Name Column
+                ImGui.TableSetColumnIndex(0);
+                ImGui.AlignTextToFramePadding();
+
+                var displayName = entry.Name.ToString();
+
+                if (CFG.Current.TableEditor_View_Properties_DisplayNames)
+                {
+                    displayName = TableMeta.GetElementNameValue(
+                    EditorState,
+                    "Name",
+                    $"{entry.Name}");
+                }
+
+                var description = TableMeta.GetElementNameValue(
+                    EditorState,
+                    "Description",
+                    $"{entry.Name}");
+
+                ImGui.SetNextItemWidth(width * 0.25f);
+                UIHelper.DisplayHeaderText(displayName);
+                UIHelper.ShowHoverTooltip(description);
+
+                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{imguiElementName}{childDepth}"))
+                {
+                    if(ImGui.Selectable("Copy Script Name"))
+                    {
+                        PlatformUtils.Instance.SetClipboardText(entry.Name.ToString());
+                    }
+
+                    ImGui.EndPopup();
+                }
+
+                // Inputs Column
+                ImGui.TableSetColumnIndex(1);
+            }
+        }
+    }
+
+    private void DisplayAttributeRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string imguiElementName)
+    {
+        var width = ImGui.GetWindowWidth();
+
+        if (attribute != null)
+        {
+            if (TextSearchFilters.FilterTableEntry(attribute.Value, SearchValueText))
+            {
+                ImGui.TableNextRow();
+
+                // Name Column
+                ImGui.TableSetColumnIndex(0);
+                ImGui.AlignTextToFramePadding();
+
+                var displayName = attribute.Name.ToString();
+
+                if (CFG.Current.TableEditor_View_Properties_DisplayNames)
+                {
+                    displayName = TableMeta.GetAttributeNameValue(
+                        EditorState,
+                        "Name",
+                        $"{entry.Name}",
+                        $"{attribute.Name}");
+                }
+
+                var description = TableMeta.GetAttributeNameValue(
+                    EditorState,
+                    "Description",
+                    $"{entry.Name}",
+                    $"{attribute.Name}");
+
+                ImGui.SetNextItemWidth(width * 0.25f);
+                ImGui.Text(displayName);
+                UIHelper.ShowHoverTooltip(description);
+
+                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{attribute.Name}{imguiElementName}{childDepth}"))
+                {
+                    if (ImGui.Selectable("Copy Script Name"))
+                    {
+                        PlatformUtils.Instance.SetClipboardText(attribute.Name.ToString());
+                    }
+
+                    ImGui.EndPopup();
+                }
+
+                // Inputs Column
+                ImGui.TableSetColumnIndex(1);
+
+                var oldValue = attribute.Value;
+                var tValue = attribute.Value;
+                var isChanged = false;
+
+                ImGui.AlignTextToFramePadding();
+                ImGui.SetNextItemWidth(width * 0.5f);
+
+                // Handling for bool type
+                if(TableMeta.IsBoolAttribute(EditorState, "IsBool", $"{entry.Name}", $"{attribute.Name}"))
+                {
+                    var tBool = false;
+
+                    if (oldValue == "true")
+                        tBool = true;
+
+                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{i}{imguiElementName}{childDepth}", ref tBool))
+                    {
+                        isChanged = true;
+                    }
+                    if (ImGui.IsItemDeactivatedAfterEdit() || !ImGui.IsAnyItemActive())
+                    {
+                        if (isChanged)
+                        {
+                            if (tBool)
+                            {
+                                var action = new ChangeAttributeValue(attribute, oldValue, "true");
+                                Screen.EditorActionManager.ExecuteAction(action);
+                            }
+                            else
+                            {
+                                var action = new ChangeAttributeValue(attribute, oldValue, "false");
+                                Screen.EditorActionManager.ExecuteAction(action);
+                            }
+                        }
+                    }
+                }
+                // Handling for string type
+                else
+                {
+                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{i}{imguiElementName}{childDepth}", ref tValue, 255))
+                    {
+                        isChanged = true;
+                    }
+                    if (ImGui.IsItemDeactivatedAfterEdit() || !ImGui.IsAnyItemActive())
+                    {
+                        if (isChanged)
+                        {
+                            var action = new ChangeAttributeValue(attribute, oldValue, tValue);
+                            Screen.EditorActionManager.ExecuteAction(action);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void DisplayMetaDataRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string imguiElementName)
+    {
+        var width = ImGui.GetWindowWidth();
+
+        if (attribute != null)
+        {
+            if (TextSearchFilters.FilterTableEntry(attribute.Value, SearchValueText))
+            {
+                var elementName = entry.Name.ToString();
+                var attributeName = attribute.Name.ToString();
+                var metaDoc = TableMeta.GetMetaDocument(EditorState, elementName);
+                List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
+
+                ImGui.TableNextRow();
+
+                // Name Column
+                ImGui.TableSetColumnIndex(0);
+                ImGui.AlignTextToFramePadding();
+
+                // Inputs Column
+                ImGui.TableSetColumnIndex(1);
+                ImGui.AlignTextToFramePadding();
+                ImGui.SetNextItemWidth(width * 0.5f);
+
+                // Input
+                foreach (var element in elements)
+                {
+                    if (element.Attribute("FileEnum") != null)
+                    {
+                        DisplayFileEnum(entry, attribute, element, i, imguiElementName);
+                    }
+                    if (element.Attribute("TextRef") != null)
+                    {
+                        DisplayTextRef(entry, attribute, element, i, imguiElementName);
+                    }
+                    if (element.Attribute("GuidRef") != null)
+                    {
+                        DisplayGuidRef(entry, attribute, element, i, imguiElementName);
+                    }
+                }
+            }
+        }
+    }
+
+    private string EnumSearchText = "";
+
+    private void DisplayFileEnum(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
+    {
+        var enumParameters = metaAttribute.Attribute("FileEnum").Value.Split(",");
+        var fileName = enumParameters[0];
+        var listKey = enumParameters[1];
+        var enumId = enumParameters[2];
+        var enumName = enumParameters[3];
+
+        var targetFile = Warbox.DataHandler.Tables.Where(e => e.Key.Name == fileName).FirstOrDefault();
+        var targetDoc = targetFile.Value;
+
+        var targetElements = targetDoc.Descendants($"{listKey}").ToList();
+
+        var displayedName = "";
+
+        foreach(var tElement in targetElements)
+        {
+            var id = tElement.Attribute(enumId).Value;
+            var name = tElement.Attribute(enumName).Value;
+
+            if(attribute.Value == id)
+            {
+                displayedName = name;
+            }
+        }
+
+        if(displayedName != "")
+        {
+            var boxWidth = 250;
+            var boxSize = new Vector2(boxWidth, 300);
+
+            UIHelper.DisplayInformationText(displayedName);
+
+            if (ImGui.BeginPopupContextItem($"##{ImGuiName}_enumContextMenu_{imguiElementName}{childDepth}"))
+            {
+                // Go to file -> entry
+                if (ImGui.Selectable($"Go to {fileName} -> {attribute.Value}"))
+                {
+
+                }
+
+                // Enum Search
+                ImGui.SetNextItemWidth(boxWidth);
+                ImGui.InputText($"##{ImGuiName}_enumSearch_{imguiElementName}{childDepth}", ref EnumSearchText, 255);
+
+                // Enum options
+                if (ImGui.BeginListBox($"##{ImGuiName}_enumListBox_{imguiElementName}{childDepth}", boxSize))
+                {
+                    foreach (var tElement in targetElements)
+                    {
+                        var id = tElement.Attribute(enumId).Value;
+                        var name = tElement.Attribute(enumName).Value;
+
+                        if (name.Contains(EnumSearchText) || EnumSearchText == "")
+                        {
+                            if (ImGui.Selectable($"{id}: {name}"))
+                            {
+                                var action = new ChangeAttributeValue(attribute, attribute.Value, id);
+                                Screen.EditorActionManager.ExecuteAction(action);
+                                break;
+                            }
+                        }
+                    }
+
+                    ImGui.EndListBox();
+                }
+
+                ImGui.EndPopup();
+            }
+
+        }
+    }
+
+    private void DisplayTextRef(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
+    {
+
+    }
+
+    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
+    {
+
     }
 }

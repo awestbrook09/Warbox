@@ -247,18 +247,7 @@
         0.2,
         1
     ],
-    "ImGui_Default_Text_Color": [
-        0.9,
-        0.9,
-        0.9,
-        1
-    ],
-    "ImGui_Warning_Text_Color": [
-        1,
-        0,
-        0,
-        1
-    ],
+    
     "ImGui_Benefit_Text_Color": [
         0,
         1,
@@ -391,6 +380,14 @@
         0,
         1
     ],
+    
+    "ImGui_Default_Text_Color": [0.9, 0.9, 0.9, 1.0],
+    "ImGui_Information_Text_Color": [1.0, 1.0, 0.0, 1.0],
+    "ImGui_Warning_Text_Color": [0.958, 0.143, 0.143, 1.0],
+    "ImGui_Highlight_Text_Color": [0.283, 0.721, 0.218, 1.0],
+    "ImGui_Action_Text_Color": [0.642, 0.705, 1.0, 1.0],
+    "ImGui_Header_Text_Color": [0.848, 0.740, 1.0, 1.0],
+    
     "DisplayGroupEditor_Border_Highlight": [
         1,
         0.2,

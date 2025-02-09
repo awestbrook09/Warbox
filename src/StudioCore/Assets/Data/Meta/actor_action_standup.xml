@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <actor_action_standup 
+        Name="Actor Action Standup" 
+        Description="" />
+    </headers>
+	<entries>
+		<actor_action_type_id 
+        Name="Actor Action Type ID"
+        Description="" 
+        FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name" />
+        
+		<actor_action_type_id_request
+        Name="Actor Action Type ID Request"
+        Description="" />
+        
+		<actor_class_hash
+        Name="Actor Class Hash"
+        Description="" />
+        
+		<animation_duration
+        Name="Animation Duration"
+        Description="" />
+        
+		<animation_id
+        Name="Animation ID"
+        Description="" />
+        
+		<fade_in
+        Name="Fade-in Duration"
+        Description="" />
+        
+		<from_knockout
+        Name="Apply from Knockout"
+        Description="" 
+        IsBool="" />
+        
+		<hasAlignProcclip
+        Name="Has Alignment ProcClip"
+        Description="" 
+        IsBool="" />
+        
+		<init_align0
+        Name="Initialization Alignment: 0"
+        Description="" />
+        
+		<init_align1
+        Name="Initialization Alignment: 1"
+        Description="" />
+        
+		<init_sec_align0
+        Name="Initialization Secondary Alignment: 0"
+        Description="" />
+        
+		<init_sec_align1
+        Name="Initialization Secondary Alignment: 1"
+        Description="" />
+        
+		<isfullbody
+        Name="Is Full Body"
+        Description="" 
+        IsBool="" />
+        
+		<isOneShot
+        Name="Is One Shot"
+        Description="" 
+        IsBool="" />
+        
+        <l_man_id
+        Name="Left Man ID"
+        Description="" />
+        
+		<mn_fragment_guid
+        Name="Fragment GUID"
+        Description="" 
+        GuidTag="" />
+        
+        <mn_fragment_id
+        Name="Fragment ID"
+        Description="" />
+        
+        <mn_option_index
+        Name="Option Index"
+        Description="" />
+        
+        <mn_tags
+        Name="Tags"
+        Description="" />
+        
+        <mounted
+        Name="Mounted"
+        Description="" 
+        IsBool="" />
+        
+        <player
+        Name="Player"
+        Description="" 
+        IsBool="" />
+        
+        <r_man_id
+        Name="Right Man ID"
+        Description="" />
+        
+        <timestamp
+        Name="Timestamp"
+        Description="" />
+        
+        <mn_fragment_id
+        Name=""
+        Description="" />
+        
+	</entries>
+</meta>

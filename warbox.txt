@@ -11,18 +11,15 @@ FEAT: PTF export for Table Editor: basically create a PTF folder and replicate t
 #-----------------------------------------------
 # Table Editor
 #-----------------------------------------------
-FEAT: add LocalizationAlias table def support (display the text contents of the passed ui_string, for the alias of a row)
-FEAT: add GuidAlias table def support (display suitable localization based on the passed guid, for the alias of a row)
+FEAT: add meta elements:
+LocalizationAlias
+GuidAlias
 
-FEAT: add LocalizationRef meta support (display the text contents of the passed ui_string)
-FEAT: add GuidRef meta support (display suitable localization based on the passed guid)
+TextRef // The attribute value points to a Text String, relevant file is passed in the parameters
+GuidRef // The attribute value points to a GUID, relevant file is passed in the parameters
 
-GuidAlias="item,Id,UIName"
- <table>,<guid attribute>,<attribute to use for localization lookup>
- 
+GuidTag // Tags the attribute as a 'GUID' property
+TextTag // Tags the attribute as a 'Text String' property
 
 
-<!-- Combat -->
-<entry Category="Combat"
-Name="XXX" ImGuiName="XXX" ListKey="XXX" AliasKey="XXX" RowKey="XXX" />
-
+local playerGUID = player:GetGUID(); System.LogAlways("GUID: " .. tostring(playerGUID))

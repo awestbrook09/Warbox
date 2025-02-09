@@ -14,6 +14,7 @@ using Veldrid.Sdl2;
 using Veldrid;
 using System.Xml.Linq;
 using CommunityToolkit.HighPerformance;
+using StudioCore.Interface;
 
 namespace StudioCore.Editors.TableEditor;
 
@@ -82,6 +83,27 @@ public class TableEditorScreen : EditorScreen
 
             ImGui.EndMenu();
         }
+
+        ImGui.Separator();
+
+        if (ImGui.BeginMenu("View"))
+        {
+            if (ImGui.MenuItem($"Window: Tools"))
+            {
+                CFG.Current.TableEditor_View_Window_Tools = !CFG.Current.TableEditor_View_Window_Tools;
+            }
+            UIHelper.ShowActiveStatus(CFG.Current.TableEditor_View_Window_Tools);
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem($"Properties: Display Names"))
+            {
+                CFG.Current.TableEditor_View_Properties_DisplayNames = !CFG.Current.TableEditor_View_Properties_DisplayNames;
+            }
+            UIHelper.ShowActiveStatus(CFG.Current.TableEditor_View_Properties_DisplayNames);
+
+            ImGui.EndMenu();
+        }
     }
 
     public void OnGUI(string[] initcmd)
@@ -109,7 +131,11 @@ public class TableEditorScreen : EditorScreen
 
         FileSelectionView.Display();
         TableDataView.Display();
-        TableToolsView.Display();
+
+        if (CFG.Current.TableEditor_View_Window_Tools)
+        {
+            TableToolsView.Display();
+        }
 
         ImGui.PopStyleVar();
         ImGui.PopStyleColor(1);
@@ -138,6 +164,11 @@ public class TableEditorScreen : EditorScreen
         {
             fileDir = $"{writePath}";
         }
+
+        var fileOutputDir = Path.GetDirectoryName(fileDir);
+
+        if (!Directory.Exists(fileOutputDir))
+            Directory.CreateDirectory(fileOutputDir);
 
         document.Save(fileDir);
 
