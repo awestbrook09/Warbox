@@ -47,6 +47,23 @@ public class TableDataView
         TableMeta.Setup();
     }
 
+    public SortedDictionary<string, GenericTableView> GetTableViews()
+    {
+        return TableViews;
+    }
+
+    public GenericTableView GetSelectedTableView()
+    {
+        if(TableViews.ContainsKey(EditorState.SelectedStatus.Name))
+        {
+            return TableViews[EditorState.SelectedStatus.Name];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public void Display()
     {
         if (ImGui.Begin("Rows##tableRowView"))

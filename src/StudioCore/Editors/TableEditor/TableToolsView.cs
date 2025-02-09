@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using StudioCore.Configuration;
 using StudioCore.Core.Data;
+using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Tools;
 using StudioCore.Editors.TextEditor;
 using StudioCore.Interface;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -35,37 +37,25 @@ public class TableToolsView
 
         if (ImGui.Begin("Tools##tableToolsView"))
         {
-            ImGui.BeginTabBar("toolTabs");
-
-            if (ImGui.BeginTabItem("Documentation"))
+            if (ImGui.CollapsingHeader("GUID Finder"))
             {
-                DisplayWiki();
-
-                ImGui.EndTabItem();
+                DisplayGuidFinder();
             }
 
-            if (ImGui.BeginTabItem("GUID Generator"))
+            if (ImGui.CollapsingHeader("GUID Generator"))
             {
-                DisplayGUIDGenerator();
-
-                ImGui.EndTabItem();
+                DisplayGuidGenerator();
             }
 
-            if (ImGui.BeginTabItem("Property Search"))
+            if (ImGui.CollapsingHeader("Property Search"))
             {
                 DisplayPropertySearch();
-
-                ImGui.EndTabItem();
             }
 
-            if (ImGui.BeginTabItem("Mass Edit"))
+            if (ImGui.CollapsingHeader("Mass Edit"))
             {
                 DisplayMassEdit();
-
-                ImGui.EndTabItem();
             }
-
-            ImGui.EndTabBar();
 
             ImGui.End();
         }
@@ -76,7 +66,73 @@ public class TableToolsView
 
     }
 
-    public void DisplayWiki()
+    private string guidInput = "";
+
+    private void DisplayGuidFinder()
+    {
+        var width = ImGui.GetWindowWidth();
+        var buttonSize = new Vector2(width, 24);
+        var childSectionSize = new Vector2(width, 500);
+
+        ImGui.Separator();
+        UIHelper.DisplayHeaderText("GUID Finder");
+        ImGui.Separator();
+        ImGui.Text("This tool will let you find all instances of a specified GUID and quickly navigate to them.");
+        ImGui.Text("");
+
+        ImGui.SetNextItemWidth(width);
+        ImGui.InputText("##guidInput", ref guidInput, 255);
+        UIHelper.ShowHoverTooltip("Input the GUID you wish to search for.");
+
+        if (ImGui.Button("Search", buttonSize))
+        {
+            TableGuidTools.FindGuids(guidInput);
+        }
+
+        ImGui.Separator();
+
+        ImGui.BeginChild("guidFinderResults", childSectionSize);
+
+        foreach(var res in TableGuidTools.GuidFinderResults)
+        {
+            var filename = res.File;
+            var propertyName = res.PropertyName;
+            var rowIndex = res.RowIndex;
+
+            if(ImGui.Selectable($"{filename} -> {rowIndex} -> {propertyName}"))
+            {
+                EditorCommandQueue.AddCommand($"table/select_by_index/{filename}/{rowIndex}");
+            }
+        }
+
+        ImGui.EndChild();
+    }
+
+    private string guidOutput = "";
+
+    public void DisplayGuidGenerator()
+    {
+        var width = ImGui.GetWindowWidth();
+        var buttonSize = new Vector2(width, 24);
+
+        ImGui.Separator();
+        UIHelper.DisplayHeaderText("GUID Generator");
+        ImGui.Separator();
+        ImGui.Text("This tool will generate a new GUID for usage in a table.");
+        ImGui.Text("");
+
+        ImGui.SetNextItemWidth(width);
+        ImGui.InputText("##guidOutput", ref guidOutput, 255);
+        UIHelper.ShowHoverTooltip("The GUID output.");
+
+        if (ImGui.Button("Generate", buttonSize))
+        {
+            var guid = TableGuidTools.GenerateGuidV4();
+            guidOutput = guid.ToString();
+        }
+    }
+
+    public void DisplayPropertySearch()
     {
 
     }
@@ -85,26 +141,5 @@ public class TableToolsView
     {
 
     }
-
-    public void DisplayPropertySearch()
-    {
-
-    }
-
-    private string guidOutput = "";
-
-    public void DisplayGUIDGenerator()
-    {
-        var width = ImGui.GetWindowWidth();
-        var buttonSize = new Vector2(width, 24);
-
-        ImGui.SetNextItemWidth(width);
-        ImGui.InputText("##guidOutput", ref guidOutput, 255);
-
-        if(ImGui.Button("Generate", buttonSize))
-        {
-            var guid = TableGUIDGenerator.GenerateGuidV4();
-            guidOutput = guid.ToString();
-        }
-    }
 }
+

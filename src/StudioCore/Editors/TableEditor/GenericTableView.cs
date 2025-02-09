@@ -2,6 +2,7 @@
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using StudioCore.Configuration;
+using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Actions;
 using StudioCore.Editors.TextEditor;
 using StudioCore.Interface;
@@ -37,6 +38,7 @@ public class GenericTableView
     private int rowIndex = -1;
 
     private bool selectRow = false;
+    private bool focusRow = false;
 
     private bool NoPrimaryKey = false;
 
@@ -53,6 +55,13 @@ public class GenericTableView
         RowNameKey = rowNameKey;
 
         NoPrimaryKey = noPrimaryKey;
+    }
+
+    public void SetRowSelection(string key, int index)
+    {
+        rowName = key;
+        rowIndex = index;
+        focusRow = true;
     }
 
     public void DisplayEntries()
@@ -97,6 +106,15 @@ public class GenericTableView
                 if (!TextSearchFilters.FilterTableRowEntry(entry, alias, SearchKeyText))
                 {
                     continue;
+                }
+
+                // Focus the newly selected row when set via command queue
+                if(focusRow && i == rowIndex)
+                {
+                    focusRow = false;
+                    rowName = key;
+                    rowIndex = i;
+                    ImGui.SetScrollHereY();
                 }
 
                 if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{i}", 
@@ -532,7 +550,7 @@ public class GenericTableView
                 // Go to file -> entry
                 if (ImGui.Selectable($"Go to {fileName} -> {attribute.Value}"))
                 {
-
+                    EditorCommandQueue.AddCommand($"table/select_by_id/{fileName}/{attribute.Value}");
                 }
 
                 // Enum Search

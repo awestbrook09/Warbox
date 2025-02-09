@@ -251,10 +251,80 @@ public class TableEditorScreen : EditorScreen
 
     public void EditorCommandQueue(string[] initcmd)
     {
-        // Parse select commands
-        if (initcmd != null && initcmd[0] == "select")
+        if (initcmd != null && initcmd[0] == "select_by_id")
         {
+            if (initcmd.Length > 2)
+            {
+                var fileName = initcmd[1];
+                var entryId = initcmd[2];
 
+                for (int i = 0; i < Warbox.DataHandler.Tables.Count; i++)
+                {
+                    var entry = Warbox.DataHandler.Tables.ElementAt(i);
+                    var status = entry.Key;
+                    var name = entry.Key.Name;
+
+                    if (name == fileName)
+                    {
+                        EditorState.InvalidateState();
+                        EditorState.UpdateSelection(entry);
+
+                        var elementList = EditorState.GetCurrentEntries();
+                        for (int j = 0; j < elementList.Count; j++)
+                        {
+                            var element = elementList.ElementAt(j);
+                            var key = $"{element.Name}";
+
+                            if (key == entryId)
+                            {
+                                var curTableView = TableDataView.GetSelectedTableView();
+                                if (curTableView != null)
+                                {
+                                    curTableView.SetRowSelection(key, j);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (initcmd != null && initcmd[0] == "select_by_index")
+        {
+            if (initcmd.Length > 2)
+            {
+                var fileName = initcmd[1];
+                var entryIndex = initcmd[2];
+
+                for (int i = 0; i < Warbox.DataHandler.Tables.Count; i++)
+                {
+                    var entry = Warbox.DataHandler.Tables.ElementAt(i);
+                    var status = entry.Key;
+                    var name = entry.Key.Name;
+
+                    if (name == fileName)
+                    {
+                        EditorState.InvalidateState();
+                        EditorState.UpdateSelection(entry);
+
+                        var elementList = EditorState.GetCurrentEntries();
+                        for (int j = 0; j < elementList.Count; j++)
+                        {
+                            var element = elementList.ElementAt(j);
+                            var key = $"{element.Name}";
+
+                            if ($"{j}" == entryIndex)
+                            {
+                                var curTableView = TableDataView.GetSelectedTableView();
+                                if (curTableView != null)
+                                {
+                                    curTableView.SetRowSelection(key, j);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
