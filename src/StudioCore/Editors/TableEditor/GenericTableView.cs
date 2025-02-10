@@ -34,7 +34,6 @@ public class GenericTableView
     private string AliasNameKey = "";
     private string RowNameKey = "";
 
-    private string rowName = "";
     private int rowIndex = -1;
 
     private bool selectRow = false;
@@ -59,7 +58,6 @@ public class GenericTableView
 
     public void SetRowSelection(string key, int index)
     {
-        rowName = key;
         rowIndex = index;
         focusRow = true;
     }
@@ -73,91 +71,82 @@ public class GenericTableView
 
         ImGui.SetNextItemWidth(width);
         ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref SearchKeyText, 255);
-        UIHelper.ShowHoverTooltip("Filters the list.");
+        UIHelper.ShowHoverTooltip($"Filters the list.\n\n{TextSearchFilters.SearchCommandsHint}");
 
         ImGui.Separator();
 
         ImGui.BeginChild($"{ImGuiName}Section");
 
-        for (int i = 0; i < elementList.Count + 1; i++)
+        for (int i = 0; i < elementList.Count; i++)
         {
-            if (i < elementList.Count)
+            var entry = elementList[i];
+
+            var key = $"{i}";
+            var alias = "";
+
+            if (!NoPrimaryKey)
             {
-                var entry = elementList[i];
-
-                var key = $"{i}";
-                var alias = "";
-
-                if (!NoPrimaryKey)
+                XAttribute aliasAttribute = null;
+                if (AliasNameKey != "")
                 {
-                    key = entry.Attribute(RowNameKey).Value;
-                    
-                    XAttribute aliasAttribute = null;
-                    if (AliasNameKey != "")
+                    aliasAttribute = entry.Attribute(AliasNameKey);
+                    if (aliasAttribute != null)
                     {
-                        aliasAttribute = entry.Attribute(AliasNameKey);
-                        if (aliasAttribute != null)
-                        {
-                            alias = aliasAttribute.Value;
-                        }
+                        alias = aliasAttribute.Value;
                     }
                 }
+            }
 
-                if (!TextSearchFilters.FilterTableRowEntry(entry, alias, SearchKeyText))
-                {
-                    continue;
-                }
+            if (!TextSearchFilters.FilterTableRowEntry(entry, alias, SearchKeyText))
+            {
+                continue;
+            }
 
-                // Focus the newly selected row when set via command queue
-                if(focusRow && i == rowIndex)
-                {
-                    focusRow = false;
-                    rowName = key;
-                    rowIndex = i;
-                    ImGui.SetScrollHereY();
-                }
+            // Focus the newly selected row when set via command queue
+            if(focusRow && i == rowIndex)
+            {
+                focusRow = false;
+                rowIndex = i;
+                ImGui.SetScrollHereY();
+            }
 
-                if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{i}", 
-                    key == rowName && rowIndex == i))
-                {
-                    rowName = key;
-                    rowIndex = i;
-                }
+            if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{i}", rowIndex == i))
+            {
+                rowIndex = i;
+            }
 
-                // Arrow Selection
-                if (ImGui.IsItemHovered() && selectRow)
-                {
-                    selectRow = false;
-                    rowName = key;
-                    rowIndex = i;
-                }
-                if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
-                {
-                    selectRow = true;
-                }
+            // Arrow Selection
+            if (ImGui.IsItemHovered() && selectRow)
+            {
+                selectRow = false;
+                rowIndex = i;
+            }
+            if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
+            {
+                selectRow = true;
+            }
 
-                if (alias != "")
-                {
-                    UIHelper.DisplayAlias(alias);
-                }
+            if (alias != "")
+            {
+                UIHelper.DisplayAlias(alias);
+            }
 
-                // Context
-                if ($"{key}" == rowName)
+            // Context
+            if (rowIndex == i)
+            {
+                if (ImGui.BeginPopupContextItem($"##{ImGuiName}EntryContext{i}"))
                 {
-                    if (ImGui.BeginPopupContextItem($"##{ImGuiName}EntryContext{i}"))
+                    if(ImGui.Selectable("Duplicate"))
                     {
-                        if(ImGui.Selectable("Duplicate"))
-                        {
-                            DuplicateRow();
-                        }
-
-                        if (ImGui.Selectable("Remove"))
-                        {
-                            RemoveRow();
-                        }
-
-                        ImGui.EndPopup();
+                        DuplicateRow();
                     }
+
+                    if (ImGui.Selectable("Remove"))
+                    {
+                        RemoveRow();
+                    }
+
+                    ImGui.EndPopup();
                 }
             }
         }
@@ -199,7 +188,10 @@ public class GenericTableView
                 }
             }
 
-            DisplayMissingElementOptions(entry);
+            if (!TableMeta.CheckMetaToggle(EditorState, "SuppressAdditionButtons", EditorState.SelectedStatus.Name))
+            {
+                DisplayMissingElementOptions(entry);
+            }
         }
 
         ImGui.EndChild();
@@ -550,7 +542,7 @@ public class GenericTableView
                 // Go to file -> entry
                 if (ImGui.Selectable($"Go to {fileName} -> {attribute.Value}"))
                 {
-                    EditorCommandQueue.AddCommand($"table/select_by_id/{fileName}/{attribute.Value}");
+                    EditorCommandQueue.AddCommand($"table/select/{fileName}/{attribute.Name}/{attribute.Value}");
                 }
 
                 // Enum Search

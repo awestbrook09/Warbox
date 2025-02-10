@@ -15,6 +15,7 @@ using Veldrid;
 using System.Xml.Linq;
 using CommunityToolkit.HighPerformance;
 using StudioCore.Interface;
+using System.Runtime.InteropServices;
 
 namespace StudioCore.Editors.TableEditor;
 
@@ -251,74 +252,56 @@ public class TableEditorScreen : EditorScreen
 
     public void EditorCommandQueue(string[] initcmd)
     {
-        if (initcmd != null && initcmd[0] == "select_by_id")
+        if (initcmd != null && initcmd[0] == "select")
         {
-            if (initcmd.Length > 2)
+            if (initcmd.Length > 3)
             {
                 var fileName = initcmd[1];
-                var entryId = initcmd[2];
+                var targetAttributeName = initcmd[2];
+                var targetAttributeValue = initcmd[3];
 
+                KeyValuePair<DataStatus, XDocument> targetEntry = new KeyValuePair<DataStatus, XDocument>();
+
+                // Set file selection
                 for (int i = 0; i < Warbox.DataHandler.Tables.Count; i++)
                 {
-                    var entry = Warbox.DataHandler.Tables.ElementAt(i);
-                    var status = entry.Key;
-                    var name = entry.Key.Name;
+                    targetEntry = Warbox.DataHandler.Tables.ElementAt(i);
+                    var name = targetEntry.Key.Name;
 
                     if (name == fileName)
                     {
                         EditorState.InvalidateState();
-                        EditorState.UpdateSelection(entry);
-
-                        var elementList = EditorState.GetCurrentEntries();
-                        for (int j = 0; j < elementList.Count; j++)
-                        {
-                            var element = elementList.ElementAt(j);
-                            var key = $"{element.Name}";
-
-                            if (key == entryId)
-                            {
-                                var curTableView = TableDataView.GetSelectedTableView();
-                                if (curTableView != null)
-                                {
-                                    curTableView.SetRowSelection(key, j);
-                                }
-                            }
-                        }
+                        EditorState.UpdateSelection(targetEntry);
+                        break;
                     }
                 }
-            }
-        }
 
-        if (initcmd != null && initcmd[0] == "select_by_index")
-        {
-            if (initcmd.Length > 2)
-            {
-                var fileName = initcmd[1];
-                var entryIndex = initcmd[2];
-
-                for (int i = 0; i < Warbox.DataHandler.Tables.Count; i++)
+                // Set row selection
+                if (targetEntry.Key != null)
                 {
-                    var entry = Warbox.DataHandler.Tables.ElementAt(i);
-                    var status = entry.Key;
-                    var name = entry.Key.Name;
+                    var database = targetEntry.Value.Elements();
+                    var classEntry = database.Elements();
+                    var entries = classEntry.Elements().ToList();
 
-                    if (name == fileName)
+                    for (int i = 0; i < entries.Count; i++)
                     {
-                        EditorState.InvalidateState();
-                        EditorState.UpdateSelection(entry);
+                        var entry = entries[i];
+                        var key = $"{i}";
 
-                        var elementList = EditorState.GetCurrentEntries();
-                        for (int j = 0; j < elementList.Count; j++)
+                        var attributes = entry.Attributes().ToList();
+                        foreach(var attribute in attributes)
                         {
-                            var element = elementList.ElementAt(j);
-                            var key = $"{element.Name}";
-
-                            if ($"{j}" == entryIndex)
+                            if($"{attribute.Name}" == targetAttributeName)
                             {
-                                var curTableView = TableDataView.GetSelectedTableView();
-                                if (curTableView != null)
+                                var value = attribute.Value;
+
+                                if(value == targetAttributeValue)
                                 {
-                                    curTableView.SetRowSelection(key, j);
+                                    var curTableView = TableDataView.GetSelectedTableView();
+                                    if (curTableView != null)
+                                    {
+                                        curTableView.SetRowSelection(key, i);
+                                    }
                                 }
                             }
                         }

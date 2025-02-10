@@ -74,9 +74,6 @@ public class TableToolsView
         var buttonSize = new Vector2(width, 24);
         var childSectionSize = new Vector2(width, 500);
 
-        ImGui.Separator();
-        UIHelper.DisplayHeaderText("GUID Finder");
-        ImGui.Separator();
         ImGui.Text("This tool will let you find all instances of a specified GUID and quickly navigate to them.");
         ImGui.Text("");
 
@@ -96,12 +93,13 @@ public class TableToolsView
         foreach(var res in TableGuidTools.GuidFinderResults)
         {
             var filename = res.File;
-            var propertyName = res.PropertyName;
-            var rowIndex = res.RowIndex;
+            var attributeName = res.Attribute.Name;
+            var attributeValue = res.Attribute.Value;
+            var index = res.Index;
 
-            if(ImGui.Selectable($"{filename} -> {rowIndex} -> {propertyName}"))
+            if (ImGui.Selectable($"{filename} -> {index}: {attributeName}"))
             {
-                EditorCommandQueue.AddCommand($"table/select_by_index/{filename}/{rowIndex}");
+                EditorCommandQueue.AddCommand($"table/select/{filename}/{attributeName}/{attributeValue}");
             }
         }
 
@@ -115,9 +113,6 @@ public class TableToolsView
         var width = ImGui.GetWindowWidth();
         var buttonSize = new Vector2(width, 24);
 
-        ImGui.Separator();
-        UIHelper.DisplayHeaderText("GUID Generator");
-        ImGui.Separator();
         ImGui.Text("This tool will generate a new GUID for usage in a table.");
         ImGui.Text("");
 

@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <!-- Toggles -->
+    <SuppressAdditionButtons Enable="" />
+
+    <!-- File Names -->
+    <item Name="Items" />
+    <item__alchemy Name="Items: Alchemy" />
+    <item__autotests Name="Items: Autotests" />
+    <item__aux Name="Items: Aux" />
+    <item__deprecated Name="Items: Deprecated" />
+    <item__horse Name="Items: Horse" />
+    <item__reward Name="Items: Reward" />
+    <item__rewards Name="Items: Rewards" />
+    <item__system Name="Items: System" />
+    <item__test Name="Items: Test" />
+    <item__unique Name="Items: Unique" />
+    
+    <!-- Property Headers -->
+    <headers>
+        <MeleeWeapon 
+        Name="Melee Weapon" 
+        Description="" />
+        
+        <NPCTool 
+        Name="Non-player Tool" 
+        Description="" />
+        
+        <MiscItem 
+        Name="Miscellaneous Item" 
+        Description="" />
+        
+        <Hood 
+        Name="Hood" 
+        Description="" />
+        
+        <Armor 
+        Name="Armor" 
+        Description="" />
+        
+        <MissileWeapon 
+        Name="Missile Weapon" 
+        Description="" />
+        
+        <Document 
+        Name="Document" 
+        Description="" />
+        
+        <DocumentContent 
+        Name="Document Content" 
+        Description="" />
+        
+        <Image 
+        Name="Image" 
+        Description="" />
+        
+        <Food
+        Name="Food" 
+        Description="" />
+        
+        <Poison 
+        Name="Poison" 
+        Description="" />
+        
+        <ItemAlias 
+        Name="Item Alias" 
+        Description="" />
+        
+        <CraftingMaterial 
+        Name="Crafting Material" 
+        Description="" />
+        
+        <Ammo 
+        Name="Ammunition" 
+        Description="" />
+        
+        <PickableItem 
+        Name="Pickable Item" 
+        Description="" />
+        
+        <QuickSlotContainer 
+        Name="Pouch Item" 
+        Description="" />
+        
+        <Herb 
+        Name="Herb" 
+        Description="" />
+        
+        <Helmet 
+        Name="Helmet" 
+        Description="" />
+        
+        <Die 
+        Name="Die" 
+        Description="" />
+        
+        <DiceBadge 
+        Name="Dice Badge" 
+        Description="" />
+    </headers>
+    
+    <!-- Property Meta Data -->
+	<entries>
+        <!-- Melee Weapon -->
+		<Attack 
+        Name="Attack"
+        Description="" />
+        
+		<AttackModStab 
+        Name="Attack Modifier: Stab"
+        Description="" />
+        
+		<AttackModSlash 
+        Name="Attack Modifier: Slash"
+        Description="" />
+        
+		<AttackModSmash 
+        Name="Attack Modifier: Smash"
+        Description="" />
+        
+		<Class 
+        Name="Class"
+        Description="" />
+        
+		<Defense 
+        Name="Defense"
+        Description="" />
+        
+		<MaxStatus 
+        Name="Max Status"
+        Description="" />
+        
+		<StrReq 
+        Name="Strength Requirement"
+        Description="" />
+        
+		<AgiReq 
+        Name="Agility Requirement"
+        Description="" />
+        
+		<IsBreakable 
+        Name="Is Breakable"
+        Description="" 
+        IsBool="" />
+        
+		<BrokenItemClassId 
+        Name="Broken Item Class ID"
+        Description="" 
+        GuidTag="" />
+        
+		<Visibility 
+        Name="Visibility"
+        Description="" />
+        
+		<Conspicuousness 
+        Name="Conspicuousness"
+        Description="" />
+        
+		<Charisma 
+        Name="Charisma"
+        Description="" />
+        
+		<SocialClassId 
+        Name="Social Class ID"
+        Description="" />
+        
+		<WealthLevel 
+        Name="Wealth Level"
+        Description="" />
+        
+		<MaxQuality
+        Name="Maximum Quality"
+        Description="" />
+        
+		<Clothing 
+        Name="Clothing"
+        Description="" />
+        
+		<IconId 
+        Name="Icon ID"
+        Description="" />
+        
+		<UIInfo 
+        Name="UI Info"
+        Description="" />
+        
+		<UIName 
+        Name="UI Name"
+        Description="" />
+        
+		<Weight 
+        Name="Weight"
+        Description="" />
+        
+		<FadeCoef 
+        Name="Fade Coefficient"
+        Description="" />
+        
+		<VisibilityCoef 
+        Name="Visibility Coefficient"
+        Description="" />
+        
+		<Id 
+        Name="Item ID"
+        Description="" 
+        GuidTag="" />
+        
+		<Name 
+        Name="Name"
+        Description="" />
+        
+		<Noise 
+        Name="Noise"
+        Description="" />
+        
+        <!-- NPC Tool -->
+		<ManipulationType 
+        Name="Manipulation Type"
+        Description="" />
+        
+		<AllowUnstream 
+        Name="Allow Unstream"
+        Description="" 
+        IsBool="" />
+        
+		<Type 
+        Name="Type"
+        Description="" />
+        
+		<Model 
+        Name="Model"
+        Description="" />
+        
+        <!-- Phase --> 
+		<Order 
+        Name="Order"
+        Description="" />
+        
+        <!-- Armor -->
+		<DefenseStab 
+        Name="Defense: Stab"
+        Description="" />
+        
+		<DefenseSlash 
+        Name="Defense: Slash"
+        Description="" />
+        
+		<DefenseSmash 
+        Name="Defense: Smash"
+        Description="" />
+        
+		<RPGBuffWeight 
+        Name="RPG Buff Weight"
+        Description="" />
+        
+        <!-- MissileWeapon -->
+		<Power 
+        Name="Power"
+        Description="" />
+        
+		<LimbResistance 
+        Name="Limb Resistance"
+        Description="" />
+        
+		<OldFormula 
+        Name="Use Old Formula"
+        Description="" 
+        IsBool="" />
+        
+		<SoundSwitch 
+        Name="Sound Switch"
+        Description="" />
+        
+		<FireSoundMultiplicator 
+        Name="Fire Sound Multiplier"
+        Description="" />
+        
+		<HolsterModel 
+        Name="Holster Model"
+        Description="" />
+        
+        <!-- Document -->
+		<LengthInGameHours 
+        Name="Study Duration"
+        Description="" />
+        
+		<Material 
+        Name="Material"
+        Description="" />
+        
+		<EntityScript 
+        Name="Entity Script"
+        Description="" />
+        
+        <!-- DocumentContent -->
+		<Parts 
+        Name="Parts"
+        Description="" />
+        
+		<Page 
+        Name="Page"
+        Description="" />
+        
+		<Image 
+        Name="Image"
+        Description="" />
+        
+        <!-- Food -->
+		<HealthBenefit 
+        Name="Health Benefit"
+        Description="" />
+        
+		<RefreshBenefit 
+        Name="Refresh Benefit"
+        Description="" />
+        
+		<NutritionBenefit 
+        Name="Nutrition Benefit"
+        Description="" />
+        
+		<ShortTermNutritionBenefitRatio 
+        Name="Short Term Nutrition Benefit Ratio"
+        Description="" />
+        
+		<AlcoholContent 
+        Name="Alcohol Content"
+        Description="" />
+        
+		<DecayTime 
+        Name="Decay Time"
+        Description="" />
+        
+		<BuffDefinitionId 
+        Name="Buff Definition ID"
+        Description="" />
+        
+		<UiSound 
+        Name="UI Sound"
+        Description="" />
+        
+		<IsDivisible 
+        Name="Is Divisible"
+        Description="" 
+        IsBool="" />
+        
+        <!-- Poison -->
+		<WeaponBuffDefinitionId 
+        Name="Weapon Buff Definition ID"
+        Description="" />
+        
+		<WeaponChargeCount 
+        Name="Weapon Charge Count"
+        Description="" />
+        
+		<AmmoApplyCount 
+        Name="Ammunition Application Count"
+        Description="" />
+        
+        <!--  Item Alias -->
+		<SourceItemId 
+        Name="Source Item ID"
+        Description="" />
+        
+		<IsQuestItem 
+        Name="Is Quest Item"
+        Description="" 
+        IsBool="" />
+        
+        <!-- Crafting Material -->
+		<ContainerModel 
+        Name="Container Model"
+        Description="" />
+        
+        <!-- Ammo -->
+		<AttackStab 
+        Name="Attack: Stab"
+        Description="" />
+        
+		<AttackSlash 
+        Name="Attack: Slash"
+        Description="" />
+        
+		<AttackSmash 
+        Name="Attack: Smash"
+        Description="" />
+        
+		<PowerMod 
+        Name="Power Modifier"
+        Description="" />
+        
+		<RpgWeight 
+        Name="RPG Weight"
+        Description="" />
+        
+		<InquiverModel 
+        Name="Model in Quiver"
+        Description="" />
+        
+		<InquiverMaterial 
+        Name="Material in Quiver"
+        Description="" />
+        
+		<DisplayInShop 
+        Name="Display in Shop"
+        Description="" 
+        IsBool="" />
+        
+		<ShortModel 
+        Name="Short Model"
+        Description="" />
+        
+		<LongModel 
+        Name="Long Model"
+        Description="" />
+        
+        <!-- QuickSlotContainer -->
+		<NumberOfQuickSlots 
+        Name="Pouch Slots"
+        Description="" />
+        
+        <!-- Herb -->
+		<LatinName 
+        Name="Latin Name"
+        Description="" />
+        
+		<Desc 
+        Name="Description Text"
+        Description="" />
+        
+		<Effect 
+        Name="Effect Text"
+        Description="" />
+        
+		<Occur 
+        Name="Location Text"
+        Description="" />
+        
+		<Poisonous 
+        Name="Is Poisonous"
+        Description="" 
+        IsBool="" />
+        
+		<InHerbarium 
+        Name="Is found in Herbarium"
+        Description="" 
+        IsBool="" />
+        
+		<DriedItemId 
+        Name="Dried Item ID"
+        Description="" />
+        
+        <!-- Helmet -->
+		<VisorTypeId 
+        Name="Visor Type ID"
+        Description="" />
+        
+		<SideWeights 
+        Name="Die Side Weightings"
+        Description="" />
+        
+		<SideValues
+        Name="Die Side Values"
+        Description="" />
+        
+        <!-- Dice Badge -->
+		<SubType
+        Name="Sub Type"
+        Description="" />
+        
+		<PickpocketInPouch
+        Name="Pickpocket in Pouch"
+        Description="" 
+        IsBool="" />
+	</entries>
+</meta>

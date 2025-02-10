@@ -75,10 +75,10 @@
         Name="ai_body2npc_reference_point" AliasNameKey="" RowNameKey="npc_reference_point_id" />
         
 		<entry Category="AI"
-        Name="ai_enums" AliasNameKey="" RowNameKey="name" />
+        Name="ai_enums" AliasNameKey="name" RowNameKey="name" />
         
 		<entry Category="AI"
-        Name="ai_types" AliasNameKey="" RowNameKey="Name" />
+        Name="ai_types" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
         Name="ai_variable_form" AliasNameKey="ai_variable_form_name" RowNameKey="ai_variable_form_id" />
@@ -87,7 +87,7 @@
         Name="ai_variable_sync" AliasNameKey="ai_variable_sync_name" RowNameKey="ai_variable_sync_id" />
         
 		<entry Category="AI"
-        Name="AIConceptSignal" AliasNameKey="" RowNameKey="Name" />
+        Name="AIConceptSignal" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
         Name="brain" AliasNameKey="brain_name" RowNameKey="brain_id" />
@@ -111,7 +111,7 @@
         Name="brain_sensor_type" AliasNameKey="brain_sensor_type_name" RowNameKey="brain_sensor_type_id" />
         
 		<entry Category="AI"
-        Name="brain_variable" AliasNameKey="" RowNameKey="brain_variable_name" />
+        Name="brain_variable" AliasNameKey="brain_variable_name" RowNameKey="brain_variable_name" />
         
 		<entry Category="AI"
         Name="brain2mailbox" AliasNameKey="" RowNameKey="brain_id" />
@@ -120,16 +120,16 @@
         Name="brain2subbrain" AliasNameKey="" RowNameKey="brain_id" />
         
 		<entry Category="AI"
-        Name="DecisionLabelDatabase" AliasNameKey="" RowNameKey="Name" />
+        Name="DecisionLabelDatabase" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
-        Name="DeltaMovementParamsDatabase" AliasNameKey="" RowNameKey="EntityClassName" />
+        Name="DeltaMovementParamsDatabase" AliasNameKey="EntityClassName" RowNameKey="EntityClassName" />
         
 		<entry Category="AI"
-        Name="DoorAnimSetDatabase" AliasNameKey="" RowNameKey="Name" />
+        Name="DoorAnimSetDatabase" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
-        Name="EventSet" AliasNameKey="" RowNameKey="Name" />
+        Name="EventSet" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
         Name="mailbox" AliasNameKey="mailbox_name" RowNameKey="mailbox_id" />
@@ -153,16 +153,16 @@
         Name="NPCStateActionDatabase" AliasNameKey="" RowNameKey="version" />
         
 		<entry Category="AI"
-        Name="NPCStateAnyElementPresetDatabase" AliasNameKey="" RowNameKey="Name" />
+        Name="NPCStateAnyElementPresetDatabase" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
-        Name="NPCStateStanceAnimDatabase" AliasNameKey="" RowNameKey="ActorClassName" />
+        Name="NPCStateStanceAnimDatabase" AliasNameKey="ActorClassName" RowNameKey="ActorClassName" />
         
 		<entry Category="AI"
-        Name="NPCStateUnstanceDatabase" AliasNameKey="" RowNameKey="Name" />
+        Name="NPCStateUnstanceDatabase" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
-        Name="NPCStateUnstanceTransitionDatabase" AliasNameKey="" RowNameKey="Fragment" />
+        Name="NPCStateUnstanceTransitionDatabase" AliasNameKey="Fragment" RowNameKey="Fragment" />
         
 		<entry Category="AI"
         Name="positioning_shape" AliasNameKey="positioning_shape_name" RowNameKey="positioning_shape_id" />
@@ -171,22 +171,22 @@
         Name="positioning_vertex" AliasNameKey="" RowNameKey="positioning_shape_id" />
         
 		<entry Category="AI"
-        Name="SchedulerAlias" AliasNameKey="" RowNameKey="Name" />
+        Name="SchedulerAlias" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
-        Name="ScriptContext" AliasNameKey="" RowNameKey="Name" />
+        Name="ScriptContext" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
-        Name="ScriptContextPreset" AliasNameKey="" RowNameKey="Name" />
+        Name="ScriptContextPreset" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
-        Name="ScriptParams" AliasNameKey="Comment" RowNameKey="Name" />
+        Name="ScriptParams" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
         Name="se_condition_type" AliasNameKey="se_condition_type_name" RowNameKey="se_condition_type_id" />
         
 		<entry Category="AI"
-        Name="Signature" AliasNameKey="" RowNameKey="Name" />
+        Name="Signature" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="AI"
         Name="situation" AliasNameKey="name" RowNameKey="situation_id" />
@@ -247,41 +247,41 @@
         Name="anim_fragment_events" AliasNameKey="event_name" RowNameKey="mn_fragment_id" />
         
 		<entry Category="Animation"
-        Name="FragmentIdleStateDatabase" AliasNameKey="" RowNameKey="Fragment" />
+        Name="FragmentIdleStateDatabase" AliasNameKey="Fragment" RowNameKey="Fragment" />
         
 		<entry Category="Animation"
-        Name="jump" AliasNameKey="mn_fragment_id" RowNameKey="timestamp" />
+        Name="jump" AliasNameKey="mn_tags" RowNameKey="mn_fragment_id" />
         
 		<entry Category="Animation"
-        Name="ladder" AliasNameKey="" RowNameKey="mn_fragment_id" />
+        Name="ladder" AliasNameKey="mn_tags" RowNameKey="mn_fragment_id" />
         
 		<entry Category="Animation"
-        Name="picking" AliasNameKey="" RowNameKey="mn_fragment" />
+        Name="picking" AliasNameKey="mn_frag_tag_state" RowNameKey="mn_fragment" />
         
         <!-- Character -->
 		<entry Category="Character"
-        Name="BloodMask" AliasNameKey="" RowNameKey="Name" />
+        Name="BloodMask" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="Character"
-        Name="CharacterComponent" AliasNameKey="" RowNameKey="Name" />
+        Name="CharacterComponent" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="Character"
-        Name="CharacterUberlod" AliasNameKey="" RowNameKey="Name" />
+        Name="CharacterUberlod" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="Character"
-        Name="ClothingConfig" AliasNameKey="" RowNameKey="Name" />
+        Name="ClothingConfig" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="Character"
-        Name="ClothingFeature" AliasNameKey="" RowNameKey="Name" />
+        Name="ClothingFeature" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="Character"
-        Name="ClothingHidingGroup" AliasNameKey="" RowNameKey="Name" />
+        Name="ClothingHidingGroup" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="Character"
-        Name="ClothingMaterial" AliasNameKey="" RowNameKey="Name" />
+        Name="ClothingMaterial" AliasNameKey="Name" RowNameKey="Name" />
         
 		<entry Category="Character"
-        Name="ClothingMorph" AliasNameKey="" RowNameKey="Name" />
+        Name="ClothingMorph" AliasNameKey="Name" RowNameKey="Name" />
         
         <!-- Combat -->
         <entry Category="Combat"
@@ -354,7 +354,7 @@
         Name="combat_attack_hit_statistics" AliasNameKey="" RowNameKey="" />
         
         <entry Category="Combat" NoPrimaryKey=""
-        Name="combat_attack_type" AliasNameKey="combat_attack_type_name" RowNameKey="" />
+        Name="combat_attack_type" AliasNameKey="combat_attack_type_name" RowNameKey="combat_attack_type_id" />
         
         <entry Category="Combat" NoPrimaryKey=""
         Name="combat_attack_type_tag" AliasNameKey="" RowNameKey="" />
@@ -399,7 +399,7 @@
         Name="combat_tag" AliasNameKey="combat_tag_name" RowNameKey="combat_tag_id" />
         
         <entry Category="Combat" 
-        Name="combat_weapon_combination" AliasNameKey="" RowNameKey="combat_weapon_combination_key" />
+        Name="combat_weapon_combination" AliasNameKey="combat_weapon_combination_key" RowNameKey="combat_weapon_combination_key" />
         
         <entry Category="Combat" 
         Name="combat_weapon_group" AliasNameKey="combat_weapon_group_name" RowNameKey="combat_weapon_group_id" />
@@ -426,7 +426,7 @@
         Name="CombatAnimationStep" AliasNameKey="" RowNameKey="Name" />
         
         <entry Category="Combat" NoPrimaryKey=""
-        Name="CombatCombo" AliasNameKey="" RowNameKey="" />
+        Name="CombatCombos" AliasNameKey="Id" RowNameKey="Id" />
         
         <!-- Item -->
         <entry Category="Item" 
@@ -439,7 +439,7 @@
         Name="armor_archetype2body_subpart" AliasNameKey="" RowNameKey="" />
         
         <entry Category="Item" 
-        Name="armor_surface" AliasNameKey="" RowNameKey="Name" />
+        Name="armor_surface" AliasNameKey="Name" RowNameKey="Name" />
         
         <entry Category="Item" 
         Name="armor_type" AliasNameKey="Name" RowNameKey="Id" />
@@ -502,7 +502,7 @@
         Name="food_type" AliasNameKey="food_type_name" RowNameKey="food_type_id" />
         
         <entry Category="Item" 
-        Name="InventoryPreset" AliasNameKey="" RowNameKey="Name" />
+        Name="InventoryPreset" AliasNameKey="Name" RowNameKey="Name" />
         
         <entry Category="Item" 
         Name="item" AliasNameKey="Name" RowNameKey="Id" />
@@ -511,10 +511,10 @@
         Name="item_category" AliasNameKey="item_category_name" RowNameKey="item_category_id" />
         
         <entry Category="Item" 
-        Name="item_tag" AliasNameKey="" RowNameKey="item_tag_name" />
+        Name="item_tag" AliasNameKey="item_tag_name" RowNameKey="item_tag_name" />
         
         <entry Category="Item" 
-        Name="item_ui_sound" AliasNameKey="" RowNameKey="item_ui_sound_name" />
+        Name="item_ui_sound" AliasNameKey="item_ui_sound_name" RowNameKey="item_ui_sound_name" />
         
         <entry Category="Item" 
         Name="ItemManipulationType" AliasNameKey="Tag" RowNameKey="Id" />
@@ -578,16 +578,16 @@
         Name="AlchemyRecipe" AliasNameKey="UIName" RowNameKey="RecipeId" />
         
         <entry Category="Minigame" 
-        Name="AlchemyRecipeStepType" AliasNameKey="" RowNameKey="Name" />
+        Name="AlchemyRecipeStepType" AliasNameKey="Name" RowNameKey="Name" />
         
         <entry Category="Minigame" 
-        Name="BlacksmithRecipe" AliasNameKey="" RowNameKey="Id" />
+        Name="BlacksmithRecipes" AliasNameKey="Id" RowNameKey="Id" />
         
         <entry Category="Minigame" 
-        Name="BlacksmithTemperature" AliasNameKey="" RowNameKey="Temperature" />
+        Name="BlacksmithTemperatures" AliasNameKey="Temperature" RowNameKey="Temperature" />
         
         <entry Category="Minigame" 
-        Name="BlacksmithWorkpiece" AliasNameKey="" RowNameKey="Id" />
+        Name="BlacksmithWorkpieces" AliasNameKey="Id" RowNameKey="Id" />
         
         <entry Category="Minigame" 
         Name="new_homes_bookmark_group" AliasNameKey="bookmark_group_name" RowNameKey="bookmark_group_id" />
@@ -614,7 +614,7 @@
         Name="new_homes_modifier_group" AliasNameKey="modifier_group_name" RowNameKey="modifier_group_id" />
         
         <entry Category="Minigame" 
-        Name="new_homes_modifier2modifier_effect" AliasNameKey="" RowNameKey="modifier_id" />
+        Name="new_homes_modifier2modifier_effect" AliasNameKey="" RowNameKey="  " />
         
         <entry Category="Minigame" 
         Name="new_homes_objective" AliasNameKey="objective_name" RowNameKey="objective_id" />
@@ -654,39 +654,39 @@
         
         <!-- Music -->
         <entry Category="Music" 
-        Name="blacksmith" AliasNameKey="" RowNameKey="Id" />
+        Name="blacksmith" AliasNameKey="Id" RowNameKey="Id" />
         
         <entry Category="Music" 
-        Name="music_address_keyword" AliasNameKey="" RowNameKey="Name" />
+        Name="music_address_keyword" AliasNameKey="Name" RowNameKey="Name" />
         
         <entry Category="Music" 
-        Name="music_matrix" AliasNameKey="" RowNameKey="Address" />
+        Name="music_matrix" AliasNameKey="Address" RowNameKey="Address" />
         
         <entry Category="Music" 
-        Name="music_world_quantity" AliasNameKey="" RowNameKey="Name" />
+        Name="music_world_quantity" AliasNameKey="Name" RowNameKey="Name" />
         
         <entry Category="Music" 
-        Name="music_world_state_toggle" AliasNameKey="" RowNameKey="Name" />
+        Name="music_world_state_toggle" AliasNameKey="Name" RowNameKey="Name" />
         
         <entry Category="Music" 
-        Name="PostProcessPreset" AliasNameKey="" RowNameKey="Name" />
+        Name="PostProcessPreset" AliasNameKey="Name" RowNameKey="Name" />
         
         <!-- Prefab -->
         <entry Category="Prefab" 
-        Name="prefab_phase" AliasNameKey="" RowNameKey="prefab_template_id" />
+        Name="prefab_phase" AliasNameKey="prefab_template_id" RowNameKey="prefab_template_id" />
         
         <entry Category="Prefab" 
         Name="prefab_phase_category" AliasNameKey="prefab_phase_category_name" RowNameKey="prefab_phase_category_id" />
         
         <!-- Random Event -->
         <entry Category="Random Event" 
-        Name="RandomEventOption" AliasNameKey="" RowNameKey="Name" />
+        Name="RandomEventOption" AliasNameKey="Name" RowNameKey="Name" />
         
         <entry Category="Random Event" 
-        Name="RandomEventOptionSet" AliasNameKey="Options" RowNameKey="Name" />
+        Name="RandomEventOptionSet" AliasNameKey="Name" RowNameKey="" />
         
         <entry Category="Random Event" 
-        Name="RandomEventTag" AliasNameKey="" RowNameKey="Name" />
+        Name="RandomEventTag" AliasNameKey="Name" RowNameKey="Name" />
         
         <!-- RPG -->
 		<entry Category="RPG"
@@ -696,10 +696,10 @@
         Name="angriness_enum" AliasNameKey="name" RowNameKey="angriness_enum_id" />
         
 		<entry Category="RPG"
-        Name="angriness_flag" AliasNameKey="interval" RowNameKey="name" />
+        Name="angriness_flag" AliasNameKey="name" RowNameKey="name" />
         
 		<entry Category="RPG"
-        Name="angriness_type" AliasNameKey="" RowNameKey="name" />
+        Name="angriness_type" AliasNameKey="name" RowNameKey="name" />
         
 		<entry Category="RPG"
         Name="buff" AliasNameKey="buff_name" RowNameKey="buff_id" />
@@ -717,7 +717,7 @@
         Name="buff_family" AliasNameKey="buff_family_name" RowNameKey="buff_family_id" />
         
 		<entry Category="RPG"
-        Name="buff_implementation" AliasNameKey="" RowNameKey="buff_implementation_name" />
+        Name="buff_implementation" AliasNameKey="buff_implementation_name" RowNameKey="buff_implementation_name" />
         
 		<entry Category="RPG"
         Name="buff_lifetime" AliasNameKey="buff_lifetime_name" RowNameKey="buff_lifetime_id" />
@@ -729,38 +729,38 @@
         Name="buff_ui_visibility" AliasNameKey="buff_ui_visibility_name" RowNameKey="buff_ui_visibility_id" />
         
 		<entry Category="RPG"
-        Name="combat_shout_type" AliasNameKey="" RowNameKey="combat_shout_type_name" />
+        Name="combat_shout_type" AliasNameKey="combat_shout_type_name" RowNameKey="combat_shout_type_name" />
         
 		<entry Category="RPG"
         Name="companion_type" AliasNameKey="companion_type_name" RowNameKey="companion_type_id" />
         
 		<entry Category="RPG"
-        Name="crime" AliasNameKey="ui_name" RowNameKey="label" 
+        Name="crime" AliasNameKey="label" RowNameKey="label" 
         LocalizationAlias="text_ui_soul" />
         
 		<entry Category="RPG"
         Name="dialogue_sequence_type_reward" AliasNameKey="xp_reward_mod" RowNameKey="sequence_type_id" />
         
 		<entry Category="RPG"
-        Name="document_required_skill" AliasNameKey="item_id" RowNameKey="item_id" 
+        Name="document_required_skill" AliasNameKey="" RowNameKey="item_id" 
         GuidAlias="item,Id,UIName" />
         
 		<entry Category="RPG"
-        Name="document_requirement" AliasNameKey="item_id" RowNameKey="item_id" 
+        Name="document_requirement" AliasNameKey="" RowNameKey="item_id" 
         GuidAlias="item,Id,UIName" />
         
 		<entry Category="RPG"
-        Name="document_reward" AliasNameKey="item_id" RowNameKey="item_id" 
+        Name="document_reward" AliasNameKey="" RowNameKey="item_id" 
         GuidAlias="item,Id,UIName"/>
         
 		<entry Category="RPG"
-        Name="DocumentRarity" AliasNameKey="XPMultiplier" RowNameKey="Name" />
+        Name="DocumentRarities" AliasNameKey="" RowNameKey="Name" />
         
 		<entry Category="RPG"
         Name="FactionTree" AliasNameKey="Comment" RowNameKey="Name" />
         
 		<entry Category="RPG"
-        Name="faction_label" AliasNameKey="" RowNameKey="name" />
+        Name="faction_label" AliasNameKey="name" RowNameKey="name" />
         
 		<entry Category="RPG"
         Name="game_over" AliasNameKey="game_over_name" RowNameKey="game_over_id" />
@@ -784,11 +784,11 @@
         Name="location_category" AliasNameKey="location_category_name" RowNameKey="location_category_id" />
         
 		<entry Category="RPG"
-        Name="location2perk" AliasNameKey="perk_id" RowNameKey="location_id" 
+        Name="location2perk" AliasNameKey="" RowNameKey="location_id" 
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="metarole" AliasNameKey="" RowNameKey="metarole_name" />
+        Name="metarole" AliasNameKey="metarole_name" RowNameKey="metarole_name" />
         
 		<entry Category="RPG"
         Name="money_change" AliasNameKey="change" RowNameKey="name" />
@@ -800,19 +800,19 @@
         Name="nervousness_flag" AliasNameKey="interval" RowNameKey="name" />
         
 		<entry Category="RPG"
-        Name="perk" AliasNameKey="perk_ui_name" RowNameKey="perk_id" 
+        Name="perk" AliasNameKey="perk_name" RowNameKey="perk_id" 
         LocalizationAlias="text_ui_soul" />
         
 		<entry Category="RPG"
-        Name="perk_buff" AliasNameKey="buff_id" RowNameKey="perk_id" 
+        Name="perk_buff" AliasNameKey="" RowNameKey="perk_id" 
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="perk_buff_override" AliasNameKey="target_buff_id" RowNameKey="target_buff_id" 
+        Name="perk_buff_override" AliasNameKey="" RowNameKey="target_buff_id" 
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="perk_codex" AliasNameKey="perk_id" RowNameKey="perk_id" 
+        Name="perk_codex" AliasNameKey="codex_ui_text" RowNameKey="perk_id" 
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
@@ -820,15 +820,15 @@
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="perk_companion" AliasNameKey="perk_id" RowNameKey="perk_id" 
+        Name="perk_companion" AliasNameKey="" RowNameKey="perk_id" 
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="perk_recipe" AliasNameKey="perk_id" RowNameKey="perk_id" 
+        Name="perk_recipe" AliasNameKey="" RowNameKey="perk_id" 
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="perk_rpg_param_override" AliasNameKey="perk_id" RowNameKey="rpg_param_key"  
+        Name="perk_rpg_param_override" AliasNameKey="rpg_param_key" RowNameKey="rpg_param_key"  
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
@@ -836,11 +836,11 @@
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="perk_soul_ability" AliasNameKey="perk_id" RowNameKey="perk_id" 
+        Name="perk_soul_ability" AliasNameKey="" RowNameKey="perk_id" 
         GuidAlias="perk,perk_id,perk_ui_name" />
         
 		<entry Category="RPG"
-        Name="perk_visibility" AliasNameKey="perk_visibility_name" RowNameKey="perk_visibility_id" />
+        Name="perk_visibility" AliasNameKey="" RowNameKey="perk_visibility_id" />
         
 		<entry Category="RPG"
         Name="perk2perk_exclusivity" AliasNameKey="first_perk_id" RowNameKey="first_perk_id" 
@@ -850,7 +850,7 @@
         Name="poi_type" AliasNameKey="label" RowNameKey="poi_type_id" />
         
 		<entry Category="RPG"
-        Name="poi_type2perk" AliasNameKey="poi_type_id" RowNameKey="perk_id" 
+        Name="poi_type2perk" AliasNameKey="" RowNameKey="perk_id" 
         GuidAlias="poi_type,poi_type_id,poi_type_name" />
         
 		<entry Category="RPG"
@@ -872,7 +872,7 @@
         Name="reputation_change_target" AliasNameKey="reputation_change_target_name" RowNameKey="reputation_change_target_id" />
         
 		<entry Category="RPG"
-        Name="reputation_condition" AliasNameKey="min_reputation" RowNameKey="name" />
+        Name="reputation_condition" AliasNameKey="name" RowNameKey="name" />
         
 		<entry Category="RPG"
         Name="reputation_notification" AliasNameKey="reputation_notification_name" RowNameKey="reputation_notification_id" />
@@ -881,7 +881,7 @@
         Name="rich_presence" AliasNameKey="name_string_id" RowNameKey="rich_presence_id" />
         
 		<entry Category="RPG"
-        Name="role" AliasNameKey="_role_string_name" RowNameKey="role_name" />
+        Name="role" AliasNameKey="role_name" RowNameKey="role_name" />
         
 		<entry Category="RPG"
         Name="rpg_context_tag" AliasNameKey="rpg_context_name" RowNameKey="rpg_context_id" />
@@ -893,7 +893,7 @@
         Name="rpg_damage_type" AliasNameKey="rpg_damage_type_name" RowNameKey="rpg_damage_type_id" />
         
 		<entry Category="RPG"
-        Name="rpg_param" AliasNameKey="rpg_param_value" RowNameKey="rpg_param_key" />
+        Name="rpg_param" AliasNameKey="rpg_param_key" RowNameKey="rpg_param_key" />
         
 		<entry Category="RPG"
         Name="rpg_movement_type" AliasNameKey="rpg_movement_type_name" RowNameKey="rpg_movement_type_id" />
@@ -911,7 +911,7 @@
         Name="skill_check_difficulty" AliasNameKey="skill_check_difficulty_name" RowNameKey="skill_check_difficulty_id" />
         
 		<entry Category="RPG"
-        Name="SkillLessonLevel" AliasNameKey="Price" RowNameKey="Level" />
+        Name="SkillLessonLevel" AliasNameKey="Level" RowNameKey="Level" />
         
 		<entry Category="RPG"
         Name="skill_teacher" AliasNameKey="" RowNameKey="SharedSoulGuid" />
@@ -959,14 +959,14 @@
         Name="soul_vip_class" AliasNameKey="soul_vip_class_name" RowNameKey="soul_vip_class_id" />
         
 		<entry Category="RPG"
-        Name="soul2perk" AliasNameKey="soul_id" RowNameKey="soul_id" 
+        Name="soul2perk" AliasNameKey="" RowNameKey="soul_id" 
         GuidAlias="soul,soul_id,skald_character_name" />
         
 		<entry Category="RPG"
-        Name="soul2skald_skill" AliasNameKey="skill_id" RowNameKey="soul_id" />
+        Name="soul2skald_skill" AliasNameKey="" RowNameKey="soul_id" />
         
 		<entry Category="RPG"
-        Name="soul2skald_soul_stat" AliasNameKey="skald_soul_stat_id" RowNameKey="soul_id" />
+        Name="soul2skald_soul_stat" AliasNameKey="" RowNameKey="soul_id" />
         
 		<entry Category="RPG"
         Name="SoulStateEffectContextData" AliasNameKey="StaminaRegenCooldown" RowNameKey="Id" />
@@ -981,26 +981,26 @@
         Name="stat" AliasNameKey="stat_name" RowNameKey="stat_id" />
         
 		<entry Category="RPG"
-        Name="statistic" AliasNameKey="" RowNameKey="statistic_name" />
+        Name="statistic" AliasNameKey="statistic_name" RowNameKey="statistic_name" />
         
 		<entry Category="RPG"
         Name="statistic_group" AliasNameKey="statistic_group_name" RowNameKey="statistic_group_id" />
         
 		<entry Category="RPG"
-        Name="statistic_type" AliasNameKey="" RowNameKey="statistic_type_name" />
+        Name="statistic_type" AliasNameKey="statistic_type_name" RowNameKey="statistic_type_name" />
         
 		<entry Category="RPG"
         Name="statistic_unit" AliasNameKey="statistic_unit_name" RowNameKey="statistic_unit_id" />
         
 		<entry Category="RPG"
-        Name="v_rich_presence_text" AliasNameKey="text" RowNameKey="string_name" />
+        Name="v_rich_presence_text" AliasNameKey="string_name" RowNameKey="string_name" />
         
 		<entry Category="RPG"
-        Name="xp_change" AliasNameKey="change" RowNameKey="name" />
+        Name="xp_change" AliasNameKey="name" RowNameKey="name" />
         
         <!-- Shop -->
         <entry Category="Shop" 
-        Name="Shop" AliasNameKey="" RowNameKey="shop_name" />
+        Name="shop" AliasNameKey="shop_name" RowNameKey="shop_name" />
         
         <!-- Skald -->
         <entry Category="Skald" 

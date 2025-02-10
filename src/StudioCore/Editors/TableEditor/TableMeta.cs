@@ -50,14 +50,88 @@ public static class TableMeta
         return null;
     }
 
+    private static string GetDocumentName(string elementName)
+    {
+        var documentName = elementName;
+
+        // Special handling for some unique XMLs
+        switch (elementName)
+        {
+            case "MeleeWeapon":
+            case "NPCTool":
+            case "MiscItem":
+            case "Hood":
+            case "Armor":
+            case "MissileWeapon":
+            case "Document":
+            case "DocumentContent":
+            case "Image":
+            case "Food":
+            case "Poison":
+            case "ItemAlias":
+            case "CraftingMaterial":
+            case "Ammo":
+            case "PickableItem":
+            case "Herb":
+            case "Helmet":
+            case "Die":
+            case "DiceBadge":
+                documentName = "item";
+                break;
+        }
+
+        return documentName;
+    }
+
+    public static string GetFileTitle(TableEditorState editorState, string metaField, string elementName)
+    {
+        var displayedString = elementName;
+        var documentName = GetDocumentName(elementName);
+
+        var metaDoc = GetMetaDocument(editorState, documentName);
+        if (metaDoc != null)
+        {
+            List<XElement> elements = metaDoc.Descendants(elementName).ToList();
+
+            foreach (var entry in elements)
+            {
+                if (entry.Attribute(metaField) != null)
+                {
+                    return entry.Attribute(metaField).Value;
+                }
+            }
+        }
+
+        return displayedString;
+    }
+
+    public static bool CheckMetaToggle(TableEditorState editorState, string metaField, string elementName)
+    {
+        var isValid = false;
+        var documentName = GetDocumentName(elementName);
+
+        var metaDoc = GetMetaDocument(editorState, documentName);
+        if (metaDoc != null)
+        {
+            var metaElement = metaDoc.Descendants(metaField);
+            if (metaElement != null)
+            {
+                isValid = true;
+            }
+        }
+
+        return isValid;
+    }
+
     /// <summary>
     /// Returns the header pretty name and description
     /// </summary>
     public static string GetElementNameValue(TableEditorState editorState, string metaField, string elementName, bool useFullName = false)
     {
         var displayedString = elementName;
+        var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, elementName, useFullName);
+        var metaDoc = GetMetaDocument(editorState, documentName, useFullName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{elementName}").ToList();
@@ -80,8 +154,9 @@ public static class TableMeta
     public static string GetAttributeNameValue(TableEditorState editorState, string metaField, string elementName, string attributeName)
     {
         var displayedString = attributeName;
+        var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, elementName);
+        var metaDoc = GetMetaDocument(editorState, documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -103,7 +178,9 @@ public static class TableMeta
     /// </summary>
     public static bool IsBoolAttribute(TableEditorState editorState, string metaField, string elementName, string attributeName)
     {
-        var metaDoc = GetMetaDocument(editorState, elementName);
+        var documentName = GetDocumentName(elementName);
+
+        var metaDoc = GetMetaDocument(editorState, documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -128,8 +205,9 @@ public static class TableMeta
     {
         var elementName = entry.Name.ToString();
         var attributeName = attribute.Name.ToString();
+        var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, elementName);
+        var metaDoc = GetMetaDocument(editorState, documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -157,8 +235,9 @@ public static class TableMeta
     public static List<XElement> GetAttributeList(TableEditorState editorState, XDocument document, XElement entry)
     {
         var elementName = entry.Name.ToString();
+        var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, elementName);
+        var metaDoc = GetMetaDocument(editorState, documentName);
         if (metaDoc != null)
         {
             return metaDoc.Descendants($"entries").Descendants().ToList();

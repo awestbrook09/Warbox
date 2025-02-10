@@ -54,8 +54,7 @@ public static class TableGuidTools
             foreach (var res in results)
             {
                 var attribute = res.Attribute;
-                var index = res.ElementIndex;
-                var guidResult = new GuidSearchResult(status.Name, index, attribute.Name.ToString());
+                var guidResult = new GuidSearchResult(status.Name, attribute, res.ElementIndex);
 
                 GuidFinderResults.Add(guidResult);
             }
@@ -81,13 +80,13 @@ public static class TableGuidTools
 public class GuidSearchResult
 {
     public string File { get; set; }
-    public int RowIndex { get; set; }
-    public string PropertyName { get; set; }
+    public XAttribute Attribute { get; set; }
+    public int Index { get; set; }
 
-    public GuidSearchResult(string file, int rowIndex, string propertyName)
+    public GuidSearchResult(string file, XAttribute attribute, int index)
     {
         File = file;
-        RowIndex = rowIndex;
-        PropertyName = propertyName;    
+        Attribute = attribute;  
+        Index = index;
     }
 }
