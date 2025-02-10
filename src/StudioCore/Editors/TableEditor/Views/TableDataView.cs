@@ -64,6 +64,11 @@ public class TableDataView
         TableMeta.Setup();
     }
 
+    public SortedDictionary<string, GenericTableView> GetTableViews()
+    {
+        return TableViews;
+    }
+
     public void RefreshTableViews()
     {
         foreach (var entry in TableViews)

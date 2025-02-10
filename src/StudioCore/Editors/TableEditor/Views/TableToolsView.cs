@@ -88,16 +88,19 @@ public class TableToolsView
 
         ImGui.BeginChild("guidFinderResults", childSectionSize);
 
-        foreach (var res in TableGuidTools.GuidFinderResults)
+        for (int i = 0; i < TableGuidTools.GuidFinderResults.Count; i++)
         {
-            var filename = res.File;
-            var attributeName = res.Attribute.Name;
-            var attributeValue = res.Attribute.Value;
-            var index = res.Index;
+            var result = TableGuidTools.GuidFinderResults[i];
+            var filename = result.File;
+            var rowIndex = result.RowIndex;
+            var elementName = result.Element.Name;
+            var descendantName = result.Descendant.Name;
+            var attributeName = result.Attribute.Name;
+            var attributeValue = result.Attribute.Value;
 
-            if (ImGui.Selectable($"{filename} -> {index}: {attributeName}"))
+            if (ImGui.Selectable($"{filename} [{rowIndex}] -> {elementName} -> {descendantName} -> {attributeName}##resultEntry{i}"))
             {
-                EditorCommandQueue.AddCommand($"table/select/{filename}/{attributeName}/{attributeValue}");
+                EditorCommandQueue.AddCommand($"table/select/{filename}/{attributeName}/{attributeValue}/{rowIndex}");
             }
         }
 

@@ -1,0 +1,30 @@
+ocal function generate_guid_v4()
+    local random = math.random
+    local guid_bytes = {}
+
+    -- Generate 16 random bytes
+    for i = 1, 16 do
+        guid_bytes[i] = random(0, 255)
+    end
+
+    -- Set the version (4) in the 7th byte
+    guid_bytes[7] = (guid_bytes[7] & 0x0F) | 0x40
+
+    -- Set the variant (RFC 4122) in the 8th byte
+    guid_bytes[8] = (guid_bytes[8] & 0x3F) | 0x80
+
+    -- Convert bytes to hex string representation
+    local function byte_to_hex(byte)
+        return string.format("%02x", byte)
+    end
+
+    return string.format("%s-%s-%s-%s-%s",
+        byte_to_hex(guid_bytes[1]) .. byte_to_hex(guid_bytes[2]) .. byte_to_hex(guid_bytes[3]) .. byte_to_hex(guid_bytes[4]),
+        byte_to_hex(guid_bytes[5]) .. byte_to_hex(guid_bytes[6]),
+        byte_to_hex(guid_bytes[7]) .. byte_to_hex(guid_bytes[8]),
+        byte_to_hex(guid_bytes[9]) .. byte_to_hex(guid_bytes[10]),
+        byte_to_hex(guid_bytes[11]) .. byte_to_hex(guid_bytes[12]) .. byte_to_hex(guid_bytes[13]) .. byte_to_hex(guid_bytes[14]) .. byte_to_hex(guid_bytes[15]) .. byte_to_hex(guid_bytes[16])
+    )
+end
+
+print(generate_guid_v4())

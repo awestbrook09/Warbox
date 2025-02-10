@@ -27,6 +27,8 @@ public class TableFileSelectionView
 
     private bool SelectNextTable = false;
 
+    private bool focusRow = false;
+
     public TableFileSelectionView(TableEditorScreen screen)
     {
         Screen = screen;
@@ -92,6 +94,15 @@ public class TableFileSelectionView
             displayName = TableMeta.GetFileTitle("Name", $"{name}");
         }
 
+        // Focus the newly selected row when set via command queue
+        if (focusRow && SelectedStatus == status)
+        {
+            focusRow = false;
+            SelectedStatus = status;
+            SelectedDocument = entry.Value;
+            ImGui.SetScrollHereY();
+        }
+
         if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", SelectedStatus == status))
         {
             SetSelection(entry);
@@ -124,6 +135,7 @@ public class TableFileSelectionView
     {
         SelectedStatus = entry.Key;
         SelectedDocument = entry.Value;
+        focusRow = true;
     }
 
     public string GetSelectedDocumentName()

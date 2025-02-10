@@ -216,11 +216,12 @@ public class TableEditorScreen : EditorScreen
     {
         if (initcmd != null && initcmd[0] == "select")
         {
-            if (initcmd.Length > 3)
+            if (initcmd.Length > 4)
             {
                 var fileName = initcmd[1];
                 var targetAttributeName = initcmd[2];
                 var targetAttributeValue = initcmd[3];
+                var targetIndex = initcmd[4];
 
                 KeyValuePair<DataStatus, XDocument> targetEntry = new KeyValuePair<DataStatus, XDocument>();
 
@@ -246,27 +247,43 @@ public class TableEditorScreen : EditorScreen
 
                     for (int i = 0; i < entries.Count; i++)
                     {
-                        var entry = entries[i];
-                        var key = $"{i}";
-
-                        var attributes = entry.Attributes().ToList();
-                        foreach(var attribute in attributes)
+                        if ($"{i}" == targetIndex)
                         {
-                            if($"{attribute.Name}" == targetAttributeName)
-                            {
-                                var value = attribute.Value;
-
-                                if(value == targetAttributeValue)
-                                {
-                                    var curTableView = TableDataView.GetSelectedTableView();
-                                    if (curTableView != null)
-                                    {
-                                        curTableView.SetRowSelection(i);
-                                    }
-                                }
-                            }
+                            var entry = entries[i];
+                            TraverseAndSearch(entry, targetAttributeName, targetAttributeValue, i);
+                        }
+                        // Select the first if no row index is given
+                        else if(targetIndex == "-1")
+                        {
+                            var entry = entries[i];
+                            TraverseAndSearch(entry, targetAttributeName, targetAttributeValue, i);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private void TraverseAndSearch(XElement entry, string targetAttributeName, string targetAttributeValue, int index)
+    {
+        SearchAttributes(entry, targetAttributeName, targetAttributeValue, index);
+
+        foreach (var child in entry.Elements())
+        {
+            TraverseAndSearch(child, targetAttributeName, targetAttributeValue, index);
+        }
+    }
+
+    private void SearchAttributes(XElement entry, string targetAttributeName, string targetAttributeValue, int index)
+    {
+        foreach (var attribute in entry.Attributes())
+        {
+            if ($"{attribute.Name}" == targetAttributeName && attribute.Value == targetAttributeValue)
+            {
+                var curTableView = TableDataView.GetSelectedTableView();
+                if (curTableView != null)
+                {
+                    curTableView.SetRowSelection(index);
                 }
             }
         }

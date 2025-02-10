@@ -735,23 +735,19 @@
         Name="companion_type" AliasNameKey="companion_type_name" RowNameKey="companion_type_id" />
         
 		<entry Category="RPG"
-        Name="crime" AliasNameKey="label" RowNameKey="label" 
-        LocalizationAlias="text_ui_soul" />
+        Name="crime" AliasNameKey="label" RowNameKey="label" />
         
 		<entry Category="RPG"
         Name="dialogue_sequence_type_reward" AliasNameKey="xp_reward_mod" RowNameKey="sequence_type_id" />
         
 		<entry Category="RPG"
-        Name="document_required_skill" AliasNameKey="" RowNameKey="item_id" 
-        GuidAlias="item,Id,UIName" />
+        Name="document_required_skill" AliasNameKey="" RowNameKey="item_id" />
         
 		<entry Category="RPG"
-        Name="document_requirement" AliasNameKey="" RowNameKey="item_id" 
-        GuidAlias="item,Id,UIName" />
+        Name="document_requirement" AliasNameKey="" RowNameKey="item_id"  />
         
 		<entry Category="RPG"
-        Name="document_reward" AliasNameKey="" RowNameKey="item_id" 
-        GuidAlias="item,Id,UIName"/>
+        Name="document_reward" AliasNameKey="" RowNameKey="item_id" />
         
 		<entry Category="RPG"
         Name="DocumentRarities" AliasNameKey="" RowNameKey="Name" />
@@ -784,8 +780,7 @@
         Name="location_category" AliasNameKey="location_category_name" RowNameKey="location_category_id" />
         
 		<entry Category="RPG"
-        Name="location2perk" AliasNameKey="" RowNameKey="location_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="location2perk" AliasNameKey="" RowNameKey="location_id"  />
         
 		<entry Category="RPG"
         Name="metarole" AliasNameKey="metarole_name" RowNameKey="metarole_name" />
@@ -800,58 +795,46 @@
         Name="nervousness_flag" AliasNameKey="interval" RowNameKey="name" />
         
 		<entry Category="RPG"
-        Name="perk" AliasNameKey="perk_name" RowNameKey="perk_id" 
-        LocalizationAlias="text_ui_soul" />
+        Name="perk" AliasNameKey="perk_name" RowNameKey="perk_id" />
         
 		<entry Category="RPG"
-        Name="perk_buff" AliasNameKey="" RowNameKey="perk_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_buff" AliasNameKey="" RowNameKey="perk_id" />
         
 		<entry Category="RPG"
-        Name="perk_buff_override" AliasNameKey="" RowNameKey="target_buff_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_buff_override" AliasNameKey="" RowNameKey="target_buff_id" />
         
 		<entry Category="RPG"
-        Name="perk_codex" AliasNameKey="codex_ui_text" RowNameKey="perk_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_codex" AliasNameKey="codex_ui_text" RowNameKey="perk_id" />
         
 		<entry Category="RPG"
-        Name="perk_combat_technique" AliasNameKey="" RowNameKey="perk_id"
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_combat_technique" AliasNameKey="" RowNameKey="perk_id" />
         
 		<entry Category="RPG"
-        Name="perk_companion" AliasNameKey="" RowNameKey="perk_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_companion" AliasNameKey="" RowNameKey="perk_id" />
         
 		<entry Category="RPG"
-        Name="perk_recipe" AliasNameKey="" RowNameKey="perk_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_recipe" AliasNameKey="" RowNameKey="perk_id"  />
         
 		<entry Category="RPG"
-        Name="perk_rpg_param_override" AliasNameKey="rpg_param_key" RowNameKey="rpg_param_key"  
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_rpg_param_override" AliasNameKey="rpg_param_key" RowNameKey="rpg_param_key"   />
         
 		<entry Category="RPG"
-        Name="perk_script" AliasNameKey="perk_editor_name" RowNameKey="perk_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_script" AliasNameKey="perk_editor_name" RowNameKey="perk_id" />
         
 		<entry Category="RPG"
-        Name="perk_soul_ability" AliasNameKey="" RowNameKey="perk_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk_soul_ability" AliasNameKey="" RowNameKey="perk_id"  />
         
 		<entry Category="RPG"
         Name="perk_visibility" AliasNameKey="" RowNameKey="perk_visibility_id" />
         
 		<entry Category="RPG"
-        Name="perk2perk_exclusivity" AliasNameKey="first_perk_id" RowNameKey="first_perk_id" 
-        GuidAlias="perk,perk_id,perk_ui_name" />
+        Name="perk2perk_exclusivity" AliasNameKey="first_perk_id" RowNameKey="first_perk_id" />
         
 		<entry Category="RPG"
         Name="poi_type" AliasNameKey="label" RowNameKey="poi_type_id" />
         
 		<entry Category="RPG"
-        Name="poi_type2perk" AliasNameKey="" RowNameKey="perk_id" 
-        GuidAlias="poi_type,poi_type_id,poi_type_name" />
+        Name="poi_type2perk" AliasNameKey="" RowNameKey="perk_id" />
         
 		<entry Category="RPG"
         Name="race" AliasNameKey="race_name" RowNameKey="race_id" />
@@ -959,8 +942,7 @@
         Name="soul_vip_class" AliasNameKey="soul_vip_class_name" RowNameKey="soul_vip_class_id" />
         
 		<entry Category="RPG"
-        Name="soul2perk" AliasNameKey="" RowNameKey="soul_id" 
-        GuidAlias="soul,soul_id,skald_character_name" />
+        Name="soul2perk" AliasNameKey="" RowNameKey="soul_id" />
         
 		<entry Category="RPG"
         Name="soul2skald_skill" AliasNameKey="" RowNameKey="soul_id" />

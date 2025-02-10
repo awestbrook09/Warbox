@@ -19,8 +19,8 @@ public class GenericTableView
 {
     private TableEditorScreen Screen;
 
-    private DataStatus ViewStatus;
-    private XDocument ViewDocument;
+    public DataStatus ViewStatus;
+    public XDocument ViewDocument;
 
     private string SearchKeyText = "";
     private string SearchValueText = "";
@@ -571,7 +571,7 @@ public class GenericTableView
                 // Go to file -> entry
                 if (ImGui.Selectable($"Go to {fileName} -> {attribute.Value}"))
                 {
-                    EditorCommandQueue.AddCommand($"table/select/{fileName}/{attribute.Name}/{attribute.Value}");
+                    EditorCommandQueue.AddCommand($"table/select/{fileName}/{attribute.Name}/{attribute.Value}/-1");
                 }
 
                 // Enum Search
