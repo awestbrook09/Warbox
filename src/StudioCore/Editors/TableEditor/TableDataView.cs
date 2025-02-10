@@ -52,6 +52,14 @@ public class TableDataView
         return TableViews;
     }
 
+    public void RefreshTableViews()
+    {
+        foreach(var entry in TableViews)
+        {
+            entry.Value.Refresh();
+        }
+    }
+
     public GenericTableView GetSelectedTableView()
     {
         if(TableViews.ContainsKey(EditorState.SelectedStatus.Name))

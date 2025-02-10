@@ -21,22 +21,3 @@ GuidRef // The attribute value points to a GUID, relevant file is passed in the 
 GuidTag // Tags the attribute as a 'GUID' property
 TextTag // Tags the attribute as a 'Text String' property
 
-for (int j = 0; j < elementList.Count; j++)
-{
-    var primaryElement = elementList[j];
-    var primaryAttribute = primaryElement.Attribute(attributeName);
-
-    if (primaryAttribute != null)
-    {
-        var key = primaryAttribute.Value;
-
-        if (primaryAttribute.Value == attributeValue)
-        {
-            var curTableView = TableDataView.GetSelectedTableView();
-            if (curTableView != null)
-            {
-                curTableView.SetRowSelection(key, j);
-            }
-        }
-    }
-}

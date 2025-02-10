@@ -2,6 +2,7 @@
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using StudioCore.Configuration;
+using StudioCore.Core.Data;
 using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Actions;
 using StudioCore.Editors.TextEditor;
@@ -35,7 +36,7 @@ public class GenericTableView
     private string AliasNameKey = "";
     private string RowNameKey = "";
 
-    private int rowIndex = -1;
+    private int CurrentRowIndex = -1;
 
     private bool selectRow = false;
     private bool focusRow = false;
@@ -43,6 +44,9 @@ public class GenericTableView
     private bool NoPrimaryKey = false;
 
     private int childDepth = 0;
+
+    private bool SetupAliasOverrides = false;
+    private Dictionary<int, string> AliasOverrides = new Dictionary<int, string>();
 
     public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, string rowNameKey, bool noPrimaryKey)
     {
@@ -57,18 +61,22 @@ public class GenericTableView
         NoPrimaryKey = noPrimaryKey;
     }
 
-    public void SetRowSelection(string key, int index)
-    {
-        rowIndex = index;
-        focusRow = true;
-    }
-
+    /// <summary>
+    /// Handles the top-level display of the row selection window
+    /// </summary>
     public void DisplayEntries()
     {
         var width = ImGui.GetWindowWidth();
 
+        var currentDocumentStatus = EditorState.SelectedStatus;
         var currentDocument = EditorState.SelectedDocument;
         var elementList = EditorState.GetCurrentEntries();
+
+        if(!SetupAliasOverrides)
+        {
+            SetupAliasOverrides = true;
+            ProcessAliasOverrides(currentDocumentStatus, currentDocument, elementList);
+        }
 
         ImGui.SetNextItemWidth(width);
         ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref SearchKeyText, 255);
@@ -96,6 +104,11 @@ public class GenericTableView
                         alias = aliasAttribute.Value;
                     }
                 }
+
+                if (AliasOverrides.ContainsKey(i))
+                {
+                    alias = AliasOverrides[i];
+                }
             }
 
             if (!TextSearchFilters.FilterTableRowEntry(entry, alias, SearchKeyText))
@@ -104,23 +117,23 @@ public class GenericTableView
             }
 
             // Focus the newly selected row when set via command queue
-            if(focusRow && i == rowIndex)
+            if(focusRow && i == CurrentRowIndex)
             {
                 focusRow = false;
-                rowIndex = i;
+                CurrentRowIndex = i;
                 ImGui.SetScrollHereY();
             }
 
-            if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{i}", rowIndex == i))
+            if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{i}", CurrentRowIndex == i))
             {
-                rowIndex = i;
+                CurrentRowIndex = i;
             }
 
             // Arrow Selection
             if (ImGui.IsItemHovered() && selectRow)
             {
                 selectRow = false;
-                rowIndex = i;
+                CurrentRowIndex = i;
             }
             if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
             {
@@ -133,7 +146,7 @@ public class GenericTableView
             }
 
             // Context
-            if (rowIndex == i)
+            if (CurrentRowIndex == i)
             {
                 if (ImGui.BeginPopupContextItem($"##{ImGuiName}EntryContext{i}"))
                 {
@@ -155,6 +168,37 @@ public class GenericTableView
         ImGui.EndChild();
     }
 
+    /// <summary>
+    /// Refreshes the current state of the view
+    /// </summary>
+    public void Refresh()
+    {
+        var currentDocumentStatus = EditorState.SelectedStatus;
+        var currentDocument = EditorState.SelectedDocument;
+
+        if (currentDocumentStatus == null)
+            return;
+
+        if (currentDocument == null)
+            return;
+
+        var elementList = EditorState.GetCurrentEntries();
+
+        ProcessAliasOverrides(currentDocumentStatus, currentDocument, elementList);
+    }
+
+    /// <summary>
+    /// Sets the current row selection
+    /// </summary>
+    public void SetRowSelection(int index)
+    {
+        CurrentRowIndex = index;
+        focusRow = true;
+    }
+
+    /// <summary>
+    /// Handles the top-level display of the properties window
+    /// </summary>
     public void DisplayProperties()
     {
         var width = ImGui.GetWindowWidth();
@@ -168,9 +212,9 @@ public class GenericTableView
         var currentDocument = EditorState.SelectedDocument;
         var elementList = EditorState.GetCurrentEntries();
 
-        if (rowIndex != -1 && elementList.Count > rowIndex)
+        if (CurrentRowIndex != -1 && elementList.Count > CurrentRowIndex)
         {
-            var entry = elementList.ElementAt(rowIndex);
+            var entry = elementList.ElementAt(CurrentRowIndex);
 
             if (entry != null)
             {
@@ -183,7 +227,7 @@ public class GenericTableView
                     ImGui.TableSetupColumn("Inputs", ImGuiTableColumnFlags.WidthFixed);
 
                     childDepth = 0;
-                    HandleElementEntry(currentDocument, entry, "root");
+                    HandleElementEntry(currentDocument, entry, "root", CurrentRowIndex);
 
                     ImGui.EndTable();
                 }
@@ -198,6 +242,9 @@ public class GenericTableView
         ImGui.EndChild();
     }
 
+    /// <summary>
+    /// Handle the shortcuts for this view
+    /// </summary>
     public void Shortcuts()
     {
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DuplicateSelectedEntry))
@@ -211,77 +258,12 @@ public class GenericTableView
         }
     }
 
-    public void DuplicateRow()
+    /// <summary>
+    /// Handle the overall display of the selected entry in the properties window
+    /// </summary>
+    private void HandleElementEntry(XDocument currentDocument, XElement entry, string imguiElementName, int rowIndex)
     {
-        var elementList = EditorState.GetCurrentEntries();
-        var action = new AddTableRow(elementList, rowIndex);
-        Screen.EditorActionManager.ExecuteAction(action);
-    }
-
-    public void RemoveRow()
-    {
-        var elementList = EditorState.GetCurrentEntries();
-        var action = new RemoveTableRow(elementList, rowIndex);
-        Screen.EditorActionManager.ExecuteAction(action);
-    }
-
-    private void DisplayMissingElementOptions(XElement entry)
-    {
-        var currentDocument = EditorState.SelectedDocument;
-        var allAttributes = TableMeta.GetAttributeList(EditorState, currentDocument, entry);
-        var curAttributes = entry.Attributes();
-
-        var missingAttributes = new List<XElement>();
-
-        foreach (var aAttribute in allAttributes)
-        {
-            var isMissing = true;
-
-            foreach (var cAttribute in curAttributes)
-            {
-                if(aAttribute.Name == cAttribute.Name)
-                {
-                    isMissing = false;
-                    break;
-                }
-            }
-
-            if(isMissing)
-            {
-                missingAttributes.Add(aAttribute);
-            }
-        }
-
-        foreach(var attrEntry in missingAttributes)
-        {
-            ImGui.AlignTextToFramePadding();
-            if(ImGui.Button($"{ForkAwesome.Plus}"))
-            {
-
-            }
-            UIHelper.ShowHoverTooltip("Add this property as it is not currently present.");
-
-            ImGui.SameLine();
-
-            var displayName = attrEntry.Name.ToString();
-
-            if (CFG.Current.TableEditor_View_Properties_DisplayNames)
-            {
-                displayName = TableMeta.GetAttributeNameValue(
-                EditorState,
-                "Name",
-                $"{entry.Name}",
-                $"{attrEntry.Name}");
-            }
-
-            ImGui.AlignTextToFramePadding();
-            UIHelper.DisplayActionText($"{displayName}");
-        }
-    }
-
-    private void HandleElementEntry(XDocument currentDocument, XElement entry, string imguiElementName)
-    {
-        DisplayHeaderRow(currentDocument, entry, imguiElementName);
+        DisplayHeaderRow(currentDocument, entry, imguiElementName, rowIndex);
 
         var attributes = entry.Attributes().ToList();
 
@@ -289,10 +271,10 @@ public class GenericTableView
         {
             var attribute = attributes[i];
 
-            DisplayAttributeRow(currentDocument, entry, attribute, i, imguiElementName);
-            if(TableMeta.HasMetaData(EditorState, currentDocument, entry, attribute, i, imguiElementName))
+            DisplayAttributeRow(currentDocument, entry, attribute, i, imguiElementName, rowIndex);
+            if(TableMeta.HasMetaData(EditorState, currentDocument, entry, attribute, i, imguiElementName, rowIndex))
             {
-                DisplayMetaDataRow(currentDocument, entry, attribute, i, imguiElementName);
+                DisplayMetaDataRow(currentDocument, entry, attribute, i, imguiElementName, rowIndex);
             }
         }
 
@@ -301,12 +283,15 @@ public class GenericTableView
         foreach (var child in entry.Elements().ToList())
         {
             ImGui.Indent();
-            HandleElementEntry(currentDocument, child, child.Name.ToString());
+            HandleElementEntry(currentDocument, child, child.Name.ToString(), rowIndex);
             ImGui.Unindent();
         }
     }
 
-    private void DisplayHeaderRow(XDocument currentDocument, XElement entry, string imguiElementName)
+    /// <summary>
+    /// Handle the display of the header rows
+    /// </summary>
+    private void DisplayHeaderRow(XDocument currentDocument, XElement entry, string imguiElementName, int rowIndex)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -355,7 +340,10 @@ public class GenericTableView
         }
     }
 
-    private void DisplayAttributeRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string imguiElementName)
+    /// <summary>
+    /// Handle the display of the attribute rows
+    /// </summary>
+    private void DisplayAttributeRow(XDocument currentDocument, XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -418,7 +406,7 @@ public class GenericTableView
                     if (oldValue == "true")
                         tBool = true;
 
-                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{i}{imguiElementName}{childDepth}", ref tBool))
+                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{attributeIndex}{imguiElementName}{childDepth}", ref tBool))
                     {
                         isChanged = true;
                     }
@@ -442,7 +430,7 @@ public class GenericTableView
                 // Handling for string type
                 else
                 {
-                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{i}{imguiElementName}{childDepth}", ref tValue, 255))
+                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{attributeIndex}{imguiElementName}{childDepth}", ref tValue, 255))
                     {
                         isChanged = true;
                     }
@@ -459,7 +447,69 @@ public class GenericTableView
         }
     }
 
-    private void DisplayMetaDataRow(XDocument currentDocument, XElement entry, XAttribute attribute, int i, string imguiElementName)
+
+    /// <summary>
+    /// Handle the display of missing property addition buttons
+    /// </summary>
+    private void DisplayMissingElementOptions(XElement entry)
+    {
+        var currentDocument = EditorState.SelectedDocument;
+        var allAttributes = TableMeta.GetAttributeList(EditorState, currentDocument, entry);
+        var curAttributes = entry.Attributes();
+
+        var missingAttributes = new List<XElement>();
+
+        foreach (var aAttribute in allAttributes)
+        {
+            var isMissing = true;
+
+            foreach (var cAttribute in curAttributes)
+            {
+                if (aAttribute.Name == cAttribute.Name)
+                {
+                    isMissing = false;
+                    break;
+                }
+            }
+
+            if (isMissing)
+            {
+                missingAttributes.Add(aAttribute);
+            }
+        }
+
+        foreach (var attrEntry in missingAttributes)
+        {
+            ImGui.AlignTextToFramePadding();
+            if (ImGui.Button($"{ForkAwesome.Plus}"))
+            {
+
+            }
+            UIHelper.ShowHoverTooltip("Add this property as it is not currently present.");
+
+            ImGui.SameLine();
+
+            var displayName = attrEntry.Name.ToString();
+
+            if (CFG.Current.TableEditor_View_Properties_DisplayNames)
+            {
+                displayName = TableMeta.GetAttributeNameValue(
+                EditorState,
+                "Name",
+                $"{entry.Name}",
+                $"{attrEntry.Name}");
+            }
+
+            ImGui.AlignTextToFramePadding();
+            UIHelper.DisplayActionText($"{displayName}");
+        }
+    }
+
+
+    /// <summary>
+    /// Handle the display of the meta text rows
+    /// </summary>
+    private void DisplayMetaDataRow(XDocument currentDocument, XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -471,7 +521,7 @@ public class GenericTableView
                 var attributeName = attribute.Name.ToString();
                 var documentName = TableMeta.GetDocumentName(elementName);
 
-                var metaDoc = TableMeta.GetMetaDocument(EditorState, documentName);
+                var metaDoc = TableMeta.GetMetaDocument(documentName);
                 List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
 
                 ImGui.TableNextRow();
@@ -490,15 +540,15 @@ public class GenericTableView
                 {
                     if (element.Attribute("FileEnum") != null)
                     {
-                        DisplayFileEnum(entry, attribute, element, i, imguiElementName);
+                        DisplayFileEnum(entry, attribute, element, attributeIndex, imguiElementName, rowIndex);
                     }
                     if (element.Attribute("TextRef") != null)
                     {
-                        DisplayTextRef(entry, attribute, element, i, imguiElementName);
+                        DisplayTextRef(entry, attribute, element, attributeIndex, imguiElementName, rowIndex);
                     }
                     if (element.Attribute("GuidRef") != null)
                     {
-                        DisplayGuidRef(entry, attribute, element, i, imguiElementName);
+                        DisplayGuidRef(entry, attribute, element, attributeIndex, imguiElementName, rowIndex);
                     }
                 }
             }
@@ -507,7 +557,10 @@ public class GenericTableView
 
     private string EnumSearchText = "";
 
-    private void DisplayFileEnum(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
+    /// <summary>
+    /// Handle the file enum reference meta text for a property that requires it.
+    /// </summary>
+    private void DisplayFileEnum(XElement entry, XAttribute attribute, XElement metaAttribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
         var enumParameters = metaAttribute.Attribute("FileEnum").Value.Split(",");
         var fileName = enumParameters[0];
@@ -580,7 +633,10 @@ public class GenericTableView
         }
     }
 
-    private void DisplayTextRef(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
+    /// <summary>
+    /// Handle the text reference meta text for a property that requires it.
+    /// </summary>
+    private void DisplayTextRef(XElement entry, XAttribute attribute, XElement metaAttribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
         var localizationFile = metaAttribute.Attribute("TextRef").Value;
         var targetString = attribute.Value.ToString();
@@ -608,12 +664,91 @@ public class GenericTableView
 
         if(displayedName != "")
         {
+            if(displayedName.Contains("%"))
+            {
+                displayedName = displayedName.Replace("%", "%%");
+            }
+
             UIHelper.DisplayInformationText(displayedName, true);
         }
     }
 
-    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
+    /// <summary>
+    /// Handle the GUID reference meta text for a property that requires it.
+    /// </summary>
+    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaAttribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
 
     }
+
+    /// <summary>
+    /// Fill out the alias override dictionary for the current document
+    /// </summary>
+    private void ProcessAliasOverrides(DataStatus docStatus, XDocument document, List<XElement> currentEntries)
+    {
+        AliasOverrides = new();
+
+        const string targetAttributeName = "UIName";
+
+        string documentName = TableMeta.GetDocumentName(docStatus.Name);
+        var metaDocument = TableMeta.GetMetaDocument(documentName);
+
+        if (metaDocument?.Root == null)
+            return;
+
+        var metaElementList = metaDocument.Root.Descendants("entries").Elements();
+        var targetMetaEntry = metaElementList.FirstOrDefault(e => e.Name == targetAttributeName);
+
+        if (targetMetaEntry == null)
+            return;
+
+        var textRef = targetMetaEntry.Attribute("TextRef")?.Value;
+        if (string.IsNullOrEmpty(textRef))
+            return;
+
+        var targetFile = Warbox.DataHandler.Localization.FirstOrDefault(e => e.Key.Name == textRef).Value;
+        if (targetFile?.Root == null)
+            return;
+
+        // Preload rows for fast lookup
+        var rowDictionary = targetFile.Root.Elements("Row")
+            .Select(row => row.Elements("Cell").ToList())
+            .Where(cells => cells.Count >= 3)
+            .ToDictionary(cells => cells[0].Value, cells => cells[1].Value);
+
+        for(int i = 0; i < currentEntries.Count; i++)
+        {
+            var elementEntry = currentEntries[i];
+
+            var attribute = elementEntry.Attribute(targetAttributeName);
+            if (attribute == null)
+            {
+                continue;
+            }
+
+            rowDictionary.TryGetValue(attribute.Value, out string displayedName);
+            AliasOverrides[i] = displayedName ?? "";
+        }
+    }
+
+    /// <summary>
+    /// Duplicate the currently selected row
+    /// </summary>
+    public void DuplicateRow()
+    {
+        var elementList = EditorState.GetCurrentEntries();
+        var action = new AddTableRow(elementList, CurrentRowIndex, this);
+        Screen.EditorActionManager.ExecuteAction(action);
+    }
+
+    /// <summary>
+    /// Remove the currently selected row
+    /// </summary>
+    public void RemoveRow()
+    {
+        var elementList = EditorState.GetCurrentEntries();
+        var action = new RemoveTableRow(elementList, CurrentRowIndex, this);
+        Screen.EditorActionManager.ExecuteAction(action);
+    }
+
 }

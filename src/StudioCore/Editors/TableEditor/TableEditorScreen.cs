@@ -300,7 +300,7 @@ public class TableEditorScreen : EditorScreen
                                     var curTableView = TableDataView.GetSelectedTableView();
                                     if (curTableView != null)
                                     {
-                                        curTableView.SetRowSelection(key, i);
+                                        curTableView.SetRowSelection(i);
                                     }
                                 }
                             }

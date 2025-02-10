@@ -15,9 +15,11 @@ public static class TableMeta
 {
     public static Dictionary<string, XDocument> Meta = new();
 
+    public static Dictionary<string, string> DocumentMappings = new();
+
     public static void Setup()
     {
-        // Get table meta
+        // Table Meta
         var metaDir = $"{AppContext.BaseDirectory}\\Assets\\Data\\Meta\\";
 
         string[] xmlFiles = Directory.GetFiles(metaDir, "*.xml", SearchOption.AllDirectories);
@@ -28,9 +30,33 @@ public static class TableMeta
 
             Meta.Add(name, doc);
         }
+
+        // Document Mappings
+        var documentMappingPath = $"{AppContext.BaseDirectory}\\Assets\\Data\\DocumentMappings.xml";
+        DocumentMappings = ReadXmlToDictionary(documentMappingPath);
     }
 
-    public static XDocument GetMetaDocument(TableEditorState editorState, string name, bool useFullName = false)
+    private static Dictionary<string, string> ReadXmlToDictionary(string filePath)
+    {
+        Dictionary<string, string> result = new Dictionary<string, string>();
+
+        XDocument xmlDoc = XDocument.Load(filePath);
+
+        foreach (XElement element in xmlDoc.Root.Elements())
+        {
+            string key = element.Name.LocalName;
+            string value = element.Attribute("MapTo")?.Value;
+
+            if (value != null)
+            {
+                result[key] = value;
+            }
+        }
+
+        return result;
+    }
+
+    public static XDocument GetMetaDocument(string name, bool useFullName = false)
     {
         var fileName = name;
 
@@ -54,30 +80,9 @@ public static class TableMeta
     {
         var documentName = elementName;
 
-        // Special handling for some unique XMLs
-        switch (elementName)
+        if(DocumentMappings.ContainsKey(documentName))
         {
-            case "MeleeWeapon":
-            case "NPCTool":
-            case "MiscItem":
-            case "Hood":
-            case "Armor":
-            case "MissileWeapon":
-            case "Document":
-            case "DocumentContent":
-            case "Image":
-            case "Food":
-            case "Poison":
-            case "ItemAlias":
-            case "CraftingMaterial":
-            case "Ammo":
-            case "PickableItem":
-            case "Herb":
-            case "Helmet":
-            case "Die":
-            case "DiceBadge":
-                documentName = "item";
-                break;
+            documentName = DocumentMappings[documentName];  
         }
 
         return documentName;
@@ -88,7 +93,7 @@ public static class TableMeta
         var displayedString = elementName;
         var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, documentName);
+        var metaDoc = GetMetaDocument(documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants(elementName).ToList();
@@ -110,7 +115,7 @@ public static class TableMeta
         var isValid = false;
         var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, documentName);
+        var metaDoc = GetMetaDocument(documentName);
         if (metaDoc != null)
         {
             var metaElement = metaDoc.Descendants(metaField);
@@ -131,7 +136,7 @@ public static class TableMeta
         var displayedString = elementName;
         var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, documentName, useFullName);
+        var metaDoc = GetMetaDocument(documentName, useFullName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{elementName}").ToList();
@@ -156,7 +161,7 @@ public static class TableMeta
         var displayedString = attributeName;
         var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, documentName);
+        var metaDoc = GetMetaDocument(documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -180,7 +185,7 @@ public static class TableMeta
     {
         var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, documentName);
+        var metaDoc = GetMetaDocument(documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -201,13 +206,13 @@ public static class TableMeta
     /// Check if the attribute has any relevant metadata tags, 
     /// if so, we will display the secondary row to contain it.
     /// </summary>
-    public static bool HasMetaData(TableEditorState editorState, XDocument document, XElement entry, XAttribute attribute, int index, string imguiElementName)
+    public static bool HasMetaData(TableEditorState editorState, XDocument document, XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
         var elementName = entry.Name.ToString();
         var attributeName = attribute.Name.ToString();
         var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, documentName);
+        var metaDoc = GetMetaDocument(documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -237,7 +242,7 @@ public static class TableMeta
         var elementName = entry.Name.ToString();
         var documentName = GetDocumentName(elementName);
 
-        var metaDoc = GetMetaDocument(editorState, documentName);
+        var metaDoc = GetMetaDocument(documentName);
         if (metaDoc != null)
         {
             return metaDoc.Descendants($"entries").Descendants().ToList();

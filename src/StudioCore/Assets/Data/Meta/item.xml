@@ -427,15 +427,18 @@
         
 		<Desc 
         Name="Description Text"
-        Description="" />
+        Description="" 
+        TextRef="text_ui_items" />
         
 		<Effect 
         Name="Effect Text"
-        Description="" />
+        Description="" 
+        TextRef="text_ui_items" />
         
 		<Occur 
         Name="Location Text"
-        Description="" />
+        Description="" 
+        TextRef="text_ui_items" />
         
 		<Poisonous 
         Name="Is Poisonous"

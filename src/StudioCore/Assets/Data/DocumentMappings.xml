@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<database>
+    <MeleeWeapon MapTo="item" />
+    <NPCTool MapTo="item" />
+    <MiscItem MapTo="item" />
+    <Hood MapTo="item" />
+    <Armor MapTo="item" />
+    <MissileWeapon MapTo="item" />
+    <Document MapTo="item" />
+    <DocumentContent MapTo="item" />
+    <Image MapTo="item" />
+    <Food MapTo="item" />
+    <Poison MapTo="item" />
+    <ItemAlias MapTo="item" />
+    <CraftingMaterial MapTo="item" />
+    <Ammo MapTo="item" />
+    <PickableItem MapTo="item" />
+    <Herb MapTo="item" />
+    <Helmet MapTo="item" />
+    <Die MapTo="item" />
+    <DiceBadge MapTo="item" />
+</database>

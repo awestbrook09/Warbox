@@ -37,6 +37,7 @@ public class TableEditorState
     public void InvalidateState()
     {
         CurrentEntries = new List<XElement>();
+        Screen.TableDataView.RefreshTableViews();
     }
 
     public List<XElement> GetCurrentEntries()

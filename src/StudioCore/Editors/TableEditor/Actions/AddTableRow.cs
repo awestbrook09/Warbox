@@ -15,17 +15,20 @@ public class AddTableRow : EditorAction
     private int RowIndex;
     private List<XElement> Elements;
     private XElement Row;
+    private GenericTableView CurrentView;
 
-    public AddTableRow(List<XElement> elements, int rowIndex)
+    public AddTableRow(List<XElement> elements, int rowIndex, GenericTableView curView)
     {
         Elements = elements;
         RowIndex = rowIndex;
         Row = new XElement(Elements.ElementAt(rowIndex));
+        CurrentView = curView;
     }
 
     public override ActionEvent Execute()
     {
         Elements.Insert(RowIndex, Row);
+        CurrentView.Refresh();
 
         return ActionEvent.NoEvent;
     }
@@ -33,6 +36,7 @@ public class AddTableRow : EditorAction
     public override ActionEvent Undo()
     {
         Elements.RemoveAt(RowIndex);
+        CurrentView.Refresh();
 
         return ActionEvent.NoEvent;
     }
