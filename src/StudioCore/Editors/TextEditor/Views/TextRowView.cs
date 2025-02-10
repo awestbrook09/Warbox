@@ -2,6 +2,7 @@
 using StudioCore.Configuration;
 using StudioCore.Core.Data;
 using StudioCore.Editors.TextEditor.Actions;
+using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Interface;
 using StudioCore.KCD;
 using StudioCore.TextEditor;
@@ -15,7 +16,7 @@ using System.Xml;
 using System.Xml.Linq;
 using static Assimp.Metadata;
 
-namespace StudioCore.Editors.TextEditor;
+namespace StudioCore.Editors.TextEditor.Views;
 
 public class TextRowView
 {
@@ -54,7 +55,7 @@ public class TextRowView
 
                 if (curStatus != null && curDocument != null && curText != null)
                 {
-                    for(int i = 0; i < curText.Rows.Count; i++)
+                    for (int i = 0; i < curText.Rows.Count; i++)
                     {
                         var entry = curText.Rows[i];
                         var firstCell = entry.Cells.FirstOrDefault();

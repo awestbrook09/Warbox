@@ -1,4 +1,6 @@
 ﻿using ImGuiNET;
+using StudioCore.Core.Data;
+using StudioCore.Editors.TableEditor.Framework;
 using StudioCore.Editors.TextEditor;
 using StudioCore.Interface;
 using StudioCore.TextEditor;
@@ -9,12 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TableEditor;
+namespace StudioCore.Editors.TableEditor.Views;
 
 public class TableDataView
 {
     private TableEditorScreen Screen;
-    private TableEditorState EditorState;
 
     private SortedDictionary<string, GenericTableView> TableViews = new();
     private SortedDictionary<string, string> XmlNames = new();
@@ -22,11 +23,10 @@ public class TableDataView
     public TableDataView(TableEditorScreen screen)
     {
         Screen = screen;
-        EditorState = screen.EditorState;
 
-        foreach(var entry in TableDefinition.Definitions)
+        foreach (var entry in TableDefinition.Definitions)
         {
-            var name = entry.Attribute("Name").Value;
+            var defName = entry.Attribute("Name").Value;
             var aliasKey = entry.Attribute("AliasNameKey").Value;
             var rowKey = entry.Attribute("RowNameKey").Value;
 
@@ -34,27 +34,39 @@ public class TableDataView
             // instead they will be displayed as Entry 1, 2, etc in the selection list
             var noPrimaryKey = false;
             var npk = entry.Attribute("NoPrimaryKey");
-            if(npk != null)
+            if (npk != null)
             {
                 noPrimaryKey = true;
             }
 
-            var newView = new GenericTableView(screen, name, aliasKey, rowKey, noPrimaryKey);
+            foreach (var tbl in DataHandler.Tables)
+            {
+                var status = tbl.Key;
+                var document = tbl.Value;
 
-            TableViews.Add(name, newView);
+                var docFullName = status.Name;
+                var docName = status.Name;
+
+                if (status.Name.Contains("__"))
+                {
+                    docName = status.Name.Split("__")[0];
+                }
+
+                if (docName == defName)
+                {
+                    var newView = new GenericTableView(screen, docFullName, aliasKey, noPrimaryKey, status, document);
+
+                    TableViews.Add(docFullName, newView);
+                }
+            }
         }
 
         TableMeta.Setup();
     }
 
-    public SortedDictionary<string, GenericTableView> GetTableViews()
-    {
-        return TableViews;
-    }
-
     public void RefreshTableViews()
     {
-        foreach(var entry in TableViews)
+        foreach (var entry in TableViews)
         {
             entry.Value.Refresh();
         }
@@ -62,9 +74,11 @@ public class TableDataView
 
     public GenericTableView GetSelectedTableView()
     {
-        if(TableViews.ContainsKey(EditorState.SelectedStatus.Name))
+        var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
+
+        if (TableViews.ContainsKey(selectedDocumentName))
         {
-            return TableViews[EditorState.SelectedStatus.Name];
+            return TableViews[selectedDocumentName];
         }
         else
         {
@@ -74,13 +88,13 @@ public class TableDataView
 
     public void Display()
     {
+        var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
+
         if (ImGui.Begin("Rows##tableRowView"))
         {
-            var xmlName = GetSelectedXmlName();
-
-            foreach(var entry in TableViews)
+            foreach (var entry in TableViews)
             {
-                if (entry.Value.Name == xmlName)
+                if (entry.Value.Name == selectedDocumentName)
                 {
                     entry.Value.DisplayEntries();
                 }
@@ -92,11 +106,9 @@ public class TableDataView
 
         if (ImGui.Begin("Properties##tablePropertyView"))
         {
-            var xmlName = GetSelectedXmlName();
-
             foreach (var entry in TableViews)
             {
-                if (entry.Value.Name == xmlName)
+                if (entry.Value.Name == selectedDocumentName)
                 {
                     entry.Value.DisplayProperties();
                 }
@@ -108,30 +120,14 @@ public class TableDataView
 
     public void Shortcuts()
     {
-        var xmlName = GetSelectedXmlName();
+        var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
 
         foreach (var entry in TableViews)
         {
-            if (entry.Value.Name == xmlName)
+            if (entry.Value.Name == selectedDocumentName)
             {
                 entry.Value.Shortcuts();
             }
         }
-    }
-
-    public string GetSelectedXmlName()
-    {
-        if (EditorState.SelectedStatus == null)
-            return "";
-
-        var xmlName = EditorState.SelectedStatus.Name;
-
-        // Only assess the relevant part of the file name (i.e. ignore PTF part)
-        if (xmlName.Contains("__"))
-        {
-            xmlName = xmlName.Split("__")[0];
-        }
-
-        return xmlName;
     }
 }

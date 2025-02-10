@@ -1,4 +1,5 @@
 ﻿using StudioCore.Editor;
+using StudioCore.Editors.TableEditor.Views;
 using StudioCore.KCD;
 using System;
 using System.Collections.Generic;

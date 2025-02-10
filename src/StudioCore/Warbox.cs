@@ -30,7 +30,6 @@ public class Warbox
     public static EditorHandler EditorHandler;
     public static WindowHandler WindowHandler;
     public static ProjectHandler ProjectHandler;
-    public static DataHandler DataHandler;
 
     public static string DataRoot = "";
     public static string ProjectDataRoot = "";
@@ -93,8 +92,6 @@ public class Warbox
 
         // Handlers
         ProjectHandler = new ProjectHandler();
-
-        DataHandler = new DataHandler();
 
         EditorHandler = new EditorHandler(_context);
         WindowHandler = new WindowHandler(_context);
@@ -561,7 +558,6 @@ public class Warbox
 
         ProjectHandler.OnGui();
         WindowHandler.OnGui();
-        DataHandler.OnGui();
 
         // Tool windows
         ColorPicker.DisplayColorPicker();

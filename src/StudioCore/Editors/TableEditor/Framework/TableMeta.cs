@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TableEditor;
+namespace StudioCore.Editors.TableEditor.Framework;
 
 public static class TableMeta
 {
@@ -80,15 +80,15 @@ public static class TableMeta
     {
         var documentName = elementName;
 
-        if(DocumentMappings.ContainsKey(documentName))
+        if (DocumentMappings.ContainsKey(documentName))
         {
-            documentName = DocumentMappings[documentName];  
+            documentName = DocumentMappings[documentName];
         }
 
         return documentName;
     }
 
-    public static string GetFileTitle(TableEditorState editorState, string metaField, string elementName)
+    public static string GetFileTitle(string metaField, string elementName)
     {
         var displayedString = elementName;
         var documentName = GetDocumentName(elementName);
@@ -110,7 +110,7 @@ public static class TableMeta
         return displayedString;
     }
 
-    public static bool CheckMetaToggle(TableEditorState editorState, string metaField, string elementName)
+    public static bool CheckMetaToggle(string metaField, string elementName)
     {
         var isValid = false;
         var documentName = GetDocumentName(elementName);
@@ -131,7 +131,7 @@ public static class TableMeta
     /// <summary>
     /// Returns the header pretty name and description
     /// </summary>
-    public static string GetElementNameValue(TableEditorState editorState, string metaField, string elementName, bool useFullName = false)
+    public static string GetElementNameValue(string metaField, string elementName, bool useFullName = false)
     {
         var displayedString = elementName;
         var documentName = GetDocumentName(elementName);
@@ -156,7 +156,7 @@ public static class TableMeta
     /// <summary>
     /// Returns the attribute pretty name and description
     /// </summary>
-    public static string GetAttributeNameValue(TableEditorState editorState, string metaField, string elementName, string attributeName)
+    public static string GetAttributeNameValue(string metaField, string elementName, string attributeName)
     {
         var displayedString = attributeName;
         var documentName = GetDocumentName(elementName);
@@ -181,7 +181,7 @@ public static class TableMeta
     /// <summary>
     /// Returns true if the attribute is marked as bool
     /// </summary>
-    public static bool IsBoolAttribute(TableEditorState editorState, string metaField, string elementName, string attributeName)
+    public static bool IsBoolAttribute(string metaField, string elementName, string attributeName)
     {
         var documentName = GetDocumentName(elementName);
 
@@ -206,7 +206,7 @@ public static class TableMeta
     /// Check if the attribute has any relevant metadata tags, 
     /// if so, we will display the secondary row to contain it.
     /// </summary>
-    public static bool HasMetaData(TableEditorState editorState, XDocument document, XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
+    public static bool HasMetaData(XElement entry, XAttribute attribute)
     {
         var elementName = entry.Name.ToString();
         var attributeName = attribute.Name.ToString();
@@ -217,7 +217,7 @@ public static class TableMeta
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
 
-            foreach(var element in elements)
+            foreach (var element in elements)
             {
                 if (element.Attribute("FileEnum") != null)
                 {
@@ -237,7 +237,7 @@ public static class TableMeta
         return false;
     }
 
-    public static List<XElement> GetAttributeList(TableEditorState editorState, XDocument document, XElement entry)
+    public static List<XElement> GetAttributeList(XElement entry)
     {
         var elementName = entry.Name.ToString();
         var documentName = GetDocumentName(elementName);

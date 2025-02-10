@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TextEditor;
+namespace StudioCore.Editors.TextEditor.Framework;
 
 public static class TextSearchFilters
 {
@@ -27,12 +27,12 @@ public static class TextSearchFilters
 
         var isValid = false;
 
-        if(preppedInput.Contains("header:"))
+        if (preppedInput.Contains("header:"))
         {
             var headerInput = preppedInput.Replace("header:", "");
             var headerName = $"{element.Name}".ToLower().Trim();
 
-            if(headerName.Contains(headerInput))
+            if (headerName.Contains(headerInput))
             {
                 isValid = true;
             }
@@ -44,7 +44,7 @@ public static class TextSearchFilters
 
             var attributes = element.Attributes().ToList();
 
-            foreach(var attrib in attributes)
+            foreach (var attrib in attributes)
             {
                 var attribName = $"{attrib.Name}".ToLower().Trim();
 
@@ -93,9 +93,9 @@ public static class TextSearchFilters
                                 double valueB = 0;
                                 var resB = double.TryParse(propValue, out valueB);
 
-                                if(propOperation == ">")
+                                if (propOperation == ">")
                                 {
-                                    if(valueA > valueB)
+                                    if (valueA > valueB)
                                     {
                                         isValid = true;
                                     }

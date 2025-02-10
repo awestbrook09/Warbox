@@ -16,19 +16,17 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TableEditor;
+namespace StudioCore.Editors.TableEditor.Views;
 
 public class TableToolsView
 {
     private TableEditorScreen Screen;
-    private TableEditorState EditorState;
 
     private string SearchText = "";
 
     public TableToolsView(TableEditorScreen screen)
     {
         Screen = screen;
-        EditorState = screen.EditorState;
     }
 
     public void Display()
@@ -90,7 +88,7 @@ public class TableToolsView
 
         ImGui.BeginChild("guidFinderResults", childSectionSize);
 
-        foreach(var res in TableGuidTools.GuidFinderResults)
+        foreach (var res in TableGuidTools.GuidFinderResults)
         {
             var filename = res.File;
             var attributeName = res.Attribute.Name;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TableEditor;
+namespace StudioCore.Editors.TableEditor.Framework;
 
 public static class TableDefinition
 {
@@ -23,7 +23,7 @@ public static class TableDefinition
 
         // Table Categories
         var categories = doc.Descendants("categories").Elements("entry").ToList();
-        foreach(var category in categories)
+        foreach (var category in categories)
         {
             Categories.Add(category.Attribute("Name").Value);
         }

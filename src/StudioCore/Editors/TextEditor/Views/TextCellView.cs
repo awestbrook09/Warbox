@@ -1,6 +1,7 @@
 ﻿using Assimp;
 using ImGuiNET;
 using StudioCore.Core.Data;
+using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.TextEditor;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TextEditor;
+namespace StudioCore.Editors.TextEditor.Views;
 
 public class TextCellView
 {
@@ -27,7 +28,7 @@ public class TextCellView
 
     public void Display()
     {
-        var height = ImGui.GetWindowHeight(); 
+        var height = ImGui.GetWindowHeight();
 
         var curStatus = EditorState.SelectedStatus;
         var curDocument = EditorState.SelectedDocument;
@@ -50,7 +51,7 @@ public class TextCellView
 
                         var size = new Vector2(-1, 24 * Warbox.GetUIScale());
 
-                        if(i > 0)
+                        if (i > 0)
                             size = new Vector2(-1, 100 * Warbox.GetUIScale());
 
                         if (ImGui.InputTextMultiline($"##textEntry{i}", ref cell, 2000, size))

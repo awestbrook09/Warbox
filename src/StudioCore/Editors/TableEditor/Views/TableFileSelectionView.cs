@@ -1,7 +1,8 @@
 ﻿using ImGuiNET;
 using StudioCore.Configuration;
 using StudioCore.Core.Data;
-using StudioCore.Editors.TextEditor;
+using StudioCore.Editors.TableEditor.Framework;
+using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Interface;
 using StudioCore.TextEditor;
 using System;
@@ -13,19 +14,22 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TableEditor;
+namespace StudioCore.Editors.TableEditor.Views;
 
 public class TableFileSelectionView
 {
     private TableEditorScreen Screen;
-    private TableEditorState EditorState;
 
     private string SearchText = "";
+
+    private DataStatus SelectedStatus;
+    private XDocument SelectedDocument;
+
+    private bool SelectNextTable = false;
 
     public TableFileSelectionView(TableEditorScreen screen)
     {
         Screen = screen;
-        EditorState = screen.EditorState;
     }
 
     public void Display()
@@ -85,29 +89,28 @@ public class TableFileSelectionView
         // Typically the name of the file is one of the headers, so just do this
         if (CFG.Current.TableEditor_View_Properties_DisplayNames)
         {
-            displayName = TableMeta.GetFileTitle(EditorState, "Name", $"{name}");
+            displayName = TableMeta.GetFileTitle("Name", $"{name}");
         }
 
-        if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", EditorState.SelectedStatus == status))
+        if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", SelectedStatus == status))
         {
-            EditorState.InvalidateState();
-            EditorState.UpdateSelection(entry);
+            SetSelection(entry);
+            Screen.TableDataView.RefreshTableViews();
         }
 
         // Arrow Selection
-        if (ImGui.IsItemHovered() && EditorState.SelectNextTable)
+        if (ImGui.IsItemHovered() && SelectNextTable)
         {
-            EditorState.SelectNextTable = false;
-            EditorState.InvalidateState();
-            EditorState.UpdateSelection(entry);
+            SetSelection(entry);
+            Screen.TableDataView.RefreshTableViews();
         }
         if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
         {
-            EditorState.SelectNextTable = true;
+            SelectNextTable = true;
         }
 
         // Context
-        if (EditorState.SelectedStatus == status)
+        if (SelectedStatus == status)
         {
             if (ImGui.BeginPopupContextItem($"##tableFileEntryContext{index}"))
             {
@@ -115,6 +118,27 @@ public class TableFileSelectionView
                 ImGui.EndPopup();
             }
         }
+    }
+
+    public void SetSelection(KeyValuePair<DataStatus, XDocument> entry)
+    {
+        SelectedStatus = entry.Key;
+        SelectedDocument = entry.Value;
+    }
+
+    public string GetSelectedDocumentName()
+    {
+        return SelectedStatus == null ? "" : SelectedStatus.Name;
+    }
+
+    public DataStatus GetSelectedDocumentStatus()
+    {
+        return SelectedStatus;
+    }
+
+    public XDocument GetSelectedDocument()
+    {
+        return SelectedDocument;
     }
 
     public void Shortcuts()
@@ -130,9 +154,9 @@ public class TableFileSelectionView
             // Build categories
             foreach (var category in TableDefinition.Categories)
             {
-                for (int i = 0; i < Warbox.DataHandler.Tables.Count; i++)
+                for (int i = 0; i < DataHandler.Tables.Count; i++)
                 {
-                    var entry = Warbox.DataHandler.Tables.ElementAt(i);
+                    var entry = DataHandler.Tables.ElementAt(i);
                     var status = entry.Key;
                     var name = entry.Key.Name;
 

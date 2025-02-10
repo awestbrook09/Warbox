@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StudioCore.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,7 +46,7 @@ public static class TableGuidTools
     {
         GuidFinderResults = new();
 
-        foreach (var entry in Warbox.DataHandler.Tables)
+        foreach (var entry in DataHandler.Tables)
         {
             var status = entry.Key;
             var document = entry.Value;

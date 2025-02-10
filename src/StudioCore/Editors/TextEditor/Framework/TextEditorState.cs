@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace StudioCore.Editors.TextEditor;
+namespace StudioCore.Editors.TextEditor.Framework;
 
 public class TextEditorState
 {
@@ -46,9 +46,9 @@ public class TextEditorState
     {
         if (SelectedText != null && SelectedStatus.Modified)
         {
-            if (Warbox.DataHandler.Localization.ContainsKey(SelectedStatus))
+            if (DataHandler.Localization.ContainsKey(SelectedStatus))
             {
-                Warbox.DataHandler.Localization[SelectedStatus] = SelectedText.ExportXML();
+                DataHandler.Localization[SelectedStatus] = SelectedText.ExportXML();
             }
         }
     }

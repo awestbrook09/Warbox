@@ -7,9 +7,10 @@ using Veldrid.Sdl2;
 using StudioCore.Utilities;
 using StudioCore.Core.Project;
 using StudioCore.Interface;
-using StudioCore.Editors.TextEditor;
 using System.IO;
 using StudioCore.Core.Data;
+using StudioCore.Editors.TextEditor.Views;
+using StudioCore.Editors.TextEditor.Framework;
 
 namespace StudioCore.TextEditor;
 
@@ -27,6 +28,8 @@ public class TextEditorScreen : EditorScreen
 
     public TextEditorScreen(Sdl2Window window, GraphicsDevice device)
     {
+        DataHandler.SetupLocalization();
+
         EditorState = new(this);
         FileSelectionView = new(this);
         TextRowView = new(this);
@@ -125,7 +128,7 @@ public class TextEditorScreen : EditorScreen
             Directory.CreateDirectory(outputDir);
 
         var status = EditorState.SelectedStatus;
-        var document = Warbox.DataHandler.Localization[status];
+        var document = DataHandler.Localization[status];
 
         var writePath = status.Path;
         var fileDir = $"{outputDir}\\{writePath}";

@@ -16,6 +16,9 @@ using System.Xml.Linq;
 using CommunityToolkit.HighPerformance;
 using StudioCore.Interface;
 using System.Runtime.InteropServices;
+using static Assimp.Metadata;
+using StudioCore.Editors.TableEditor.Views;
+using StudioCore.Editors.TableEditor.Framework;
 
 namespace StudioCore.Editors.TableEditor;
 
@@ -24,7 +27,6 @@ public class TableEditorScreen : EditorScreen
     public string EditorName => "Tables";
     public string CommandEndpoint => "table";
 
-    public TableEditorState EditorState;
     public TableFileSelectionView FileSelectionView;
     public TableDataView TableDataView;
     public TableToolsView TableToolsView;
@@ -33,9 +35,9 @@ public class TableEditorScreen : EditorScreen
 
     public TableEditorScreen(Sdl2Window window, GraphicsDevice device)
     {
+        DataHandler.SetupTables();
         TableDefinition.Setup();
 
-        EditorState = new(this);
         FileSelectionView = new(this);
         TableDataView = new(this);
         TableToolsView = new(this);
@@ -154,8 +156,8 @@ public class TableEditorScreen : EditorScreen
         if (!Directory.Exists(outputDir))
             Directory.CreateDirectory(outputDir);
 
-        var status = EditorState.SelectedStatus;
-        var document = Warbox.DataHandler.Tables[status];
+        var status = FileSelectionView.GetSelectedDocumentStatus();
+        var document = DataHandler.Tables[status];
 
         var writePath = status.Path;
         var fileDir = $"{outputDir}\\{writePath}";
@@ -178,46 +180,6 @@ public class TableEditorScreen : EditorScreen
 
     public void SavePTF()
     {
-        return;
-
-        var outputDir = $"{Warbox.ProjectDataRoot}\\Data";
-        var ptfName = Warbox.ProjectHandler.CurrentProject.Config.ProjectName.Replace(" ", "_").ToLower().Trim();
-
-
-        if (!Directory.Exists(outputDir))
-            Directory.CreateDirectory(outputDir);
-
-        var status = EditorState.SelectedStatus;
-        var outputDocument = new XDocument(Warbox.DataHandler.Tables[status]);
-
-        if (status.Name.Contains("__"))
-        {
-            TaskLogs.AddLog($"This file is already a PTF table, you cannot save it as a PTF again.");
-            return;
-        }
-
-        var writePath = status.Path;
-
-        var vanillaEntry = Warbox.DataHandler.Vanilla_Tables.Where(e => e.Key.Name == status.Name).FirstOrDefault();
-        var vanillaDocument = vanillaEntry.Value;
-
-        // Create a hash set of serialized node strings for all elements in doc1
-        var doc1Elements = vanillaDocument.Descendants()
-            .Select(e => e.Name + "|" + string.Join("|", e.Attributes().Select(a => a.Name + "=" + a.Value)) + "|" + e.Value)
-            .ToHashSet();
-
-        // TODO: this is not working correctly
-
-        // Remove matching elements from doc2
-        outputDocument.Descendants()
-            .Where(e => doc1Elements.Contains(e.Name + "|" + string.Join("|", e.Attributes().Select(a => a.Name + "=" + a.Value)) + "|" + e.Value))
-            .Remove();
-
-        var outputPath = writePath.Replace(".xml", $"__{ptfName}.xml");
-
-        outputDocument.Save(outputPath);
-
-        TaskLogs.AddLog($"{outputPath} saved.");
     }
 
     private void ResetActionManager()
@@ -263,15 +225,14 @@ public class TableEditorScreen : EditorScreen
                 KeyValuePair<DataStatus, XDocument> targetEntry = new KeyValuePair<DataStatus, XDocument>();
 
                 // Set file selection
-                for (int i = 0; i < Warbox.DataHandler.Tables.Count; i++)
+                for (int i = 0; i < DataHandler.Tables.Count; i++)
                 {
-                    targetEntry = Warbox.DataHandler.Tables.ElementAt(i);
+                    targetEntry = DataHandler.Tables.ElementAt(i);
                     var name = targetEntry.Key.Name;
 
                     if (name == fileName)
                     {
-                        EditorState.InvalidateState();
-                        EditorState.UpdateSelection(targetEntry);
+                        FileSelectionView.SetSelection(targetEntry);
                         break;
                     }
                 }

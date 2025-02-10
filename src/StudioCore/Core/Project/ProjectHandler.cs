@@ -33,6 +33,21 @@ public class ProjectHandler
         ProjectModal = new ProjectModal();
 
         IsInitialLoad = true;
+
+        if (!RecentProjectLoad && Current.Project_LoadRecentProjectOnStart)
+        {
+            RecentProjectLoad = true;
+            IsInitialLoad = false;
+            try
+            {
+                LoadProjectFromJSON(Current.LastProjectFile, true);
+            }
+            catch (Exception ex)
+            {
+                TaskLogs.AddLog("Failed to load recent project.");
+            }
+        }
+
         UpdateProjectVariables();
     }
     public void OnGui()
@@ -43,7 +58,7 @@ public class ProjectHandler
             IsInitialLoad = false;
             try
             {
-                Warbox.ProjectHandler.LoadProjectFromJSON(Current.LastProjectFile);
+                LoadProjectFromJSON(Current.LastProjectFile);
             }
             catch (Exception ex)
             {
@@ -70,7 +85,7 @@ public class ProjectHandler
         Warbox.ProjectHandler.IsInitialLoad = false;
     }
 
-    public bool LoadProject(string path)
+    public bool LoadProject(string path, bool ignoreRefresh = false)
     {
         if (CurrentProject.Config == null)
         {
@@ -101,7 +116,8 @@ public class ProjectHandler
 
         Warbox.SetProgramTitle($"{CurrentProject.Config.ProjectName} - Warbox");
 
-        Warbox.EditorHandler.UpdateEditors();
+        if(!ignoreRefresh)
+            Warbox.EditorHandler.UpdateEditors();
 
         Current.LastProjectFile = path;
         Save();
@@ -116,7 +132,7 @@ public class ProjectHandler
         return true;
     }
 
-    public bool LoadProjectFromJSON(string jsonPath)
+    public bool LoadProjectFromJSON(string jsonPath, bool ignoreRefresh = false)
     {
         if (CurrentProject == null)
         {
@@ -131,7 +147,7 @@ public class ProjectHandler
             return false;
         }
 
-        return LoadProject(jsonPath);
+        return LoadProject(jsonPath, ignoreRefresh);
     }
 
     public void ClearProject()

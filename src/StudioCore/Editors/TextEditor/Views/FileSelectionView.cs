@@ -12,8 +12,9 @@ using System.Xml.Linq;
 using StudioCore.Core.Data;
 using System.Numerics;
 using System.Data.SqlTypes;
+using StudioCore.Editors.TextEditor.Framework;
 
-namespace StudioCore.Editors.TextEditor;
+namespace StudioCore.Editors.TextEditor.Views;
 
 public class FileSelectionView
 {
@@ -40,9 +41,9 @@ public class FileSelectionView
 
             ImGui.BeginChild("fileListSection");
 
-            for(int i = 0; i < Warbox.DataHandler.Localization.Count; i++)
+            for (int i = 0; i < DataHandler.Localization.Count; i++)
             {
-                var entry = Warbox.DataHandler.Localization.ElementAt(i);
+                var entry = DataHandler.Localization.ElementAt(i);
                 var status = entry.Key;
                 var name = entry.Key.Name;
 
@@ -100,13 +101,13 @@ public class FileSelectionView
 
         var isValidName = true;
 
-        for (int i = 0; i < Warbox.DataHandler.Localization.Count; i++)
+        for (int i = 0; i < DataHandler.Localization.Count; i++)
         {
-            var entry = Warbox.DataHandler.Localization.ElementAt(i);
+            var entry = DataHandler.Localization.ElementAt(i);
             var status = entry.Key;
             var name = entry.Key.Name;
 
-            if(NewFileName == name || NewFileName == "")
+            if (NewFileName == name || NewFileName == "")
             {
                 isValidName = false;
             }
@@ -123,7 +124,7 @@ public class FileSelectionView
 
                 XDocument newDoc = XDocument.Parse(xmlString);
 
-                Warbox.DataHandler.Localization.Add(newStatus, newDoc);
+                DataHandler.Localization.Add(newStatus, newDoc);
             }
         }
         else

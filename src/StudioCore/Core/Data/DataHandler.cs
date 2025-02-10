@@ -11,42 +11,40 @@ using static Assimp.Metadata;
 
 namespace StudioCore.Core.Data;
 
-public class DataHandler
+public static class DataHandler
 {
-    private bool SetupData = false;
-
-    public SortedDictionary<DataStatus, XDocument> Localization = new();
+    public static SortedDictionary<DataStatus, XDocument> Localization = new();
 
     /// <summary>
     /// Holds our working tables
     /// </summary>
-    public SortedDictionary<DataStatus, XDocument> Tables = new();
+    public static SortedDictionary<DataStatus, XDocument> Tables = new();
 
     /// <summary>
     /// Holds the base tables, used for comparison to generate PTF output
     /// </summary>
-    public SortedDictionary<DataStatus, XDocument> Vanilla_Tables = new();
+    public static SortedDictionary<DataStatus, XDocument> Vanilla_Tables = new();
 
     //public Dictionary<DataStatus, XDocument> Scripts = new Dictionary<DataStatus, XDocument>();
 
-    public DataHandler() { }
-
-    public void OnGui()
+    public static void SetupTables()
     {
-        if (!SetupData && Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
+        if (Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
         {
-            SetupData = true;
-
             Tables = SetupDataFromPak("Data", "Tables");
             Vanilla_Tables = SetupDataFromPak("Data", "Tables", true);
-
-            Localization = SetupDataFromPak("Localization", "English_xml");
-
-            //Scripts = SetupDataFromPak("Data", "Scripts");
         }
     }
 
-    public SortedDictionary<DataStatus, XDocument> SetupDataFromPak(string folderName, string pakName, bool ignoreProject = false)
+    public static void SetupLocalization()
+    {
+        if (Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
+        {
+            Localization = SetupDataFromPak("Localization", "English_xml");
+        }
+    }
+
+    public static SortedDictionary<DataStatus, XDocument> SetupDataFromPak(string folderName, string pakName, bool ignoreProject = false)
     {
         if (Warbox.DataRoot == "")
             return new SortedDictionary<DataStatus, XDocument>();
@@ -106,7 +104,7 @@ public class DataHandler
         return finalData;
     }
 
-    private SortedDictionary<DataStatus, XDocument> ReadXmlFromZip(string zipPath)
+    private static SortedDictionary<DataStatus, XDocument> ReadXmlFromZip(string zipPath)
     {
         var xmlFiles = new SortedDictionary<DataStatus, XDocument>();
 
@@ -150,7 +148,7 @@ public class DataHandler
         return xmlFiles;
     }
 
-    public SortedDictionary<DataStatus, XDocument> ReadXmlFromDirectory(string directoryPath)
+    public static SortedDictionary<DataStatus, XDocument> ReadXmlFromDirectory(string directoryPath)
     {
         var xmlFiles = new SortedDictionary<DataStatus, XDocument>();
 
@@ -189,7 +187,7 @@ public class DataHandler
         return xmlFiles;
     }
 
-    private Encoding DetectEncoding(Stream stream, out string xmlContent)
+    private static Encoding DetectEncoding(Stream stream, out string xmlContent)
     {
         using (StreamReader reader = new StreamReader(stream, Encoding.Default, detectEncodingFromByteOrderMarks: true))
         {
@@ -212,7 +210,7 @@ public class DataHandler
         }
     }
 
-    private Encoding DetectEncoding(string filePath, out string xmlContent)
+    private static Encoding DetectEncoding(string filePath, out string xmlContent)
     {
         using (StreamReader reader = new StreamReader(filePath, Encoding.Default, detectEncodingFromByteOrderMarks: true))
         {
