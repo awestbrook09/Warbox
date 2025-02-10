@@ -50,7 +50,7 @@ public static class TableMeta
         return null;
     }
 
-    private static string GetDocumentName(string elementName)
+    public static string GetDocumentName(string elementName)
     {
         var documentName = elementName;
 

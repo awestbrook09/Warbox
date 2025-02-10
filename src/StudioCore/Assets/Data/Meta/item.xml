@@ -182,11 +182,13 @@
         
 		<UIInfo 
         Name="UI Info"
-        Description="" />
+        Description="" 
+        TextRef="text_ui_items" />
         
 		<UIName 
         Name="UI Name"
-        Description="" />
+        Description="" 
+        TextRef="text_ui_items" />
         
 		<Weight 
         Name="Weight"

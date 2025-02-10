@@ -93,26 +93,71 @@ public static class UIHelper
         }
     }
 
-    public static void DisplayHeaderText(string text)
+    public static void DisplayHeaderText(string text, bool wrap = false)
     {
-        ImGui.TextColored(CFG.Current.ImGui_Header_Text_Color, @$"{text}");
+        if (wrap)
+        {
+            ImGui.PushTextWrapPos();
+            ImGui.TextColored(CFG.Current.ImGui_Header_Text_Color, @$"{text}");
+            ImGui.PopTextWrapPos();
+        }
+        else
+        {
+            ImGui.TextColored(CFG.Current.ImGui_Header_Text_Color, @$"{text}");
+        }
     }
 
-    public static void DisplayInformationText(string text)
+    public static void DisplayInformationText(string text, bool wrap = false)
     {
-        ImGui.TextColored(CFG.Current.ImGui_Information_Text_Color, @$"{text}");
+        if (wrap)
+        {
+            ImGui.PushTextWrapPos();
+            ImGui.TextColored(CFG.Current.ImGui_Information_Text_Color, @$"{text}");
+            ImGui.PopTextWrapPos();
+        }
+        else
+        {
+            ImGui.TextColored(CFG.Current.ImGui_Information_Text_Color, @$"{text}");
+        }
     }
-    public static void DisplayWarningText(string text)
+    public static void DisplayWarningText(string text, bool wrap = false)
     {
-        ImGui.TextColored(CFG.Current.ImGui_Warning_Text_Color, @$"{text}");
+        if (wrap)
+        {
+            ImGui.PushTextWrapPos();
+            ImGui.TextColored(CFG.Current.ImGui_Warning_Text_Color, @$"{text}");
+            ImGui.PopTextWrapPos();
+        }
+        else
+        {
+            ImGui.TextColored(CFG.Current.ImGui_Warning_Text_Color, @$"{text}");
+        }
     }
-    public static void DisplayHighlightText(string text)
+    public static void DisplayHighlightText(string text, bool wrap = false)
     {
-        ImGui.TextColored(CFG.Current.ImGui_Highlight_Text_Color, @$"{text}");
+        if (wrap)
+        {
+            ImGui.PushTextWrapPos();
+            ImGui.TextColored(CFG.Current.ImGui_Highlight_Text_Color, @$"{text}");
+            ImGui.PopTextWrapPos();
+        }
+        else
+        {
+            ImGui.TextColored(CFG.Current.ImGui_Highlight_Text_Color, @$"{text}");
+        }
     }
-    public static void DisplayActionText(string text)
+    public static void DisplayActionText(string text, bool wrap = false)
     {
-        ImGui.TextColored(CFG.Current.ImGui_Action_Text_Color, @$"{text}");
+        if (wrap)
+        {
+            ImGui.PushTextWrapPos();
+            ImGui.TextColored(CFG.Current.ImGui_Action_Text_Color, @$"{text}");
+            ImGui.PopTextWrapPos();
+        }
+        else
+        {
+            ImGui.TextColored(CFG.Current.ImGui_Action_Text_Color, @$"{text}");
+        }
     }
 
     public static void DisplayColoredText(string text, Vector4 color)

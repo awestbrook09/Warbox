@@ -15,6 +15,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using static Assimp.Metadata;
 
@@ -340,7 +341,7 @@ public class GenericTableView
 
                 if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{imguiElementName}{childDepth}"))
                 {
-                    if(ImGui.Selectable("Copy Script Name"))
+                    if(ImGui.Selectable("Copy Header Name"))
                     {
                         PlatformUtils.Instance.SetClipboardText(entry.Name.ToString());
                     }
@@ -391,7 +392,7 @@ public class GenericTableView
 
                 if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{attribute.Name}{imguiElementName}{childDepth}"))
                 {
-                    if (ImGui.Selectable("Copy Script Name"))
+                    if (ImGui.Selectable("Copy Property Name"))
                     {
                         PlatformUtils.Instance.SetClipboardText(attribute.Name.ToString());
                     }
@@ -468,7 +469,9 @@ public class GenericTableView
             {
                 var elementName = entry.Name.ToString();
                 var attributeName = attribute.Name.ToString();
-                var metaDoc = TableMeta.GetMetaDocument(EditorState, elementName);
+                var documentName = TableMeta.GetDocumentName(elementName);
+
+                var metaDoc = TableMeta.GetMetaDocument(EditorState, documentName);
                 List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
 
                 ImGui.TableNextRow();
@@ -579,7 +582,34 @@ public class GenericTableView
 
     private void DisplayTextRef(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
     {
+        var localizationFile = metaAttribute.Attribute("TextRef").Value;
+        var targetString = attribute.Value.ToString();
 
+        var targetFile = Warbox.DataHandler.Localization.Where(e => e.Key.Name == localizationFile).FirstOrDefault();
+        var targetDoc = targetFile.Value;
+
+        var rows = targetDoc.Root.Elements("Row").ToList();
+
+        var displayedName = "";
+
+        foreach (var row in rows)
+        {
+            var cells = row.Elements("Cell").ToList();
+
+            var defString = cells[0].Value;
+            var textString1 = cells[1].Value;
+            var textString2 = cells[2].Value;
+
+            if(defString == targetString)
+            {
+                displayedName = textString1;
+            }
+        }
+
+        if(displayedName != "")
+        {
+            UIHelper.DisplayInformationText(displayedName, true);
+        }
     }
 
     private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaAttribute, int i, string imguiElementName)
