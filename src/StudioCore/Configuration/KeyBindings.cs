@@ -135,7 +135,7 @@ public class KeyBindings
         public KeyBind CORE_SaveAll = new(
             "Save All",
             "Save all within the focused editor.",
-            Key.S,
+            Key.L,
             true);
 
         public KeyBind CORE_SavePTF = new(

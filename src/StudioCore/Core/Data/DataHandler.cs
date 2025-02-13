@@ -38,6 +38,8 @@ public static class DataHandler
 
     public static void SetupLocalization()
     {
+        Localization = new();
+
         if (Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
         {
             Localization.Add("English", ReadLocalization("Localization", "English_xml"));

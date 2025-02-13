@@ -123,15 +123,16 @@ public static class TableSaveHandler
         var modName = SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 
         var curStatus = currentEntry.Key;
-        var curDocument = currentEntry.Value;
-
         var vanillaStatus = vanillaEntry.Key;
-        var vanillaDocument = vanillaEntry.Value;
+
+        // Make new documents so we don't affect the in-use versions
+        var curDocument = new XDocument(currentEntry.Value);
+        var vanillaDocument = new XDocument(vanillaEntry.Value);
 
         // This contains the new 'edits' only document for writing when saving as a PTF
-        var result = GetUniqueEntries(curDocument, vanillaDocument);
-        var compareDocument = result.Item1;
-        var compareDifferenceCount = result.Item2;
+        //var result = GetUniqueEntries(curDocument, vanillaDocument);
+        //var compareDocument = result.Item1;
+        var compareDifferenceCount = 1; //result.Item2;
 
         if (compareDifferenceCount > 0)
         {
@@ -142,7 +143,7 @@ public static class TableSaveHandler
                 Directory.CreateDirectory(outputDir);
 
             var newStatus = new DataStatus(curStatus);
-            newStatus.Name = $"{newStatus.Name}__testmod";
+            newStatus.Name = $"{newStatus.Name}__{modName}.xml";
 
             var writePath = newStatus.Path.Replace($"{Warbox.ProjectDataRoot}\\Data", "");
             var fileDir = $"{outputDir}\\{writePath}";
@@ -161,7 +162,7 @@ public static class TableSaveHandler
             // If saving as PTF, only include the changed lines
             if (saveAsPTF)
             {
-                compareDocument.Save(fileDir);
+                //compareDocument.Save(fileDir);
             }
             // Otherwise, save the entire table.
             else
