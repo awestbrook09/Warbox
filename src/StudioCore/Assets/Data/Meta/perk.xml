@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="us-ascii"?>
-<meta AliasOverrideAttribute="UIName">
+<meta AliasOverrideAttribute="perk_ui_name">
     <perk Name="Perks" />
     <perk__combat Name="Perks: Combat" />
     <perk__kcd2 Name="Perks: KCD2" />
