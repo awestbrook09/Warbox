@@ -1016,7 +1016,7 @@ StaminaRegenBlock
 StaminaRegenAttack
 
 # ard
-Ranged weapon attack distance
+StaminaConsumptionForBowDrawHold
 
 # skp
 StealthKillProbability

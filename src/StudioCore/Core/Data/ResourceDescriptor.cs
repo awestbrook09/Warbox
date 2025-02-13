@@ -77,11 +77,11 @@ public class ResourceDescriptor : IComparable<ResourceDescriptor>
         }
         if (directory.Contains("Source\\Data"))
         {
-            directory = directory.Replace("Data", "");
+            directory = directory.Replace("Source\\Data", "");
         }
         if (directory.Contains("Source\\Localization"))
         {
-            directory = directory.Replace("Localization", "");
+            directory = directory.Replace("Source\\Localization", "");
         }
 
         RelativeDirectory = $"{directory}";

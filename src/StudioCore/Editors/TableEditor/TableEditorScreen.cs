@@ -192,11 +192,6 @@ public class TableEditorScreen : EditorScreen
         TableSaveHandler.ExportPTF();
     }
 
-    public void ExportAllPTF()
-    {
-        TableSaveHandler.ExportAllPTF();
-    }
-
     public void PackagePTF()
     {
         TableSaveHandler.PackagePTF();

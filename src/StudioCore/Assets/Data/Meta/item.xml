@@ -97,6 +97,10 @@
         <DiceBadge 
         Name="Dice Badge" 
         Description="" />
+        
+        <Ointment 
+        Name="Ointment" 
+        Description="" />
     </headers>
     
     <!-- Property Meta Data -->
@@ -335,7 +339,7 @@
 		<BuffDefinitionId 
         Name="Buff Definition ID"
         Description="" 
-        GuidRef="buff,buff_id,buff_ui_name" />
+        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name" />
         
 		<UiSound 
         Name="UI Sound"
@@ -475,6 +479,12 @@
         
 		<PickpocketInPouch
         Name="Pickpocket in Pouch"
+        Description="" 
+        IsBool="" />
+        
+        <!-- Ointment -->
+		<Efficiency
+        Name="Efficiency"
         Description="" 
         IsBool="" />
 	</entries>

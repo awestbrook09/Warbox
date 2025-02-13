@@ -49,7 +49,7 @@ public static class TableSaveHandler
 
             if (entry.Key.Name == status.Name)
             {
-                (bool, string, XDocument) result = RemoveVanillaEntries(entry.Key.Name, entry.Value, vanillaEntry.Value);
+                (bool, string, XDocument) result = RemoveVanillaEntries(entry.Key, entry.Value, vanillaEntry.Value);
 
                 var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 
@@ -61,27 +61,6 @@ public static class TableSaveHandler
                 {
                     TaskLogs.AddLog(result.Item2);
                 }
-            }
-        }
-    }
-
-    public static void ExportAllPTF()
-    {
-        foreach (var entry in DataHandler.Tables)
-        {
-            var vanillaEntry = DataHandler.Vanilla_Tables.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
-
-            (bool, string, XDocument) result = RemoveVanillaEntries(entry.Key.Name, entry.Value, vanillaEntry.Value);
-
-            var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
-
-            if (result.Item1 && result.Item3 != null)
-            {
-                SaveTable("Source\\PTF", entry.Key, entry.Value, result.Item3, $"__{modName}");
-            }
-            else if(result.Item2 != "")
-            {
-                TaskLogs.AddLog(result.Item2);
             }
         }
     }
@@ -122,13 +101,19 @@ public static class TableSaveHandler
                 TaskLogs.AddLog($"Unsupported encoding: {document.Declaration.Encoding}");
             }
 
-            TaskLogs.AddLog($"{writePath} saved.");
+            var fileName = Path.GetFileName(writePath);
+            TaskLogs.AddLog($"Saved file at: {writePath}.");
+            TaskLogs.AddLog($"{fileName} saved.");
         }
     }
 
-    // TODO: make this support nested tables properly, e.g. stuff where there are child of child lists
-    private static (bool, string, XDocument) RemoveVanillaEntries(string name, XDocument baseDoc, XDocument vanillaDoc)
+    private static Dictionary<string, List<RemovalTag>> Removals = new();
+
+    // TODO: fix this so it works with nested elements
+    private static (bool, string, XDocument) RemoveVanillaEntries(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)
     {
+        Removals = new();
+
         var tempDoc = new XDocument(baseDoc);
 
         if(vanillaDoc == null)
@@ -136,29 +121,140 @@ public static class TableSaveHandler
             return (false, "No valid vanilla counterpart document.", tempDoc);
         }
 
-        // Database -> Header -> Entries
-        var baseElements = tempDoc.Elements().Elements().Descendants().Where(e => e.HasAttributes).ToList();
-        var vanillaElements = vanillaDoc.Elements().Elements().Descendants().Where(e => e.HasAttributes).ToList();
+        // Check in reverse so we can remove child first
+        CheckElements(tempDoc, vanillaDoc, "3"); // Sub sub list iter
+        CheckElements(tempDoc, vanillaDoc, "2"); // Sub list tier
+        CheckElements(tempDoc, vanillaDoc, "1"); // Top list tier
 
-        foreach (var baseElement in baseElements.ToList())
+        var diffCount = 0;
+
+        List<XElement> RetainedElements = new();
+
+        if (Removals.ContainsKey("3"))
         {
-            if (vanillaElements.Any(vanillaElement => ElementsMatch(baseElement, vanillaElement)))
+            var removals = Removals["3"];
+            foreach(var entry in removals)
             {
-                baseElement.Remove();
+                if(entry.Element.Parent != null)
+                {
+                    RetainedElements.Add(entry.Element.Parent);
+                    entry.Element.Remove();
+                    diffCount++;
+                }
             }
         }
 
-        var editedElements = tempDoc.Elements().Elements().Descendants().Where(e => e.HasAttributes).ToList();
-
-        if (editedElements.Count == 0)
+        if (Removals.ContainsKey("2"))
         {
-            return (false, $"No differences were found for {name}. PTF Export cancelled.", tempDoc);
+            var removals = Removals["2"];
+            foreach (var entry in removals)
+            {
+                if (entry.Element.Parent != null && !RetainedElements.Contains(entry.Element))
+                {
+                    RetainedElements.Add(entry.Element.Parent);
+                    entry.Element.Remove();
+                    diffCount++;
+                }
+            }
+        }
+
+        if (Removals.ContainsKey("1"))
+        {
+            var removals = Removals["1"];
+            foreach (var entry in removals)
+            {
+                if (entry.Element.Parent != null && !RetainedElements.Contains(entry.Element))
+                {
+                    RetainedElements.Add(entry.Element.Parent);
+                    entry.Element.Remove();
+                    diffCount++;
+                }
+            }
+        }
+
+        // Return failed export if no differences are found
+        if (diffCount == 0)
+        {
+            return (false, $"No differences were found for {resDesc.Name}. PTF Export cancelled.", tempDoc);
         }
 
         return (true, "", tempDoc);
     }
 
-    private static bool ElementsMatch(XElement baseElement, XElement vanillaElement)
+    private static void CheckElements(XDocument tempDoc, XDocument vanillaDoc, string tier)
+    {
+        List<XElement> baseElements = new();
+        List<XElement> vanillaElements = new();
+
+        if(tier == "1")
+        {
+            baseElements = tempDoc.Elements().Elements().Descendants().ToList(); 
+            vanillaElements = vanillaDoc.Elements().Elements().Descendants().ToList();
+        }
+        if (tier == "2")
+        {
+            baseElements = tempDoc.Elements().Elements().Elements().Descendants().ToList();
+            vanillaElements = vanillaDoc.Elements().Elements().Elements().Descendants().ToList();
+        }
+        if (tier == "3")
+        {
+            baseElements = tempDoc.Elements().Elements().Elements().Elements().Descendants().ToList();
+            vanillaElements = vanillaDoc.Elements().Elements().Elements().Elements().Descendants().ToList();
+        }
+
+        foreach (var baseElement in baseElements.ToList())
+        {
+            // Check attributes
+            if (baseElement.HasAttributes)
+            {
+                if (vanillaElements.Any(vanillaElement => ElementAttributesMatch(baseElement, vanillaElement)))
+                {
+                    if (baseElement.Parent != null && baseElement != null)
+                    {
+                        var newRemoval = new RemovalTag(baseElement.Parent, baseElement);
+                        if (Removals.ContainsKey(tier))
+                        {
+                            Removals[tier].Add(newRemoval);
+                        }
+                        else
+                        {
+                            Removals.Add(tier, new List<RemovalTag>() { newRemoval });
+                        }
+                    }
+                }
+            }
+            // Element value check if no attributes are used
+            else if (vanillaElements.Any(vanillaElement => ElementValueMatch(baseElement, vanillaElement)))
+            {
+                if (baseElement.Parent != null && baseElement != null)
+                {
+                    var newRemoval = new RemovalTag(baseElement.Parent, baseElement);
+                    if (Removals.ContainsKey(tier))
+                    {
+                        Removals[tier].Add(newRemoval);
+                    }
+                    else
+                    {
+                        Removals.Add(tier, new List<RemovalTag>() { newRemoval });
+                    }
+                }
+            }
+        }
+    }
+
+    private static bool ElementValueMatch(XElement baseElement, XElement vanillaElement)
+    {
+        // Elements must have the same name
+        if (baseElement.Name != vanillaElement.Name)
+            return false;
+
+        if(baseElement.Value == vanillaElement.Value)
+            return true;
+
+        return false;
+    }
+
+    private static bool ElementAttributesMatch(XElement baseElement, XElement vanillaElement)
     {
         // Elements must have the same name
         if (baseElement.Name != vanillaElement.Name)
@@ -229,3 +325,15 @@ public static class TableSaveHandler
         }
     }
 }
+ public class RemovalTag
+{
+    public XElement Parent;
+    public XElement Element;
+
+    public RemovalTag(XElement parent, XElement element)
+    {
+        Parent = parent;
+        Element = element;
+    }
+}
+    

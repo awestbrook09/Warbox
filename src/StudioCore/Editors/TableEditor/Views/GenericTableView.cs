@@ -4,6 +4,7 @@ using StudioCore.Core.Data;
 using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Actions;
 using StudioCore.Editors.TableEditor.Framework;
+using StudioCore.Editors.TableEditor.Tools;
 using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Interface;
 using StudioCore.Platform;
@@ -172,6 +173,7 @@ public class GenericTableView
     public void Refresh()
     {
         ProcessAliasOverrides();
+        GuidResults = new();
     }
 
     /// <summary>
@@ -822,12 +824,116 @@ public class GenericTableView
         }
     }
 
+    private Dictionary<string, List<GuidSearchResult>> GuidResults = new();
+
     /// <summary>
     /// Handle the GUID reference meta text for a property that requires it.
     /// </summary>
-    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaAttribute, string curImguiKey)
+    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaElement, string curImguiKey)
     {
         var imguiKey = $"{ImGuiName}_{childDepth}_temp_{curImguiKey}";
+
+        var targetGuid = attribute.Value;
+
+        if (targetGuid == null || targetGuid == "")
+            return;
+
+        var guidParameters = metaElement.Attribute("GuidRef").Value.Split(",");
+        var targetFileName = guidParameters[0];
+        var targetProperty = guidParameters[1];
+        var localizationFile = guidParameters[2];
+        var localizationProperty = guidParameters[3];
+
+        if (GuidResults.ContainsKey(targetGuid))
+        {
+            DisplayGuidRefEntry(GuidResults[targetGuid], targetGuid, guidParameters, imguiKey);
+            return;
+        }
+        else
+        {
+            GuidResults = new Dictionary<string, List<GuidSearchResult>>
+            {
+                { targetGuid, new List<GuidSearchResult>() }
+            };
+        }
+
+        foreach (var view in Warbox.EditorHandler.TableEditor.TableDataView.GetTableViews())
+        {
+            var viewName = view.Key;
+            var curView = view.Value;
+
+            if (viewName.Contains(targetFileName))
+            {
+                var results = TableGuidTools.FindAttributebyNameAndValue(curView.ViewDocument, targetProperty, targetGuid);
+                
+                foreach (var res in results)
+                {
+                    var guidResult = new GuidSearchResult(curView.ViewStatus.Name, res.Item1, res.Item2, res.Item3, res.Item4);
+
+                    GuidResults[targetGuid].Add(guidResult);
+                }
+            }
+        }
+    }
+
+    private void DisplayGuidRefEntry(List<GuidSearchResult> results, string targetValue, string[] guidParameters, string curImguiKey)
+    {
+        var displayedName = "";
+
+        var targetFileName = guidParameters[0];
+        var targetProperty = guidParameters[1];
+        var localizationFile = guidParameters[2];
+        var localizationProperty = guidParameters[3];
+
+        // If individual result, show directly.
+        if (results.Count > 0)
+        {
+            // Only show first result
+            var result = results[0];
+
+            var locAttribute = result.Descendant.Attribute(localizationProperty);
+            if(locAttribute != null) 
+            {
+                var target_ui_string = locAttribute.Value;
+
+                var targetDoc = DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage].Where(e => e.Key.Name == localizationFile).FirstOrDefault();
+
+                if(targetDoc.Value != null)
+                {
+                    var rows = targetDoc.Value.Root.Elements("Row").ToList();
+
+                    foreach (var row in rows)
+                    {
+                        var cells = row.Elements("Cell").ToList();
+
+                        var ui_string = cells[0].Value;
+                        var reference_text = cells[1].Value;
+                        var localized_text = cells[2].Value;
+
+                        if (ui_string == target_ui_string)
+                        {
+                            displayedName = localized_text;
+                        }
+                    }
+                }
+
+                if (displayedName != "")
+                {
+                    UIHelper.DisplayInformationText(displayedName);
+
+                    if (ImGui.BeginPopupContextItem($"##guidRefContextMenu_{curImguiKey}"))
+                    {
+                        // Go to file -> entry
+                        if (ImGui.Selectable($"Go to {result.File} -> {targetValue}##goToEnumFile_{curImguiKey}"))
+                        {
+                            EditorCommandQueue.AddCommand($"table/select/{result.File}/{targetProperty}/{targetValue}/-1");
+                        }
+
+                        ImGui.EndPopup();
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>

@@ -114,6 +114,65 @@ public static class TableGuidTools
             }
         }
     }
+
+    /// <summary>
+    /// Scan for attributes with the specific name and value, and return a result list
+    /// </summary>
+    public static List<(int, XElement, XElement, XAttribute)> FindAttributebyNameAndValue(XDocument doc, string name, string value)
+    {
+        if (doc == null)
+            throw new ArgumentNullException(nameof(doc));
+
+        if (string.IsNullOrEmpty(value))
+            throw new ArgumentException("Value cannot be null or empty.", nameof(value));
+
+        var result = new List<(int, XElement, XElement, XAttribute)>();
+        int index = 0;
+
+        foreach (var element in doc.Root.Elements())
+        {
+            index = 0;
+
+            foreach (var secondElement in element.Elements())
+            {
+                AttributeScan(result, element, secondElement, value, index, name);
+
+                foreach (var thirdElement in secondElement.Elements())
+                {
+                    AttributeScan(result, secondElement, thirdElement, value, index, name);
+
+                    foreach (var fourthElement in thirdElement.Elements())
+                    {
+                        AttributeScan(result, thirdElement, fourthElement, value, index, name);
+
+                        // I'm fairly sure few XML files go this deep, if needed, add more.
+                        foreach (var fifthElement in fourthElement.Elements())
+                        {
+                            AttributeScan(result, fourthElement, fifthElement, value, index, name);
+                        }
+                    }
+                }
+
+                index++;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Filter the scan by the attribute name
+    /// </summary>
+    private static void AttributeScan(List<(int, XElement, XElement, XAttribute)> result, XElement srcElement, XElement curElement, string value, int index, string name)
+    {
+        foreach (var attribute in curElement.Attributes())
+        {
+            if (attribute.Name == name && attribute.Value == value)
+            {
+                result.Add((index, srcElement, curElement, attribute));
+            }
+        }
+    }
 }
 
 public class GuidSearchResult

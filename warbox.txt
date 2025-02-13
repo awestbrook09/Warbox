@@ -1,17 +1,11 @@
 #-----------------------------------------------
 # Warbox
 #-----------------------------------------------
+FEAT: support nested entries with the PTF save (currently it won't work correctly for tables with them).
+
 FEAT: add basic meta for all tables
 
 FEAT: add mass edit for properties
 
-FEAT: add goto for the TextRef meta (e.g. jump to localization entry)
-
 FEAT: add meta elements:
  - GuidRef // The attribute value points to a GUID, relevant file is passed in the parameters
-
-FEAT: PTF export for Table Editor: 
- - basically create a PTF folder and replicate the mod structure within it, but diff the edits (tables in memory) with the vanilla tables, and only include a file if there are changes, and only include the edits within said file.
-
-
-    
