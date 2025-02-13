@@ -126,28 +126,55 @@ public class KeyBindings
             Key.Z,
             true);
 
-        public KeyBind CORE_Save = new(
-            "Save", 
-            "Save the current file-level selection within the focused editor.", 
+        // Table Editor
+        public KeyBind CORE_SaveTable = new(
+            "Save Table File", 
+            "Save the current table file in its entirety.", 
             Key.S, 
             true);
 
-        public KeyBind CORE_SaveAll = new(
-            "Save All",
-            "Save all within the focused editor.",
+        public KeyBind CORE_SaveAllTables = new(
+            "Save All Table Files",
+            "Save all table files in their entirety.",
             Key.L,
             true);
 
-        public KeyBind CORE_SavePTF = new(
-            "Export as PTF",
-            "Exports all changes to a PTF version of your project.",
+        public KeyBind CORE_SavePatchedTableFile = new(
+            "Save Patched Table File",
+            "Saves the current table file changes to its own patched table file for this project.",
             Key.S,
             false,
             true);
 
-        public KeyBind CORE_Package = new(
-            "Save",
-            "Package the current file-level selection within the focused editor.",
+        public KeyBind CORE_SaveAllPatchedTableFiles = new(
+            "Save All Patched Table Files",
+            "Saves the all table file changes to their own patched table files for this project.",
+            Key.L,
+            false,
+            true);
+
+        public KeyBind CORE_PackagePatchedTables = new(
+            "Package Patched Tables",
+            "Package all the patched tables files linked to this mod as a PAK file.",
+            Key.P,
+            true);
+
+        // Text Editor
+        public KeyBind CORE_SaveLocalizationFile = new(
+            "Save Localization File",
+            "Save the current localization file in its entirety.",
+            Key.S,
+            true);
+
+        public KeyBind CORE_SaveAllLocalizationFiles = new(
+            "Save All Localization Files",
+            "Save all localization files in their entirety.",
+            Key.L,
+            true);
+
+        public KeyBind CORE_PackageLocalizationFiles = new(
+            "Package Localization Files",
+            "Package all the localization files as a PAK file for the current language.",
             Key.P,
             true);
 

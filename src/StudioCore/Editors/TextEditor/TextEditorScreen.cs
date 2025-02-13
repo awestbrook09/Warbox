@@ -42,15 +42,15 @@ public class TextEditorScreen : EditorScreen
     {
         if (ImGui.BeginMenu("File"))
         {
-            // Package
-            if (ImGui.MenuItem($"Package", KeyBindings.Current.CORE_Package.HintText))
+            // Package Localization Files
+            if (ImGui.MenuItem($"Package", KeyBindings.Current.CORE_PackageLocalizationFiles.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
                 Package();
             }
 
             // Save
-            if (ImGui.MenuItem($"Save", KeyBindings.Current.CORE_Save.HintText))
+            if (ImGui.MenuItem($"Save", KeyBindings.Current.CORE_SaveLocalizationFile.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
                 Save();
@@ -125,8 +125,8 @@ public class TextEditorScreen : EditorScreen
         var resDesc = FileSelectionView.SelectedStatus;
         var document = DataHandler.GetCurrentLocalization()[resDesc];
 
-        var writeDir = $"{Warbox.ProjectDataRoot}\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
-        var writePath = $"{Warbox.ProjectDataRoot}\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}{resDesc.Extension}";
+        var writeDir = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
+        var writePath = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}{resDesc.Extension}";
 
         if (!Directory.Exists(writeDir))
             Directory.CreateDirectory(writeDir);
@@ -136,18 +136,26 @@ public class TextEditorScreen : EditorScreen
         TaskLogs.AddLog($"{writePath} saved.");
     }
 
-    /// <summary>
-    /// Creates the PAK file for the Localization folder based of the current loose files
-    /// </summary>
     public void Package()
     {
         // Save first so the files are up to date.
         Save();
 
-        var sourceDir = $"{Warbox.ProjectDataRoot}\\Localization\\";
+        var sourceDir = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
+        var writeDir = $"{Warbox.ProjectDataRoot}\\Localization\\";
+
+        foreach(var entry in DataHandler.Localization)
+        {
+            var fileName = entry.Key;
+
+
+        }
+
         var pakName = "English_xml"; // Only support English for now.
 
         DataHandler.ZipXmlFiles(sourceDir, $"{sourceDir}\\{pakName}.pak");
+
+        ManifestHandler.CreateManisfestIfMissing();
     }
 
     private void ResetActionManager()
@@ -157,13 +165,13 @@ public class TextEditorScreen : EditorScreen
 
     public void Shortcuts()
     {
-        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_Save))
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveLocalizationFile))
         {
             Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
             Save();
         }
 
-        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_Package))
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_PackageLocalizationFiles))
         {
             Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
             Package();

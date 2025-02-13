@@ -151,7 +151,7 @@ public static class DataHandler
             return new SortedDictionary<ResourceDescriptor, XDocument>();
 
         var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
-        var projectDir = $"{Warbox.ProjectDataRoot}\\{folderName}\\";
+        var projectDir = $"{Warbox.ProjectDataRoot}\\Source\\{folderName}\\";
 
         var baseData = ReadXmlFromZip(dataDir);
         var projectData = ReadXmlFromDirectory(projectDir);
@@ -211,7 +211,7 @@ public static class DataHandler
             return new SortedDictionary<ResourceDescriptor, XDocument>();
 
         var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
-        var projectDir = $"{Warbox.ProjectDataRoot}\\{folderName}\\{CFG.Current.TextEditor_CurrentLanguage}";
+        var projectDir = $"{Warbox.ProjectDataRoot}\\Source\\{folderName}\\{CFG.Current.TextEditor_CurrentLanguage}";
 
         var baseData = ReadXmlFromZip(dataDir);
         var projectData = ReadXmlFromDirectory(projectDir);

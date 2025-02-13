@@ -5,6 +5,7 @@ using StudioCore.Editors.TextEditor.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,9 +17,6 @@ using static DotNext.Threading.Tasks.DynamicTaskAwaitable;
 namespace StudioCore.Editors.TableEditor.Framework;
 public static class TableSaveHandler
 {
-    /// <summary>
-    /// Export the current Table document as its own XML file (if changes are present)
-    /// </summary>
     public static void Export()
     {
         var status = Warbox.EditorHandler.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
@@ -28,26 +26,19 @@ public static class TableSaveHandler
             // Only process the current table
             if (entry.Key.Name == status.Name)
             {
-                SaveTable(entry.Key, entry.Value, entry.Value);
+                SaveTable("Source\\Data", entry.Key, entry.Value, entry.Value);
             }
         }
     }
 
-    /// <summary>
-    /// Export the all Table documents as their own XML file (if changes are present)
-    /// </summary>
     public static void ExportAll()
     {
         foreach (var entry in DataHandler.Tables)
         {
-            SaveTable(entry.Key, entry.Value, entry.Value);
+            SaveTable("Source\\Data", entry.Key, entry.Value, entry.Value);
         }
     }
 
-    /// <summary>
-    /// Export the all Table documents as their own XML file  (if changes are present),
-    /// only including the explicit entries that have been changed.
-    /// </summary>
     public static void ExportPTF()
     {
         var status = Warbox.EditorHandler.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
@@ -58,22 +49,47 @@ public static class TableSaveHandler
 
             if (entry.Key.Name == status.Name)
             {
-                XDocument result = RemoveVanillaEntries(entry.Value, vanillaEntry.Value);
+                (bool, string, XDocument) result = RemoveVanillaEntries(entry.Key.Name, entry.Value, vanillaEntry.Value);
 
-                var modName = SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+                var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 
-                if(result != null)
+                if(result.Item1 && result.Item3 != null)
                 {
-                    SaveTable(entry.Key, entry.Value, result, $"__{modName}");
+                    SaveTable("Source\\PTF", entry.Key, entry.Value, result.Item3, $"__{modName}");
+                }
+                else if (result.Item2 != "")
+                {
+                    TaskLogs.AddLog(result.Item2);
                 }
             }
         }
     }
 
-    private static void SaveTable(ResourceDescriptor resDesc, XDocument originalDocument, XDocument document, string postfix = "")
+    public static void ExportAllPTF()
     {
-        var writeDir = $"{Warbox.ProjectDataRoot}\\Data\\{resDesc.RelativeDirectory}\\";
-        var writePath = $"{Warbox.ProjectDataRoot}\\Data\\{resDesc.RelativeDirectory}\\{resDesc.Name}{postfix}{resDesc.Extension}";
+        foreach (var entry in DataHandler.Tables)
+        {
+            var vanillaEntry = DataHandler.Vanilla_Tables.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
+
+            (bool, string, XDocument) result = RemoveVanillaEntries(entry.Key.Name, entry.Value, vanillaEntry.Value);
+
+            var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+
+            if (result.Item1 && result.Item3 != null)
+            {
+                SaveTable("Source\\PTF", entry.Key, entry.Value, result.Item3, $"__{modName}");
+            }
+            else if(result.Item2 != "")
+            {
+                TaskLogs.AddLog(result.Item2);
+            }
+        }
+    }
+
+    private static void SaveTable(string saveDir, ResourceDescriptor resDesc, XDocument originalDocument, XDocument document, string postfix = "")
+    {
+        var writeDir = $"{Warbox.ProjectDataRoot}\\{saveDir}\\{resDesc.RelativeDirectory}\\";
+        var writePath = $"{Warbox.ProjectDataRoot}\\{saveDir}\\{resDesc.RelativeDirectory}\\{resDesc.Name}{postfix}{resDesc.Extension}";
 
         if (!Directory.Exists(writeDir))
             Directory.CreateDirectory(writeDir);
@@ -110,21 +126,15 @@ public static class TableSaveHandler
         }
     }
 
-    public static string SanitizeModName(string input)
-    {
-        if (input == null) 
-            return string.Empty;
-
-        string result = input.Replace(' ', '_');
-
-        result = Regex.Replace(result, @"[^a-zA-Z0-9_]", "");
-
-        return result.ToLower();
-    }
-
-    private static XDocument RemoveVanillaEntries(XDocument baseDoc, XDocument vanillaDoc)
+    // TODO: make this support nested tables properly, e.g. stuff where there are child of child lists
+    private static (bool, string, XDocument) RemoveVanillaEntries(string name, XDocument baseDoc, XDocument vanillaDoc)
     {
         var tempDoc = new XDocument(baseDoc);
+
+        if(vanillaDoc == null)
+        {
+            return (false, "No valid vanilla counterpart document.", tempDoc);
+        }
 
         // Database -> Header -> Entries
         var baseElements = tempDoc.Elements().Elements().Descendants().Where(e => e.HasAttributes).ToList();
@@ -138,7 +148,14 @@ public static class TableSaveHandler
             }
         }
 
-        return tempDoc;
+        var editedElements = tempDoc.Elements().Elements().Descendants().Where(e => e.HasAttributes).ToList();
+
+        if (editedElements.Count == 0)
+        {
+            return (false, $"No differences were found for {name}. PTF Export cancelled.", tempDoc);
+        }
+
+        return (true, "", tempDoc);
     }
 
     private static bool ElementsMatch(XElement baseElement, XElement vanillaElement)
@@ -156,5 +173,59 @@ public static class TableSaveHandler
 
         // All attributes and their values must match
         return baseAttributes.Zip(vanillaAttributes, (b, v) => b.Name == v.Name && b.Value == v.Value).All(match => match);
+    }
+
+    public static void PackagePTF()
+    {
+        if(!Directory.Exists($"{Warbox.ProjectDataRoot}\\Source\\PTF\\"))
+        {
+            TaskLogs.AddLog($"No PTF folder exists yet.");
+            return;
+        }
+
+        if(!Directory.Exists($"{Warbox.ProjectDataRoot}\\Data\\"))
+        {
+            Directory.CreateDirectory($"{Warbox.ProjectDataRoot}\\Data\\");
+        }
+
+        var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+
+        // Output it in the normal Data folder so it can be read by the game
+        // (assuming we are in the Game/Mods/<mod name>/ structure
+        var outputPath = $"{Warbox.ProjectDataRoot}\\Data\\{modName}.pak";
+        ZipDirectory($"{Warbox.ProjectDataRoot}\\Source\\PTF\\", outputPath);
+
+        TaskLogs.AddLog($"Created PAK file from PTF files: {outputPath}");
+
+        ManifestHandler.CreateManisfestIfMissing();
+    }
+
+    private static void ZipDirectory(string directoryPath, string zipFilePath)
+    {
+        // Create the ZIP archive and set the CompressionLevel
+        using (FileStream zipToCreate = new FileStream(zipFilePath, FileMode.Create))
+        using (ZipArchive archive = new ZipArchive(zipToCreate, ZipArchiveMode.Create))
+        {
+            // Get all XML files (including subdirectories)
+            string[] xmlFiles = Directory.GetFiles(directoryPath, "*.xml", SearchOption.AllDirectories);
+
+            foreach (var file in xmlFiles)
+            {
+                // Get the relative file path (preserve directory structure)
+                string relativePath = Path.GetRelativePath(directoryPath, file);
+
+                // Add the file to the archive
+                ZipArchiveEntry entry = archive.CreateEntry(relativePath);
+
+                // Set the time format to avoid high precision timestamps
+                entry.LastWriteTime = DateTime.Now;
+
+                using (Stream entryStream = entry.Open())
+                using (FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(entryStream);
+                }
+            }
+        }
     }
 }

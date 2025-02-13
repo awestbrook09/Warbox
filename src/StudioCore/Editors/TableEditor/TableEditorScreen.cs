@@ -47,29 +47,47 @@ public class TableEditorScreen : EditorScreen
     {
         if (ImGui.BeginMenu("File"))
         {
-            // Save
-            if (ImGui.MenuItem($"Save Current Table", KeyBindings.Current.CORE_Save.HintText))
+            // Save Table File
+            if (ImGui.MenuItem($"Save Table File", KeyBindings.Current.CORE_SaveTable.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
                 Save();
             }
-            UIHelper.ShowHoverTooltip("Saves currently selected table to your project folder.");
+            UIHelper.ShowHoverTooltip("Save the current table file in its entirety.");
 
-            // Save
-            if (ImGui.MenuItem($"Save All Tables", KeyBindings.Current.CORE_SaveAll.HintText))
+            // Save All Table Files
+            if (ImGui.MenuItem($"Save All Table Files", KeyBindings.Current.CORE_SaveAllTables.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
                 SaveAll();
             }
-            UIHelper.ShowHoverTooltip("Saves all edited tables to your project folder.");
+            UIHelper.ShowHoverTooltip("Save all table files in their entirety.");
 
-            // Save PTF
-            if (ImGui.MenuItem($"Export Table as PTF", KeyBindings.Current.CORE_Save.HintText))
+            // Save Patched Table File
+            if (ImGui.MenuItem($"Save Patched Table File", KeyBindings.Current.CORE_SavePatchedTableFile.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
-                SavePTF();
+                ExportPTF();
             }
-            UIHelper.ShowHoverTooltip("Creates a patched table file based on the currently selected table.");
+            UIHelper.ShowHoverTooltip("Saves the current table file changes to its own patched table file for this project.");
+
+            // Save All Patched Table Files
+            /*
+            if (ImGui.MenuItem($"Save All Patched Table Files", KeyBindings.Current.CORE_SaveAllPatchedTableFiles.HintText))
+            {
+                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                ExportAllPTF();
+            }
+            UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
+            */
+
+            // Save All Patched Table Files
+            if (ImGui.MenuItem($"Package Patched Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
+            {
+                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                PackagePTF();
+            }
+            UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
 
             ImGui.EndMenu();
         }
@@ -169,9 +187,19 @@ public class TableEditorScreen : EditorScreen
         TableSaveHandler.ExportAll();
     }
 
-    public void SavePTF()
+    public void ExportPTF()
     {
         TableSaveHandler.ExportPTF();
+    }
+
+    public void ExportAllPTF()
+    {
+        TableSaveHandler.ExportAllPTF();
+    }
+
+    public void PackagePTF()
+    {
+        TableSaveHandler.PackagePTF();
     }
 
     private void ResetActionManager()
@@ -181,22 +209,36 @@ public class TableEditorScreen : EditorScreen
 
     public void Shortcuts()
     {
-        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_Save))
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveTable))
         {
             Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
             Save();
         }
 
-        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveAll))
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveAllTables))
         {
             Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
             SaveAll();
         }
 
-        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SavePTF))
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SavePatchedTableFile))
         {
             Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
-            SavePTF();
+            ExportPTF();
+        }
+
+        /*
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveAllPatchedTableFiles))
+        {
+            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            ExportAllPTF();
+        }
+        */
+
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_PackagePatchedTables))
+        {
+            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            PackagePTF();
         }
 
         if (EditorActionManager.CanUndo() && InputTracker.GetKeyDown(KeyBindings.Current.CORE_UndoAction))

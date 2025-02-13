@@ -75,11 +75,11 @@ public class ResourceDescriptor : IComparable<ResourceDescriptor>
         {
             directory = directory.Replace(Warbox.ProjectDataRoot, "");
         }
-        if (directory.Contains("Data"))
+        if (directory.Contains("Source\\Data"))
         {
             directory = directory.Replace("Data", "");
         }
-        if (directory.Contains("Localization"))
+        if (directory.Contains("Source\\Localization"))
         {
             directory = directory.Replace("Localization", "");
         }

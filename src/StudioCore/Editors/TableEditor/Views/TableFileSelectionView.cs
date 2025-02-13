@@ -60,7 +60,7 @@ public class TableFileSelectionView
     {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen;
         
-        var modName = TableSaveHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+        var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 
         foreach (var entry in CategoryLists)
         {

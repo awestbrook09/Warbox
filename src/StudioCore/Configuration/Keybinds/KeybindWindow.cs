@@ -137,21 +137,37 @@ public class CommonKeybindTab
                 KeyBindings.Current.CORE_UndoAction,
                 KeyBindings.Default.CORE_UndoAction);
 
-            KeyBindings.Current.CORE_Save = InputTracker.KeybindLine(6,
-                KeyBindings.Current.CORE_Save,
-                KeyBindings.Default.CORE_Save);
+            KeyBindings.Current.CORE_SaveTable = InputTracker.KeybindLine(6,
+                KeyBindings.Current.CORE_SaveTable,
+                KeyBindings.Default.CORE_SaveTable);
 
-            KeyBindings.Current.CORE_SaveAll = InputTracker.KeybindLine(12,
-                KeyBindings.Current.CORE_SaveAll,
-                KeyBindings.Default.CORE_SaveAll);
+            KeyBindings.Current.CORE_SaveAllTables = InputTracker.KeybindLine(12,
+                KeyBindings.Current.CORE_SaveAllTables,
+                KeyBindings.Default.CORE_SaveAllTables);
 
-            KeyBindings.Current.CORE_SavePTF = InputTracker.KeybindLine(11,
-                KeyBindings.Current.CORE_SavePTF,
-                KeyBindings.Default.CORE_SavePTF);
+            KeyBindings.Current.CORE_SavePatchedTableFile = InputTracker.KeybindLine(11,
+                KeyBindings.Current.CORE_SavePatchedTableFile,
+                KeyBindings.Default.CORE_SavePatchedTableFile);
 
-            KeyBindings.Current.CORE_Package = InputTracker.KeybindLine(10,
-                KeyBindings.Current.CORE_Package,
-                KeyBindings.Default.CORE_Package);
+            KeyBindings.Current.CORE_SaveAllPatchedTableFiles = InputTracker.KeybindLine(13,
+                KeyBindings.Current.CORE_SaveAllPatchedTableFiles,
+                KeyBindings.Default.CORE_SaveAllPatchedTableFiles);
+
+            KeyBindings.Current.CORE_PackagePatchedTables = InputTracker.KeybindLine(10,
+                KeyBindings.Current.CORE_PackagePatchedTables,
+                KeyBindings.Default.CORE_PackagePatchedTables);
+
+            KeyBindings.Current.CORE_SaveLocalizationFile = InputTracker.KeybindLine(14,
+                KeyBindings.Current.CORE_SaveLocalizationFile,
+                KeyBindings.Default.CORE_SaveLocalizationFile);
+
+            KeyBindings.Current.CORE_SaveAllLocalizationFiles = InputTracker.KeybindLine(15,
+                KeyBindings.Current.CORE_SaveAllLocalizationFiles,
+                KeyBindings.Default.CORE_SaveAllLocalizationFiles);
+
+            KeyBindings.Current.CORE_PackageLocalizationFiles = InputTracker.KeybindLine(16,
+                KeyBindings.Current.CORE_PackageLocalizationFiles,
+                KeyBindings.Default.CORE_PackageLocalizationFiles);
         }
 
         if (ImGui.CollapsingHeader("Windows", ImGuiTreeNodeFlags.DefaultOpen))

@@ -334,7 +334,8 @@
         
 		<BuffDefinitionId 
         Name="Buff Definition ID"
-        Description="" />
+        Description="" 
+        GuidRef="buff,buff_id,buff_ui_name" />
         
 		<UiSound 
         Name="UI Sound"
