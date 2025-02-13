@@ -89,6 +89,7 @@ public static class TableGuidTools
                     {
                         AttributeScan(result, thirdElement, fourthElement, value, index);
 
+                        // I'm fairly sure few XML files go this deep, if needed, add more.
                         foreach (var fifthElement in fourthElement.Elements())
                         {
                             AttributeScan(result, fourthElement, fifthElement, value, index);

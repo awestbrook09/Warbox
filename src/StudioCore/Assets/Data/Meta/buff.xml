@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <buff Name="Buffs" />
+    <buff__alchemy Name="Buffs: Alchemy" />
+    <buff__perk Name="Buffs: Perks" />
+    <buff__perk_kcd1 Name="Buffs: Perks - KCD 1" />
+    
+    <headers>
+        <buff 
+        Name="Buff" 
+        Description="" />
+    </headers>
+	<entries>
+		<buff_id
+        Name="GUID"
+        Description="" />
+        
+		<buff_name
+        Name="Script Name"
+        Description="Internal name, not showed in UI." />
+        
+		<buff_desc
+        Name="UI Description"
+        Description="" 
+        TextRef="text_ui_soul" />
+        
+		<buff_class_id
+        Name="Class ID"
+        Description="" 
+        FileEnum="buff_class,buff_class,buff_class_id,buff_class_name" />
+        
+		<icon_id
+        Name="Icon ID"
+        Description="" />
+        
+		<duration
+        Name="Duration"
+        Description="Used by some implementations like Cpp:BasicTimed and Cpp:Fading" />
+        
+		<buff_exclusivity_id
+        Name="Exclusivity ID"
+        Description="" 
+        Enum="BUFF_EXCLUSIVITY_TYPE" />
+        
+		<buff_params
+        Name="Parameters"
+        Description="" />
+        
+		<implementation
+        Name="Implementation"
+        Description="" />
+        
+		<buff_ui_name
+        Name="UI Name"
+        Description="" 
+        TextRef="text_ui_soul" />
+        
+		<buff_ui_type_id
+        Name="UI Type"
+        Description="" 
+        Enum="BUFF_UI_TYPE" />
+        
+		<buff_ai_tag_id
+        Name="AI Tag Type"
+        Description="" 
+        Enum="BUFF_AI_TAG_ID" />
+        
+		<buff_ui_order
+        Name="UI Order"
+        Description="Order in which buffs appear in UI." />
+        
+		<is_persistent
+        Name="Is Persistent"
+        Description="" 
+        IsBool="" />
+        
+		<visual_effect
+        Name="Visual Effect"
+        Description="Sets material effect, refers to Data\gamedata.pak\Libs\MaterialEffects\FXLibs\player_fx.xml" />
+        
+		<slot_icon_id
+        Name="Slot Icon ID"
+        Description="Icon for item buffs (e.g. poisoning)." />
+        
+		<slot_buff_ui_name
+        Name="Slot UI Name"
+        Description="The UI name for item buffs." 
+        TextRef="text_ui_soul" />
+        
+		<buff_lifetime_id
+        Name="Lifetime Type"
+        Description="" 
+        Enum="BUFF_LIFETIME_TYPE" />
+        
+		<buff_ui_visibility_id
+        Name="UI Visibility Type"
+        Description="" 
+        Enum="BUFF_UI_VISIBILITY_TYPE" />
+        
+		<buff_id
+        Name="Buff"
+        Description="" />
+	</entries>
+    
+    <enums>
+        <enum Name="BUFF_AI_TAG_ID" >
+            <Option ID="0" Name="alcohol_mood" />
+            <Option ID="1" Name="alcohol_drunk" />
+            <Option ID="2" Name="alcohol_blackout" />
+            <Option ID="3" Name="poison" />
+            <Option ID="4" Name="bleed" />
+            <Option ID="5" Name="sleep" />
+            <Option ID="6" Name="overeat" />
+            <Option ID="7" Name="injury" />
+            <Option ID="8" Name="savegame" />
+        </enum>
+        <enum Name="BUFF_EXCLUSIVITY_TYPE" >
+            <Option ID="0" Name="None - allows multiple instances of the same buff on one target" />
+            <Option ID="1" Name="ID Exclusive - more instances of the same buff (the same id) are now allowed on one target" />
+            <Option ID="2" Name="Modifer Exclusive - more buffs with the same modifier are not allowed on one target" />
+            <Option ID="3" Name="Class Exclusive - more buffs belonging to the same class are not allowed" />
+            <Option ID="4" Name="Target Exclusive - more buffs are not allowed on one target" />
+        </enum>
+        <enum Name="BUFF_LIFETIME_TYPE" >
+            <Option ID="0" Name="Short Term" />
+            <Option ID="1" Name="Long Term" />
+        </enum>
+        <enum Name="BUFF_UI_TYPE" >
+            <Option ID="0" Name="Default" />
+            <Option ID="1" Name="Buff" />
+            <Option ID="2" Name="Debuff" />
+            <Option ID="3" Name="Injury Debuff" />
+            <Option ID="4" Name="Perk" />
+        </enum>
+        <enum Name="BUFF_UI_VISIBILITY_TYPE" >
+            <Option ID="0" Name="None" />
+            <Option ID="1" Name="HUD" />
+            <Option ID="2" Name="Inventory" />
+            <Option ID="3" Name="All" />
+        </enum>
+    </enums>
+</meta>

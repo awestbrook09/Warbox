@@ -1,37 +1,38 @@
 ﻿using StudioCore.Editor;
+using StudioCore.Editors.TableEditor.Views;
 using StudioCore.KCD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace StudioCore.Editors.TextEditor.Actions;
 
 public class RemoveTextRow : EditorAction
 {
     private int RowIndex;
-    private KCDText.Row TargetRow;
-    private KCDText SourceText;
+    private List<XElement> Elements;
+    private XElement Row;
 
-    public RemoveTextRow(KCDText sourceText, int rowIndex)
+    public RemoveTextRow(List<XElement> elements, int rowIndex)
     {
-        SourceText = sourceText;
+        Elements = elements;
         RowIndex = rowIndex;
+        Row = new XElement(Elements.ElementAt(rowIndex));
     }
 
     public override ActionEvent Execute()
     {
-        TargetRow = SourceText.Rows[RowIndex].NewCopy();
-
-        SourceText.Rows.RemoveAt(RowIndex);
+        Elements.RemoveAt(RowIndex);
 
         return ActionEvent.NoEvent;
     }
 
     public override ActionEvent Undo()
     {
-        SourceText.Rows.Insert(RowIndex, TargetRow);
+        Elements.Insert(RowIndex, Row);
 
         return ActionEvent.NoEvent;
     }

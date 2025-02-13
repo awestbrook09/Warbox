@@ -48,18 +48,28 @@ public class TableEditorScreen : EditorScreen
         if (ImGui.BeginMenu("File"))
         {
             // Save
-            if (ImGui.MenuItem($"Save", KeyBindings.Current.CORE_Save.HintText))
+            if (ImGui.MenuItem($"Save Current Table", KeyBindings.Current.CORE_Save.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
                 Save();
             }
+            UIHelper.ShowHoverTooltip("Saves currently selected table to your project folder.");
+
+            // Save
+            if (ImGui.MenuItem($"Save All Tables", KeyBindings.Current.CORE_SaveAll.HintText))
+            {
+                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                SaveAll();
+            }
+            UIHelper.ShowHoverTooltip("Saves all edited tables to your project folder.");
 
             // Save PTF
-            if (ImGui.MenuItem($"Save PTF", KeyBindings.Current.CORE_Save.HintText))
+            if (ImGui.MenuItem($"Export as PTF Mod", KeyBindings.Current.CORE_Save.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
                 SavePTF();
             }
+            UIHelper.ShowHoverTooltip("Creates a patched table file mod based on your current edits. PTF export is found in the PTF folder.");
 
             ImGui.EndMenu();
         }
@@ -151,35 +161,17 @@ public class TableEditorScreen : EditorScreen
 
     public void Save()
     {
-        var outputDir = $"{Warbox.ProjectDataRoot}\\Data";
+        TableSaveHandler.Export();
+    }
 
-        if (!Directory.Exists(outputDir))
-            Directory.CreateDirectory(outputDir);
-
-        var status = FileSelectionView.GetSelectedDocumentStatus();
-        var document = DataHandler.Tables[status];
-
-        var writePath = status.Path;
-        var fileDir = $"{outputDir}\\{writePath}";
-
-        // If it is a project-specific file, use the status Path as it is a full path
-        if (writePath.Contains(outputDir))
-        {
-            fileDir = $"{writePath}";
-        }
-
-        var fileOutputDir = Path.GetDirectoryName(fileDir);
-
-        if (!Directory.Exists(fileOutputDir))
-            Directory.CreateDirectory(fileOutputDir);
-
-        document.Save(fileDir);
-
-        TaskLogs.AddLog($"{fileDir} saved.");
+    public void SaveAll()
+    {
+        TableSaveHandler.ExportAll();
     }
 
     public void SavePTF()
     {
+        TableSaveHandler.ExportPTF();
     }
 
     private void ResetActionManager()
@@ -193,6 +185,12 @@ public class TableEditorScreen : EditorScreen
         {
             Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
             Save();
+        }
+
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveAll))
+        {
+            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            SaveAll();
         }
 
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SavePTF))

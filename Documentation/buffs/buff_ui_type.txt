@@ -1,0 +1,5 @@
+0 Default
+1 Buff
+2 Debuff
+3 InjuryDebuff
+4 Perk

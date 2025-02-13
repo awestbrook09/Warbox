@@ -11,6 +11,10 @@ using System.IO;
 using StudioCore.Core.Data;
 using StudioCore.Editors.TextEditor.Views;
 using StudioCore.Editors.TextEditor.Framework;
+using System.Collections.Generic;
+using System.Xml.Linq;
+using System.Linq;
+using static Assimp.Metadata;
 
 namespace StudioCore.TextEditor;
 
@@ -19,7 +23,6 @@ public class TextEditorScreen : EditorScreen
     public string EditorName => "Localization";
     public string CommandEndpoint => "text";
 
-    public TextEditorState EditorState;
     public FileSelectionView FileSelectionView;
     public TextRowView TextRowView;
     public TextCellView TextCellView;
@@ -30,7 +33,6 @@ public class TextEditorScreen : EditorScreen
     {
         DataHandler.SetupLocalization();
 
-        EditorState = new(this);
         FileSelectionView = new(this);
         TextRowView = new(this);
         TextCellView = new(this);
@@ -120,14 +122,12 @@ public class TextEditorScreen : EditorScreen
 
     public void Save()
     {
-        EditorState.UpdateSelectedDocument();
-
         var outputDir = $"{Warbox.ProjectDataRoot}\\Localization";
 
         if(!Directory.Exists(outputDir))
             Directory.CreateDirectory(outputDir);
 
-        var status = EditorState.SelectedStatus;
+        var status = FileSelectionView.SelectedStatus;
         var document = DataHandler.Localization[status];
 
         var writePath = status.Path;
@@ -193,7 +193,37 @@ public class TextEditorScreen : EditorScreen
         // Parse select commands
         if (initcmd != null && initcmd[0] == "select")
         {
+            if (initcmd.Length > 2)
+            {
+                var fileName = initcmd[1];
+                var targetUiString = initcmd[2];
 
+                var targetFile = DataHandler.Localization.Where(e => e.Key.Name == fileName).FirstOrDefault();
+
+                FileSelectionView.UpdateSelection(targetFile, true);
+
+                // Set row selection
+                if (FileSelectionView.SelectedDocument != null)
+                {
+                    var curElements = FileSelectionView.SelectedElements;
+
+                    // Row
+                    for (int i = 0; i < curElements.Count; i++)
+                    {
+                        var entry = curElements[i];
+                        var cells = entry.Elements().ToList();
+
+                        var id = cells[0].Value;
+                        var text = cells[1].Value;
+                        var fallback_text = cells[2].Value;
+
+                        if(id == targetUiString)
+                        {
+                            TextRowView.UpdateSelection(entry, i, true);
+                        }
+                    }
+                }
+            }
         }
     }
 }

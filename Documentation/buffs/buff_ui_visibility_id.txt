@@ -1,0 +1,4 @@
+0 None
+1 HUD
+2 Inventory
+3 All

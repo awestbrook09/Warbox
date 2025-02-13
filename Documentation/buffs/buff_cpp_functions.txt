@@ -11,7 +11,7 @@
 ?
 
 - Cpp:Bleeding
-Apply buff if player is bleeding
+Used for showing the value of BleedingTotal derived stat in UI. Adding this buff will not cause bleeding! 
 
 - Cpp:Branding
 ?
@@ -20,10 +20,10 @@ Apply buff if player is bleeding
 ?
 
 - Cpp:Constant
-Apply constant buff
+Buff is constantly active.
 
 - Cpp:Instant
-Apply instant buff
+Applies its modifiers and then it gets removed. Useful in buff class exlusivity, to kick out other buffs in the same class. 
 
 - Cpp:ConstantContextChecking
 ?
@@ -38,16 +38,16 @@ Apply instant buff
 ?
 
 - Cpp:Caffeine
-?
+Modifies Caffeine derived stat. 
 
 - Cpp:CarryingLoad
 ?
 
 - Cpp:CarryingBodyGravedigger
-?
+Modifies CarriedWeight and StaminaDerivation derived stats. Depends on CarriedBodyWeightCoef, CarriedCarriedWeightCoef, CarriedBodyMaxStamConsumption and the carried body's BodyWeight and CarriedWeight derived stats. CarriedWeight mod is multiplied by PerkCarriedBodyGravediggerWeightMul and StaminaDerivation mod is 0. 
 
 - Cpp:CombatContextBuff
-?
+Applied in combat.
 
 - Cpp:CombatStaminaBuff
 ?
@@ -59,10 +59,10 @@ Apply instant buff
 ?
 
 - Cpp:AdditionalWeight
-?
+Modifies CarriedWeight derived stat. 
 
 - Cpp:AgilityWeaponBuff
-?
+Activates when a weapon with higher agility requirement than strength requirement is equipped. 
 
 - Cpp:AlcoholCraving
 ?
@@ -71,7 +71,7 @@ Apply instant buff
 ?
 
 - Cpp:Alerted
-?
+Adds "alerted" mannequin tag used by animations.
 
 - Cpp:Cooldown
 ?
@@ -86,55 +86,57 @@ Apply buff when player is crouching
 ?
 
 - Cpp:DialogSkillCheck
-Apply buff during skill check in dialog
+Applied in dialog.
 
 - Cpp:CrimeDialogSkillCheck
 ?
 
 - Cpp:VersusWomanDialogSkillCheck
-?
+Applied against souls in soul_archetype with race "human" and gender "female" during dialog.
 
 - Cpp:Drunk
-?
+Adds "Drunk" mannequin tag used by animations.
 
 - Cpp:DrunkOrHangoverChecking
 Apply buff when player is drunk or hungover
 
 - Cpp:DrunkChecking
-Apply buff if player is drunk
+Active when Drunkenness derived stat > 0 
 
 - Cpp:Drunkenness
-?
+Modifies Strength, Agility, Vitality, Speech, Charisma, Conspicuousness, Drunkenness, Exhaust and Sprint. 
+Adds "Drunk" mannequin tag for animations.
+Depends on AlcoholMoodThreshold, AlcoholDrunkThreshold, AlcoholMaxSTREffect, AlcoholMaxAGIEffect, AlcoholMaxVITEffect, AlcoholMaxSPCEffect, AlcoholMaxCHAEffect, AlcoholMaxCONEffect, AlcoholMoodMaxExhaustPossitiveEffect, AlcoholDrunkMaxExhaustNegativeEffect, AlcoholBlackoutDuration, AlcoholBaseHangoverDuration, AlcoholMaxDrinkingSkillHangoverDurationModifier, AlcoholDigestSpeedModfifOnEmptyStomache, AlcoholDigestSpeedModfifOnFullStomache, AlcoholPerkDrunkMoodRangeMod, AlcoholPerkDrunkHangoverDurationMod, AlcoholPerkTrueSlavMaxAlcoholMod, AlcoholPerkTrueSlavHangoverDurationMod, AlcoholPerkLooseTongueSpcChaModif and FoodOverEat. 
 
 - Cpp:DuringFader
-?
+Active during fader. Deactivates DuringFaderHysteresis GameTime seconds after fader ends
 
 - Cpp:Educated
-?
+Applied against souls in social_class "nobleman", "monk" and "circator". 
 
 - Cpp:Encumbered
-?
+Sets primary mod group intensity to Encumberance derived stat and enables secondary mod group when Encumberance > EncumberanceForSecondaryModifiers
 
 - Cpp:EquippableItemWeighted
-?
+Sets mod intensity to equipped item's rpg_buff_weight. 
 
 - Cpp:ExteriorCrouch
 ?
 
 - Cpp:Fading
-?
+Timed buff, which gets removed after it expires. Duration controls the expiration time in GameTime seconds. Modifier intensity linearly decreases over time. 
 
 - Cpp:WorldTimeFading
-?
+Similar to Cpp:Fading, but uses WorldTime. 
 
 - Cpp:HealthFadingFromLimit
-Apply buff if HP is 75 or less, scaling buff by HP amount.
+Modifier intensity depends on Health: no effect when Health = HealthFadingFromLimitValue, max effect when Health = 0. 
 
 - Cpp:HealthinessFading
-?
+Modifier intensity depends on Healthiness derived stat: no effect when Healthiness = 1, max effect when Healthiness = 0. 
 
 - Cpp:AdditionalAttackerCountFading
-?
+Activates when outnumbered in combat. Modifier intensity depends on number of opponent: no effect against 1 opponent, max effect against AdditionalAttackerCountForMaxFadingBuff opponents. 
 
 - Cpp:AlcoholMood
 Apply buff when player has drank any alcohol
@@ -146,10 +148,12 @@ Apply buff when player has drank any alcohol
 ?
 
 - Cpp:Exhausted
-?
+Modifies Speech and Charisma. 
+Depends on SpeechMulOnExtremeExhaustion, CharismaMulOnExtremeExhaustion, ExhaustedThreshold, ExhaustedPlayerEffectMinMin, ExhaustedPlayerEffectMaxMin, ExhaustedPlayerEffectMinMax, ExhaustedPlayerEffectMaxMax and ExtremeExhaustionFaintAveragePeriod.
+
 
 - Cpp:CountrysideLocation
-?
+Active if you enter a location tagged as Countryside.
 
 - Cpp:CountrysideLocationWithObedientDogBuff
 ?
@@ -164,16 +168,18 @@ Apply buff when player has drank any alcohol
 ?
 
 - Cpp:FoodPoisoning
-?
+Modifies Health, Strength, Vitality, Agility and Charisma. 
+Depends on FoodPoisoningMaxValue, FoodPoisoningThreshold, FoodPoisoningMinHealthEffectSpeed, FoodPoisoningMaxHealthEffectSpeed, FoodPoisoningMaxStatPenalty, MetabolismDigestSpeedMultiplier and MetabolismAbsorbSpeed. 
 
 - Cpp:ForcedDrunkenness
 ?
 
 - Cpp:Haggle
-?
+Applied when haggling.
 
 - Cpp:Hangover
-?
+Modifies Strength, Agility, Vitality, Speech, Charisma and Conspicuousness. 
+Depends on AlcoholMaxSTREffect, AlcoholMaxAGIEffect, AlcoholMaxVITEffect, AlcoholMaxSPCEffect, AlcoholMaxCHAEffect, AlcoholMaxCONEffect, AlcoholHangoverOffsetModif, AlcoholPerkBacchusHangoverEffectMod and AlcoholPerkLooseTongueSpcChaModif. 
 
 - Cpp:HasDamagedWeapon
 ?
@@ -188,10 +194,11 @@ Apply buff if dog is obedient
 ?
 
 - Cpp:FoodHealth
-?
+Modifies Health and FoodPoisoningAntidote.
+Depends on PerkWaterOfLifeHealthMultiplier. 
 
 - Cpp:PotionHealth
-?
+Changes Health modifier. Depends on PerkWaterOfLifeHealthMultiplier and WaterOfLife ability. 
 
 - Cpp:HeavyWeapon
 Apply buff if player is using Heavy weapon
@@ -200,13 +207,14 @@ Apply buff if player is using Heavy weapon
 ?
 
 - Cpp:Horseman
-?
+Combination of Cpp:BasicTimed and Cpp:VersusDog. Primary modifier group is always enabled, but secondary group is enabled only against dogs. 
 
 - Cpp:InCombatDanger
 ?
 
 - Cpp:Injured
-?
+Uses a special Bleeding modifier. 
+Depends on InjuryLowThreshold, InjuryHighThreshold, InjuryRegenInterval and HealthFull. 
 
 - Cpp:InteriorCrouch
 ?
@@ -227,10 +235,10 @@ Apply buff if item is stolen
 Apply buff if item is stolen and player branded
 
 - Cpp:DocumentItemBuff
-?
+Applied when dealing with items in category "document".
 
 - Cpp:HerbItemBuff
-?
+Applied when dealing with items in category "herb".
 
 - Cpp:MeleeWeaponBuff
 ?
@@ -245,28 +253,28 @@ Apply buff if item is stolen and player branded
 Apply buff if item is a potion, herb, recipe, book or alchemy related item
 
 - Cpp:ItemHealthChecking
-?
+Activates when the item's health >= threshold. 
 
 - Cpp:ItemHealthMyItemChecking
-?
+Context checking version of Cpp:ItemHealthChecking. 
 
 - Cpp:RazorSharp
 ?
 
 - Cpp:JailRecovery
-?
+Modifier intensity depends on time spent in jail. Depends on JailRecoveryDebuffDurationMultiplier and JailRecoveryDebuffMaxHours. 
 
 - Cpp:LocationMonitorBuffBase
 ?
 
 - Cpp:ForestLocation
-?
+Active if you enter a location tagged as Forest.
 
 - Cpp:SettlementLocation
-Apply buff if near human settlement
+Active if you enter a location tagged as Settlement.
 
 - Cpp:Monk
-?
+Adds "Monk" mannequin tag used by animations.
 
 - Cpp:Mounted
 Apply buff if player is mounted
@@ -284,7 +292,7 @@ Apply buff if player is mounted
 Apply buff if horse is almost out of stamina
 
 - Cpp:Night
-Apply buff at night.
+Active when the time is between DuskTime and DawnTime
 
 - Cpp:NonHealingPotionFading
 ?
@@ -293,7 +301,7 @@ Apply buff at night.
 ?
 
 - Cpp:MoraleContext
-?
+Modifies Morale derived stat. Depends on MoraleContextFadingSpeed and MoraleContextFadingMod derived stat. 
 
 - Cpp:NonHealingPotionAnimal
 ?
@@ -317,16 +325,16 @@ Apply buff if weapon is the same class as opponent
 Apply buff if weapon is the same sub-class as opponent
 
 - Cpp:Overread
-?
+Modifies Overreadness derived stat. Depends on OverreadnessFillTime and OverreadnessEmptyTime. 
 
 - Cpp:Overeat
-?
+Modifies RelativeStaminaMax intermediate stat. Depends on FoodFull, FoodOverEat and Hunger. 
 
 - Cpp:Oversleep
-?
+Modifies Oversleepness derived stat. Depends on OversleepnessFillTime, OversleepnessEmptyTime and InactiveTimeToDestroyOversleep. 
 
 - Cpp:ChainStrikePolearm
-?
+Stacks for each added buff, up to PerkChainStrikeMaxChain. Each stack lasts for Duration in GameTime second. Modifier intensity depends on number of stacks. 
 
 - Cpp:ChainStrikeHeavyWeapon
 ?
@@ -386,16 +394,16 @@ Apply buff if unarmed against opponent with weapon
 Apply buff after 10 seconds of fast sprinting (Ranger Run)
 
 - Cpp:BloodRush
-?
+Activates when an enemy in PerkBloodRushDistance meter radius is killed. After activation lasts for PerkBloodRushDuration in GameTime seconds, then it gets deactivated. 
 
 - Cpp:KnightInAShiningArmor
-Apply buff if player is wearing plate armour
+Active when the time is between DawnTime and DuskTime, and CloudAverage <= MaxCloudAverageForShiningArmor. Modifier intensity depends on PlatingRatio derived stat. 
 
 - Cpp:LastGaspShortTerm
-?
+Activates when health after combat hit would be smaller than 1. Depends on PerkLastGaspCooldown. 
 
 - Cpp:LastGaspLongTerm
-?
+Activates when health after combat hit would be smaller than 1. Depends on PerkLastGaspCooldown. 
 
 - Cpp:LetEmCome
 ?
@@ -407,22 +415,22 @@ Apply buff if player is wearing plate armour
 ?
 
 - Cpp:Infamous
-?
+Active when reputation in current location < LocalHeroInfamousReputationThreshold
 
 - Cpp:LocalHero
-Apply buff in locations where player has good reputation
+Active when reputation in current location > LocalHeroInfamousReputationThreshold
 
 - Cpp:Lowborn
-?
+Applied against souls in social_class with wealth < HighbornWealthThreshold
 
 - Cpp:Highborn
-?
+Applied against souls in social_class with wealth >= HighbornWealthThreshold
 
 - Cpp:ManlyOdourStealth
-?
+Active when Dirtiness derived stat > PerkManlyOdourDirtinessThreshold
 
 - Cpp:ManlyOdourWoman
-?
+Similar to Cpp:VersusWoman, but applied only when Dirtiness derived stat > PerkManlyOdourDirtinessThreshold
 
 - Cpp:CreativeSoul
 Apply buff (Energy recovery) when doing Alchemy, Sharpening, Blacksmithing or Dice-playing. 
@@ -470,12 +478,12 @@ Apply buff if sword attack is fully charged.
 Apply buff to enemy weapons
 
 - Cpp:Sadist
-?
+Active when opponent is bleeding 
 
 - Cpp:SteadyAim
 Apply buff if player took time to aim properly
 
-- Cpp:Skirmishe
+- Cpp:Skirmisher
 ?
 
 - Cpp:TireEmToTakeEm
@@ -500,19 +508,20 @@ Apply buff to stolen status
 ?
 
 - Cpp:WellWorn
-?
+Modifies EquippedWeight and CarriedWeight. 
+Depends on EquippedWeightSubWithWellWornPerk. 
 
 - Cpp:Warmonger
 Apply buff if recently in combat.
 
 - Cpp:PerkFlowerPower
-?
+Active when number of herbs in inventory >= HerbsInInventoryForFlowerPowerPerk
 
 - Cpp:PlayerDogObedienceNotification
 ?
 
 - Cpp:PerkHorsenip
-?
+Active when number of herbs in inventory >= HerbsInHorseInventoryForHorsenipPerk
 
 - Cpp:MountedPlayerBuff
 ?
@@ -533,22 +542,22 @@ Apply buff if recently in combat.
 ?
 
 - Cpp:ReadingCartographer
-?
+Reveals all locations on the map. 
 
 - Cpp:ReadingQuality
-?
+Modifies ReadingQuality derived stat. 
 
 - Cpp:Respec
 ?
 
 - Cpp:RiddenHorse
-?
+Modifies StaminaConsumption, Courage, Morale and HorseDash. Depends on RiderThreatToHorseMorale. 
 
 - Cpp:OnRoad
 ?
 
 - Cpp:SharpeningPressure
-?
+Modifier intensity depends on pressure. 
 
 - Cpp:OffRoad
 Apply buff if player is off-road (on horse)
@@ -560,19 +569,20 @@ Apply buff when player is using Polearm weapon
 ?
 
 - Cpp:Still
-Apply buff when player is standing still
+Activates when not moving for StillBuffDuration WorldTime seconds 
 
 - Cpp:Starvation
-?
+Modifies Health. 
+Depends on StarvationHealthLossSpeed. 
 
 - Cpp:StillAndHidden
-?
+Activates when crouching and not moving for StillAndHiddenHysteresis GameTime seconds
 
 - Cpp:StrengthWeaponBuff
-?
+Activates when a weapon with higher strength requirement than agility requirement is equipped. 
 
 - Cpp:StomachPain
-?
+Adds "Shitty" mannequin tag used by animations.
 
 - Cpp:Sword
 Apply buff when player is using Sword weapon
@@ -584,19 +594,19 @@ Apply buff when player is using Sword weapon
 ?
 
 - Cpp:TestRealSpeed
-?
+Testing implementation. 
 
 - Cpp:HuntingSword
 ?
 
 - Cpp:WorldTimeTimed
-?
+Similar to Cpp:BasicTimed, but uses WorldTime. 
 
 - Cpp:BasicTimed
-Apply timed buff
+Timed buff, which gets removed after it expires. Duration controls the expiration time in GameTime seconds. Modifier intensity does not change over time. 
 
 - Cpp:TipplerPotion
-?
+Similar to Cpp:WorldTimeTimed. On activation removes some other buffs. 
 
 - Cpp:ModifiableTimed
 ?
@@ -608,61 +618,64 @@ Apply timed buff
 ?
 
 - Cpp:Unconscious
-?
+Depending on input parameters it starts a fader or skiptime. 
 
 - Cpp:VersusDog
-?
+Applied against souls in soul_archetype with race "dog" 
 
 - Cpp:UntilUnconsciousnessEnds
 ?
 
 - Cpp:VersusWoman
-Apply buff if the target (in conversation or combat) is a woman
+Applied against souls in soul_archetype with race "human" and gender "female" 
 
 - Cpp:VersusAnimal
-?
+Applied against souls in soul_archetype with race not "human" 
 
 - Cpp:VersusCuman
-?
+Applied against souls in faction with superfaction "Cumans" 
 
 - Cpp:VersusMan
 ?
 
 - Cpp:VersusEnemy
-?
+Applied against souls with relationship < 0 
 
 - Cpp:VersusSoldier
-?
+Applied against souls in social_class with soul_crime_role "soldier" 
 
 - Cpp:Wanted
-?
+Active when wanted level in any location >= PerkDaringDebonairWantedLevel
 
 - Cpp:Void
-None
+Does nothing, useful for buff overrides. 
 
 - Cpp:ShoeRepairkit
-Apply buff if item is a shoe being repaired
+Applied when dealing with items in category "shoe repair kit" 
 
 - Cpp:ShieldAndArmorBuff
-?
+Applied when dealing with items in category "armor" or in category "weapon" with class "shield".
 
 - Cpp:ShortTermFood
-?
+Modifies Hunger. 
+Depends on DigestionSpeed and ShortTermNutritionDigestionSpeedMultiplier. 
 
 - Cpp:SimpleDrunkenness
 ?
 
 - Cpp:Sick
-?
+Adds "Sick" mannequin tag used by animations.
 
 - Cpp:Sleep
-?
+Modifies Health and Exhaust. 
+Depends on SleepHealthRegenBaseSpeed. 
 
 - Cpp:Sitting
 ?
 
 - Cpp:SleepImproved
-?
+Similar to Cpp:Sleep. 
+Depends on ImprovedSleepMultiplier. 
 
 - Cpp:Sniffing
 ?
@@ -671,10 +684,10 @@ Apply buff if item is a shoe being repaired
 ?
 
 - Cpp:WeaponHealthIntensity
-?
+Modifier intensity depends on item health. 
 
 - Cpp:Thunderstorm
-?
+Active when rain intensity > ThunderstormBuffRainIntensity
 
 - Cpp:WhileSleeping
 ?
@@ -683,8 +696,8 @@ Apply buff if item is a shoe being repaired
 ?
 
 - Cpp:WithPlatingArmor
-?
+Active when PlatingRatio derived stat > 0 
 
-- WithoutPlatingArmor
-?
+- Cpp:WithoutPlatingArmor
+Active when PlatingRatio derived stat <= 0 
 

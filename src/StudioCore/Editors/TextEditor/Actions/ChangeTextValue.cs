@@ -1,39 +1,37 @@
 ﻿using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Views;
-using StudioCore.KCD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace StudioCore.Editors.TextEditor.Actions;
 
-public class AddTextRow : EditorAction
+public class ChangeTextValue : EditorAction
 {
-    private int RowIndex;
-    private List<XElement> Elements;
-    private XElement Row;
+    private XElement Element;
+    private string OldValue;
+    private string NewValue;
 
-    public AddTextRow(List<XElement> elements, int rowIndex)
+    public ChangeTextValue(XElement element, string oldValue, string newValue)
     {
-        Elements = elements;
-        RowIndex = rowIndex;
-        Row = new XElement(Elements.ElementAt(rowIndex));
+        Element = element;
+        OldValue = oldValue;
+        NewValue = newValue;
     }
 
     public override ActionEvent Execute()
     {
-        Elements.Insert(RowIndex, Row);
+        Element.Value = NewValue;
 
         return ActionEvent.NoEvent;
     }
 
     public override ActionEvent Undo()
     {
-        Elements.RemoveAt(RowIndex);
+        Element.Value = OldValue;
 
         return ActionEvent.NoEvent;
     }

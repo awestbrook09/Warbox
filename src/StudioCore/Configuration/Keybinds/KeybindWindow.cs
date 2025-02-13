@@ -141,6 +141,10 @@ public class CommonKeybindTab
                 KeyBindings.Current.CORE_Save,
                 KeyBindings.Default.CORE_Save);
 
+            KeyBindings.Current.CORE_SaveAll = InputTracker.KeybindLine(12,
+                KeyBindings.Current.CORE_SaveAll,
+                KeyBindings.Default.CORE_SaveAll);
+
             KeyBindings.Current.CORE_SavePTF = InputTracker.KeybindLine(11,
                 KeyBindings.Current.CORE_SavePTF,
                 KeyBindings.Default.CORE_SavePTF);

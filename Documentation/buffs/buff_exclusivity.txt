@@ -1,0 +1,5 @@
+0 NoExclusivity - allows multiple instances of the same buff on one target
+1 IdExclusive - more instances of the same buff (the same id) are now allowed on one target
+2 ModExclusive - more buffs with the same modifier are not allowed on one target
+3 ClassExclusive - more buffs belonging to the same class are not allowed
+4 TargetExclusive - more buffs are not allowed on one target

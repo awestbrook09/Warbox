@@ -132,9 +132,15 @@ public class KeyBindings
             Key.S, 
             true);
 
+        public KeyBind CORE_SaveAll = new(
+            "Save All",
+            "Save all within the focused editor.",
+            Key.S,
+            true);
+
         public KeyBind CORE_SavePTF = new(
-            "Save PTF",
-            "Save the current file-level selection within the focused editor as a PTF xml.",
+            "Export as PTF",
+            "Exports all changes to a PTF version of your project.",
             Key.S,
             false,
             true);

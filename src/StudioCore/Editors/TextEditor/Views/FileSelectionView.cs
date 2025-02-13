@@ -19,14 +19,19 @@ namespace StudioCore.Editors.TextEditor.Views;
 public class FileSelectionView
 {
     private TextEditorScreen Screen;
-    private TextEditorState EditorState;
 
     private string SearchText = "";
+
+    public bool FocusFileEntry = false;
+    public bool SelectNextText = false;
+
+    public DataStatus SelectedStatus;
+    public XDocument SelectedDocument;
+    public List<XElement> SelectedElements;
 
     public FileSelectionView(TextEditorScreen screen)
     {
         Screen = screen;
-        EditorState = screen.EditorState;
     }
 
     public void Display()
@@ -61,82 +66,42 @@ public class FileSelectionView
 
     private void SelectionRow(int index, KeyValuePair<DataStatus, XDocument> entry, DataStatus status, string name)
     {
-        if (ImGui.Selectable($"{name}##fileEntry{name}{index}", EditorState.SelectedStatus == status))
+        // Focus the newly selected row when set via command queue
+        if (FocusFileEntry && SelectedStatus == status)
         {
-            EditorState.UpdateSelection(entry);
+            FocusFileEntry = false;
+            UpdateSelection(entry);
+            ImGui.SetScrollHereY();
+        }
+
+        if (ImGui.Selectable($"{name}##fileEntry{name}{index}", SelectedStatus == status))
+        {
+            UpdateSelection(entry);
         }
 
         // Arrow Selection
-        if (ImGui.IsItemHovered() && EditorState.SelectNextText)
+        if (ImGui.IsItemHovered() && SelectNextText)
         {
-            EditorState.SelectNextText = false;
-            EditorState.UpdateSelection(entry);
+            SelectNextText = false;
+            UpdateSelection(entry);
         }
         if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
         {
-            EditorState.SelectNextText = true;
+            SelectNextText = true;
         }
+    }
 
-        // Context
-        if (EditorState.SelectedStatus == status)
-        {
-            if (ImGui.BeginPopupContextItem($"##fileEntryContext{index}"))
-            {
-                CreateNewFile(index);
-                ImGui.EndPopup();
-            }
-        }
+    public void UpdateSelection(KeyValuePair<DataStatus, XDocument> entry, bool focus = false)
+    {
+        SelectedStatus = entry.Key;
+        SelectedDocument = entry.Value;
+        SelectedElements = entry.Value.Elements().Elements().ToList();
+
+        if(focus)
+            FocusFileEntry = true;
     }
 
     public void Shortcuts()
     {
-    }
-
-    private string NewFileName = "";
-
-    private void CreateNewFile(int index)
-    {
-        ImGui.SetNextItemWidth(250f);
-        ImGui.InputText("##newFileName", ref NewFileName, 255);
-
-        var isValidName = true;
-
-        for (int i = 0; i < DataHandler.Localization.Count; i++)
-        {
-            var entry = DataHandler.Localization.ElementAt(i);
-            var status = entry.Key;
-            var name = entry.Key.Name;
-
-            if (NewFileName == name || NewFileName == "")
-            {
-                isValidName = false;
-            }
-        }
-
-        if (isValidName)
-        {
-            if (ImGui.Button("Create", new Vector2(250, 24)))
-            {
-                var xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<Table>\r\n  <Row>\r\n    <Cell>blank</Cell>\r\n    <Cell></Cell>\r\n    <Cell></Cell>\r\n  </Row>\r\n</Table>";
-
-                var newStatus = new DataStatus($"{NewFileName}", $"{NewFileName}.xml");
-                newStatus.IsProjectData = true;
-
-                XDocument newDoc = XDocument.Parse(xmlString);
-
-                DataHandler.Localization.Add(newStatus, newDoc);
-            }
-        }
-        else
-        {
-            ImGui.BeginDisabled();
-
-            if (ImGui.Button("Create", new Vector2(250, 24)))
-            {
-
-            }
-
-            ImGui.EndDisabled();
-        }
     }
 }

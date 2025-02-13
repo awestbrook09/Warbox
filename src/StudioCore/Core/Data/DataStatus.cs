@@ -37,6 +37,14 @@ public class DataStatus : IComparable<DataStatus>
         IsProjectData = false;
     }
 
+    public DataStatus(DataStatus existing)
+    {
+        Name = existing.Name;
+        Path = existing.Path;
+        Modified = existing.Modified;
+        IsProjectData = existing.IsProjectData;
+    }
+
     public int CompareTo(DataStatus other)
     {
         return Name.CompareTo(other.Name);

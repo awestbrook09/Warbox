@@ -1,0 +1,2 @@
+0 ShortTerm (potions, poisons, ...)
+1 LongTerm (perks)

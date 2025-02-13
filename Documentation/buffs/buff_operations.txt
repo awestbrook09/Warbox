@@ -1,0 +1,23 @@
+Contains a comma separated list of stat and skill modifiers. For example spc+2,str-1 means that the buff will increase Speech by 2 and decrease Strength by 1.
+
+Available modifier operations:
+
+    + AddAbs: result = current + val
+    - SubAbs: result = current - val
+    = SetAbs: result = val
+    * AddBaseRel: result = current + base * (val - 1)
+    % AddCurrRel: result = current * val
+    < Min: result = min(current, val)
+    > Max: result = max(current, val)
+    ! Negation: result = val - current
+
+State modifiers (like health and exhaust) can also have suffixes:
+
+    /s PerSecond: for example health+2/s means health will be increased by 2 every second
+    /t PerDuration: for example health-50/t means health will decrease by 50 over the duration of the buff
+
+Some buff implementations like Cpp:Night also support modifier groups, which are created by dividing modifiers by a semicolon.
+
+For example in str+1,spc+1;agi+1,vit+1 the primary group is str+1,spc+1 and secondary group is agi+1,vit+1.
+
+Up to 8 modifier groups can be created, but currently no implementation uses more than 2 groups. 

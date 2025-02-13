@@ -1,12 +1,16 @@
 ﻿using Assimp;
 using ImGuiNET;
+using Silk.NET.Core;
 using StudioCore.Core.Data;
+using StudioCore.Editors.TableEditor.Actions;
+using StudioCore.Editors.TextEditor.Actions;
 using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.TextEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,52 +22,95 @@ namespace StudioCore.Editors.TextEditor.Views;
 public class TextCellView
 {
     private TextEditorScreen Screen;
-    private TextEditorState EditorState;
 
     public TextCellView(TextEditorScreen screen)
     {
         Screen = screen;
-        EditorState = screen.EditorState;
     }
 
     public void Display()
     {
-        var height = ImGui.GetWindowHeight();
+        var width = ImGui.GetWindowWidth();
+        var idInput = new Vector2(width * 0.75f, 24 * Warbox.GetUIScale());
+        var textInput = new Vector2(width * 0.75f, 300 * Warbox.GetUIScale());
 
-        var curStatus = EditorState.SelectedStatus;
-        var curDocument = EditorState.SelectedDocument;
-        var curText = EditorState.SelectedText;
-        var curTextRow = EditorState.SelectedTextRow;
+        var curCells = Screen.TextRowView.SelectedCells;
 
         if (ImGui.Begin("Entries##textCellView"))
         {
-            if (curTextRow == null || curTextRow == null)
+            if(curCells.Count > 0)
             {
-                ImGui.Text("No text row selected.");
-            }
-            else
-            {
-                if (curTextRow != null)
+                if (ImGui.BeginTable($"CellEntries", 2, ImGuiTableFlags.SizingFixedFit))
                 {
-                    for (int i = 0; i < curTextRow.Cells.Count; i++)
-                    {
-                        var cell = curTextRow.Cells[i];
+                    var id = curCells[0];
+                    var text = curCells[1];
+                    var fallback_text = curCells[2];
 
-                        var size = new Vector2(-1, 24 * Warbox.GetUIScale());
+                    ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
+                    ImGui.TableSetupColumn("Inputs", ImGuiTableColumnFlags.WidthFixed);
 
-                        if (i > 0)
-                            size = new Vector2(-1, 100 * Warbox.GetUIScale());
+                    // ID 
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
 
-                        if (ImGui.InputTextMultiline($"##textEntry{i}", ref cell, 2000, size))
-                        {
-                            curTextRow.Cells[i] = cell;
-                            EditorState.SelectedStatus.Modified = true;
-                        }
-                    }
+                    ImGui.Text("ID");
+
+                    ImGui.TableSetColumnIndex(1);
+
+                    HandleCellEntry(id, "id", idInput);
+
+                    // Text
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+
+                    ImGui.Text("Text");
+
+                    ImGui.TableSetColumnIndex(1);
+
+                    HandleCellEntry(text, "text", textInput);
+
+                    // Fallback Text
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+
+                    ImGui.Text("Fallback Text");
+
+                    ImGui.TableSetColumnIndex(1);
+
+                    HandleCellEntry(fallback_text, "fallback_text", textInput);
+
+                    ImGui.TableSetColumnIndex(0);
+
+                    ImGui.EndTable();
                 }
             }
 
             ImGui.End();
+        }
+    }
+
+    private void HandleCellEntry(XElement cell, string imguiId, Vector2 inputSize)
+    {
+        var isChanged = false;
+        var cellText = cell.Value;
+        var tNewText = cellText;
+
+        ImGui.AlignTextToFramePadding();
+        if (ImGui.InputTextMultiline($"##textEntry_{imguiId}", ref tNewText, 2000, inputSize))
+        {
+            isChanged = true;
+        }
+
+        if (ImGui.IsItemDeactivatedAfterEdit() || !ImGui.IsAnyItemActive())
+        {
+            if (isChanged)
+            {
+                var action = new ChangeTextValue(cell, cellText, tNewText);
+                Screen.EditorActionManager.ExecuteAction(action);
+            }
         }
     }
 

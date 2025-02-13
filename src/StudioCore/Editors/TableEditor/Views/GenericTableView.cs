@@ -8,6 +8,7 @@ using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Interface;
 using StudioCore.Platform;
 using StudioCore.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -57,6 +58,7 @@ public class GenericTableView
         ViewStatus = viewStatus;
         ViewDocument = viewDocument;
 
+        // Database -> List -> Entries
         Contents = ViewDocument.Elements().Elements().Elements().ToList();
     }
 
@@ -509,19 +511,26 @@ public class GenericTableView
                 ImGui.SetNextItemWidth(width * 0.5f);
 
                 // Input
-                foreach (var element in elements)
+                for(int i = 0; i < elements.Count; i++)
                 {
-                    if (element.Attribute("FileEnum") != null)
+                    var curElement = elements[i];
+                    var curImguiKey = $"{imguiElementName}{rowIndex}{attributeIndex}{i}";
+
+                    if (curElement.Attribute("Enum") != null)
                     {
-                        DisplayFileEnum(attribute, element, imguiElementName);
+                        DisplayEnum(attribute, curElement, curImguiKey);
                     }
-                    if (element.Attribute("TextRef") != null)
+                    if (curElement.Attribute("FileEnum") != null)
                     {
-                        DisplayTextRef(attribute, element);
+                        DisplayFileEnum(attribute, curElement, curImguiKey);
                     }
-                    if (element.Attribute("GuidRef") != null)
+                    if (curElement.Attribute("TextRef") != null)
                     {
-                        DisplayGuidRef(entry, attribute, element, attributeIndex, imguiElementName, rowIndex);
+                        DisplayTextRef(attribute, curElement, curImguiKey);
+                    }
+                    if (curElement.Attribute("GuidRef") != null)
+                    {
+                        DisplayGuidRef(entry, attribute, curElement, curImguiKey);
                     }
                 }
             }
@@ -531,15 +540,84 @@ public class GenericTableView
     private string EnumSearchText = "";
 
     /// <summary>
+    /// Handle the enum reference meta text for a property that requires it.
+    /// </summary>
+    private void DisplayEnum(XAttribute attribute, XElement metaAttribute, string curImguiKey)
+    {
+        var enumParameters = metaAttribute.Attribute("Enum").Value.Split(",");
+        var enumName = enumParameters[0];
+
+        var imguiKey = $"{ImGuiName}_{childDepth}_{enumName}_{curImguiKey}";
+
+        var targetMeta = TableMeta.GetMetaDocument(ViewStatus.Name);
+        var enumOptions = TableMeta.GetEnumOptions(targetMeta, enumName);
+
+        var displayedName = "";
+
+        foreach (var tElement in enumOptions)
+        {
+            var id = tElement.Attribute("ID").Value;
+            var name = tElement.Attribute("Name").Value;
+
+            if (attribute.Value == id)
+            {
+                displayedName = name;
+            }
+        }
+
+        if (displayedName != "")
+        {
+            var boxWidth = 250;
+            var boxSize = new Vector2(boxWidth, 300);
+
+            UIHelper.DisplayInformationText(displayedName);
+
+            if (ImGui.BeginPopupContextItem($"##enumContextMenu_{imguiKey}"))
+            {
+                // Enum Search
+                ImGui.SetNextItemWidth(boxWidth);
+                ImGui.InputText($"##enumSearch_{imguiKey}", ref EnumSearchText, 255);
+
+                // Enum options
+                if (ImGui.BeginListBox($"##enumListBox_{imguiKey}", boxSize))
+                {
+                    foreach (var tElement in enumOptions)
+                    {
+                        var id = tElement.Attribute("ID").Value;
+                        var name = tElement.Attribute("Name").Value;
+
+                        if (name.Contains(EnumSearchText) || EnumSearchText == "")
+                        {
+                            if (ImGui.Selectable($"{id}: {name}"))
+                            {
+                                var action = new ChangeAttributeValue(attribute, attribute.Value, id, this);
+                                Screen.EditorActionManager.ExecuteAction(action);
+                                break;
+                            }
+                        }
+                    }
+
+                    ImGui.EndListBox();
+                }
+
+                ImGui.EndPopup();
+            }
+
+        }
+    }
+
+    /// <summary>
     /// Handle the file enum reference meta text for a property that requires it.
     /// </summary>
-    private void DisplayFileEnum(XAttribute attribute, XElement metaAttribute, string imguiElementName)
+    private void DisplayFileEnum(XAttribute attribute, XElement metaAttribute, string curImguiKey)
     {
         var enumParameters = metaAttribute.Attribute("FileEnum").Value.Split(",");
         var fileName = enumParameters[0];
         var listKey = enumParameters[1];
         var enumId = enumParameters[2];
         var enumName = enumParameters[3];
+
+        var imguiKey = $"{ImGuiName}_{childDepth}_{fileName}_{curImguiKey}";
 
         var targetFile = DataHandler.Tables.Where(e => e.Key.Name == fileName).FirstOrDefault();
         var targetDoc = targetFile.Value;
@@ -566,20 +644,20 @@ public class GenericTableView
 
             UIHelper.DisplayInformationText(displayedName);
 
-            if (ImGui.BeginPopupContextItem($"##{ImGuiName}_enumContextMenu_{imguiElementName}{childDepth}"))
+            if (ImGui.BeginPopupContextItem($"##fileEnumContextMenu_{imguiKey}"))
             {
                 // Go to file -> entry
-                if (ImGui.Selectable($"Go to {fileName} -> {attribute.Value}"))
+                if (ImGui.Selectable($"Go to {fileName} -> {attribute.Value}##goToEnumFile_{imguiKey}"))
                 {
                     EditorCommandQueue.AddCommand($"table/select/{fileName}/{attribute.Name}/{attribute.Value}/-1");
                 }
 
                 // Enum Search
                 ImGui.SetNextItemWidth(boxWidth);
-                ImGui.InputText($"##{ImGuiName}_enumSearch_{imguiElementName}{childDepth}", ref EnumSearchText, 255);
+                ImGui.InputText($"##fileEnumSearch_{imguiKey}", ref EnumSearchText, 255);
 
                 // Enum options
-                if (ImGui.BeginListBox($"##{ImGuiName}_enumListBox_{imguiElementName}{childDepth}", boxSize))
+                if (ImGui.BeginListBox($"##fileEnumListBox_{imguiKey}", boxSize))
                 {
                     foreach (var tElement in targetElements)
                     {
@@ -609,10 +687,12 @@ public class GenericTableView
     /// <summary>
     /// Handle the text reference meta text for a property that requires it.
     /// </summary>
-    private void DisplayTextRef(XAttribute attribute, XElement metaElement)
+    private void DisplayTextRef(XAttribute attribute, XElement metaElement, string curImguiKey)
     {
         var localizationFile = metaElement.Attribute("TextRef").Value;
         var targetString = attribute.Value.ToString();
+
+        var imguiKey = $"{ImGuiName}_{childDepth}_{localizationFile}_{curImguiKey}";
 
         var targetFile = DataHandler.Localization.Where(e => e.Key.Name == localizationFile).FirstOrDefault();
         var targetDoc = targetFile.Value;
@@ -643,15 +723,26 @@ public class GenericTableView
             }
 
             UIHelper.DisplayInformationText(displayedName, true);
+
+            if (ImGui.BeginPopupContextItem($"##textRefContextMenu_{imguiKey}"))
+            {
+                // Go to file -> entry
+                if (ImGui.Selectable($"Go to {localizationFile} -> {attribute.Value}##goToTextRef_{imguiKey}"))
+                {
+                    EditorCommandQueue.AddCommand($"text/select/{localizationFile}/{attribute.Value}/-1");
+                }
+
+                ImGui.EndPopup();
+            }
         }
     }
 
     /// <summary>
     /// Handle the GUID reference meta text for a property that requires it.
     /// </summary>
-    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaAttribute, int attributeIndex, string imguiElementName, int rowIndex)
+    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaAttribute, string curImguiKey)
     {
-
+        var imguiKey = $"{ImGuiName}_{childDepth}_temp_{curImguiKey}";
     }
 
     /// <summary>

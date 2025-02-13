@@ -75,6 +75,14 @@ public static class TableMeta
 
         return null;
     }
+    public static List<XElement> GetEnumOptions(XDocument doc, string enumName)
+    {
+        return doc.Descendants("enums")
+                  .Descendants("enum")
+                  .Where(e => (string)e.Attribute("Name") == enumName)
+                  .Descendants("Option")
+                  .ToList();
+    }
 
     public static string GetDocumentName(string elementName)
     {
@@ -219,6 +227,10 @@ public static class TableMeta
 
             foreach (var element in elements)
             {
+                if (element.Attribute("Enum") != null)
+                {
+                    return true;
+                }
                 if (element.Attribute("FileEnum") != null)
                 {
                     return true;

@@ -1,0 +1,9 @@
+0 alcohol_mood
+1 alcohol_drunk
+2 alcohol_blackout
+3 poison
+4 bleed
+5 sleep
+6 overeat
+7 injury
+8 savegame

@@ -21,119 +21,107 @@ namespace StudioCore.Editors.TextEditor.Views;
 public class TextRowView
 {
     private TextEditorScreen Screen;
-    private TextEditorState EditorState;
 
     private string SearchText = "";
+
+    public int TextEntryIndex = -1;
+
+    private bool SelectNextTextRow = false;
+    public bool FocusEntry = false;
+
+    public List<XElement> SelectedCells = new List<XElement>();
 
     public TextRowView(TextEditorScreen screen)
     {
         Screen = screen;
-        EditorState = screen.EditorState;
     }
 
     public void Display()
     {
         var width = ImGui.GetWindowWidth();
 
-        var curStatus = EditorState.SelectedStatus;
-        var curDocument = EditorState.SelectedDocument;
-        var curText = EditorState.SelectedText;
+        var curElements = Screen.FileSelectionView.SelectedElements;
 
         if (ImGui.Begin("Rows##textRowView"))
         {
-            if (curText == null || curText == null)
-            {
-                ImGui.Text("No text file selected.");
-            }
-            else
-            {
-                ImGui.SetNextItemWidth(width * 0.75f);
-                ImGui.InputText($"##textRowViewSearch", ref SearchText, 255);
-                UIHelper.ShowHoverTooltip("Filters the list.");
+            ImGui.SetNextItemWidth(width * 0.75f);
+            ImGui.InputText($"##textRowViewSearch", ref SearchText, 255);
+            UIHelper.ShowHoverTooltip("Filters the list.");
 
-                ImGui.BeginChild("rowListSection");
+            ImGui.BeginChild("rowListSection");
 
-                if (curStatus != null && curDocument != null && curText != null)
+            if (curElements != null && curElements.Count > 0)
+            {
+                // Row
+                for (int i = 0; i < curElements.Count; i++)
                 {
-                    for (int i = 0; i < curText.Rows.Count; i++)
+                    var entry = curElements[i];
+                    var cells = entry.Elements().ToList();
+
+                    var id = cells[0].Value;
+                    var text = cells[1].Value;
+                    var fallback_text = cells[2].Value;
+
+                    if (TextSearchFilters.FilterRowList(id, text, fallback_text, SearchText))
                     {
-                        var entry = curText.Rows[i];
-                        var firstCell = entry.Cells.FirstOrDefault();
-
-                        if (firstCell != null)
-                        {
-                            var name = firstCell;
-
-                            var text1 = "";
-                            if (entry.Cells.Count >= 2)
-                                text1 = entry.Cells[1];
-
-                            var text2 = "";
-                            if (entry.Cells.Count >= 3)
-                                text2 = entry.Cells[2];
-
-                            if (TextSearchFilters.FilterRowList(name, text1, text2, SearchText))
-                            {
-                                SelectionRow(i, entry, name, text1);
-                            }
-                        }
+                        SelectionRow(curElements, entry, id, text, fallback_text, i);
                     }
                 }
-
-                ImGui.EndChild();
             }
 
+            ImGui.EndChild();
             ImGui.End();
         }
     }
 
-    private void SelectionRow(int index, KCDText.Row entry, string name, string text1)
+    private void SelectionRow(List<XElement> elements, XElement entry, string id, string text, string fallback_text, int rowIndex)
     {
-        var selectedIndex = EditorState.SelectedTextRowIndex;
-        var curTextRow = EditorState.SelectedTextRow;
-
-        if (ImGui.Selectable($"{name}##textRow{name}{index}", selectedIndex == index))
+        // Focus the newly selected row when set via command queue
+        if (FocusEntry && TextEntryIndex == rowIndex)
         {
-            EditorState.SelectedTextRow = entry;
-            EditorState.SelectedTextRowIndex = index;
+            FocusEntry = false;
+            UpdateSelection(entry, rowIndex);
+            ImGui.SetScrollHereY();
+        }
+
+        if (ImGui.Selectable($"{id}##textRow{id}{rowIndex}", TextEntryIndex == rowIndex))
+        {
+            UpdateSelection(entry, rowIndex);
         }
 
         // Only display aliases for entries of reasonable length
-        if (EditorState.SelectedStatus.Name != "text_ui_dialog")
+        if (Screen.FileSelectionView.SelectedStatus.Name != "text_ui_dialog")
         {
-            if (text1 != "" && text1.Length < 100)
-            {
-                UIHelper.DisplayAlias(text1);
-            }
+            UIHelper.DisplayAlias(text);
         }
 
         // Arrow Selection
-        if (ImGui.IsItemHovered() && EditorState.SelectNextTextRow)
+        if (ImGui.IsItemHovered() && SelectNextTextRow)
         {
-            EditorState.SelectNextTextRow = false;
-            EditorState.SelectedTextRowIndex = index;
+            SelectNextTextRow = false;
+            UpdateSelection(entry, rowIndex);
         }
         if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
         {
-            EditorState.SelectNextTextRow = true;
+            SelectNextTextRow = true;
         }
 
         // Context
-        if (selectedIndex == index)
+        if (TextEntryIndex == rowIndex)
         {
-            if (ImGui.BeginPopupContextItem($"##textRowContext{index}"))
+            if (ImGui.BeginPopupContextItem($"##textRowContext{rowIndex}"))
             {
                 // Duplicate
                 if (ImGui.Selectable("Duplicate"))
                 {
-                    var action = new AddTextRow(EditorState.SelectedText, index);
+                    var action = new AddTextRow(elements, rowIndex);
                     Screen.EditorActionManager.ExecuteAction(action);
                 }
 
                 // Remove
                 if (ImGui.Selectable("Remove"))
                 {
-                    var action = new RemoveTextRow(EditorState.SelectedText, index);
+                    var action = new RemoveTextRow(elements, rowIndex);
                     Screen.EditorActionManager.ExecuteAction(action);
                 }
 
@@ -142,22 +130,30 @@ public class TextRowView
         }
     }
 
+    public void UpdateSelection(XElement entry, int rowIndex, bool focus = false)
+    {
+        TextEntryIndex = rowIndex;
+        SelectedCells = entry.Elements().ToList();
+
+        if (focus)
+            FocusEntry = true;
+    }
+
     public void Shortcuts()
     {
-        var selectedText = EditorState.SelectedText;
-        var selectedIndex = EditorState.SelectedTextRowIndex;
+        var curElements = Screen.FileSelectionView.SelectedElements;
 
         // Duplicate
-        if (EditorState.SelectedText != null && InputTracker.GetKeyDown(KeyBindings.Current.CORE_DuplicateSelectedEntry))
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DuplicateSelectedEntry))
         {
-            var action = new AddTextRow(selectedText, selectedIndex);
+            var action = new AddTextRow(curElements, TextEntryIndex);
             Screen.EditorActionManager.ExecuteAction(action);
         }
 
         // Remove
-        if (EditorState.SelectedText != null && InputTracker.GetKeyDown(KeyBindings.Current.CORE_DeleteSelectedEntry))
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DeleteSelectedEntry))
         {
-            var action = new RemoveTextRow(selectedText, selectedIndex);
+            var action = new RemoveTextRow(curElements, TextEntryIndex);
             Screen.EditorActionManager.ExecuteAction(action);
         }
     }

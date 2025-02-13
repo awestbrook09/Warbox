@@ -22,11 +22,6 @@ public class ProjectModal
         newProjectDirectory = "";
     }
 
-    public bool IsLogicalDrive(string path)
-    {
-        return Directory.GetLogicalDrives().Contains(path);
-    }
-
     public void Display()
     {
         ImGui.BeginTabBar("ProjectModelTabs");
@@ -48,46 +43,11 @@ public class ProjectModal
         ImGui.EndTabBar();
     }
 
-    public void RecentProjectEntry(CFG.RecentProject p, int id)
-    {
-        if (ImGui.MenuItem($@"Projects: {p.Name}##{id}"))
-        {
-            if (File.Exists(p.ProjectFile))
-            {
-                var path = p.ProjectFile;
-
-                Warbox.ProjectHandler.LoadProjectFromJSON(path);
-                Warbox.ProjectHandler.IsInitialLoad = false;
-            }
-            else
-            {
-                DialogResult result = PlatformUtils.Instance.MessageBox(
-                    $"Project file at \"{p.ProjectFile}\" does not exist.\n\n" +
-                    $"Remove project from list of recent projects?",
-                    $"Project.json cannot be found", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    CFG.RemoveRecentProject(p);
-                }
-            }
-        }
-
-        if (ImGui.BeginPopupContextItem())
-        {
-            if (ImGui.Selectable("Remove from list"))
-            {
-                CFG.RemoveRecentProject(p);
-                CFG.Save();
-            }
-
-            ImGui.EndPopup();
-        }
-    }
-
     public void DisplayProjectLoadOptions()
     {
         var scale = Warbox.GetUIScale();
-        var width = ImGui.GetWindowWidth() / 100;
+        var width = ImGui.GetWindowWidth();
+        var buttonSize = new Vector2(400 * 0.5f, 24) * Warbox.GetUIScale();
 
         if (CFG.Current.RecentProjects.Count > 0)
         {
@@ -100,14 +60,14 @@ public class ProjectModal
             ImGui.Separator();
         }
 
-        if (ImGui.Button("Load New Project", new Vector2(width * 95, 32 * scale)))
+        if (ImGui.Button("Load New Project", buttonSize))
         {
             Warbox.ProjectHandler.OpenProjectDialog();
         }
-
+        ImGui.SameLine();
         if (CFG.Current.LastProjectFile != "")
         {
-            if (ImGui.Button("Load Recent Project", new Vector2(width * 95, 32 * scale)))
+            if (ImGui.Button("Load Recent Project", buttonSize))
             {
                 Warbox.ProjectHandler.LoadRecentProject();
             }
@@ -116,10 +76,13 @@ public class ProjectModal
 
     public void DisplayNewProjectCreation()
     {
+        var width = ImGui.GetWindowWidth();
+        var buttonSize = new Vector2(400, 24) * Warbox.GetUIScale();
+
         // Project Name
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Project Name:      ");
-        UIHelper.ShowHoverTooltip("Project's display name. Only affects visuals within Warbox.");
+        UIHelper.ShowHoverTooltip("The name of this project. Used when generating the mod.manifest and patched table files.");
         ImGui.SameLine();
 
         var pname = newProject.Config != null ? newProject.Config.ProjectName : "Blank";
@@ -132,7 +95,7 @@ public class ProjectModal
         // Project Directory
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Project Directory: ");
-        UIHelper.ShowHoverTooltip("The mod directory.");
+        UIHelper.ShowHoverTooltip("The directory that contains the data for this project.");
         ImGui.SameLine();
         ImGui.InputText("##pdir", ref newProjectDirectory, 255);
         ImGui.SameLine();
@@ -147,7 +110,7 @@ public class ProjectModal
         // Data Directory
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Data Directory:    ");
-        UIHelper.ShowHoverTooltip("The game data directory.");
+        UIHelper.ShowHoverTooltip("The directory that contains the game data.");
         ImGui.SameLine();
 
         var gname = newProject.Config != null ? newProject.Config.GameRoot : "";
@@ -171,7 +134,7 @@ public class ProjectModal
         ImGui.Separator();
 
         // Create
-        if (ImGui.Button("Create", new Vector2(120, 0) * Warbox.GetUIScale()))
+        if (ImGui.Button("Create", buttonSize))
         {
             newProject.ProjectJsonPath = $@"{newProjectDirectory}\project.json";
 
