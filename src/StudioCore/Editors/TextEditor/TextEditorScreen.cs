@@ -122,26 +122,18 @@ public class TextEditorScreen : EditorScreen
 
     public void Save()
     {
-        var outputDir = $"{Warbox.ProjectDataRoot}\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
+        var resDesc = FileSelectionView.SelectedStatus;
+        var document = DataHandler.GetCurrentLocalization()[resDesc];
 
-        if(!Directory.Exists(outputDir))
-            Directory.CreateDirectory(outputDir);
+        var writeDir = $"{Warbox.ProjectDataRoot}\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
+        var writePath = $"{Warbox.ProjectDataRoot}\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}{resDesc.Extension}";
 
-        var status = FileSelectionView.SelectedStatus;
-        var document = DataHandler.GetCurrentLocalization()[status];
+        if (!Directory.Exists(writeDir))
+            Directory.CreateDirectory(writeDir);
 
-        var writePath = status.Path;
-        var fileDir = $"{outputDir}\\{writePath}";
+        document.Save(writePath);
 
-        // If it is a project-specific file, use the status Path as it is a full path
-        if (writePath.Contains(outputDir))
-        {
-            fileDir = $"{writePath}";
-        }
-
-        document.Save(fileDir);
-
-        TaskLogs.AddLog($"{fileDir} saved.");
+        TaskLogs.AddLog($"{writePath} saved.");
     }
 
     /// <summary>

@@ -13,17 +13,17 @@ namespace StudioCore.Core.Data;
 
 public static class DataHandler
 {
-    public static Dictionary<string, SortedDictionary<DataStatus, XDocument>> Localization = new();
+    public static Dictionary<string, SortedDictionary<ResourceDescriptor, XDocument>> Localization = new();
 
     /// <summary>
     /// Holds our working tables
     /// </summary>
-    public static SortedDictionary<DataStatus, XDocument> Tables = new();
+    public static SortedDictionary<ResourceDescriptor, XDocument> Tables = new();
 
     /// <summary>
     /// Holds the base tables, used for comparison to generate PTF output
     /// </summary>
-    public static SortedDictionary<DataStatus, XDocument> Vanilla_Tables = new();
+    public static SortedDictionary<ResourceDescriptor, XDocument> Vanilla_Tables = new();
 
     //public Dictionary<DataStatus, XDocument> Scripts = new Dictionary<DataStatus, XDocument>();
 
@@ -88,7 +88,7 @@ public static class DataHandler
         }
     }
 
-    public static SortedDictionary<DataStatus, XDocument> GetCurrentLocalization()
+    public static SortedDictionary<ResourceDescriptor, XDocument> GetCurrentLocalization()
     {
         return DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage];
     }
@@ -145,17 +145,17 @@ public static class DataHandler
         return options;
     }
 
-    public static SortedDictionary<DataStatus, XDocument> ReadTables(string folderName, string pakName, bool ignoreProject = false)
+    public static SortedDictionary<ResourceDescriptor, XDocument> ReadTables(string folderName, string pakName, bool ignoreProject = false)
     {
         if (Warbox.DataRoot == "")
-            return new SortedDictionary<DataStatus, XDocument>();
+            return new SortedDictionary<ResourceDescriptor, XDocument>();
 
         var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
         var projectDir = $"{Warbox.ProjectDataRoot}\\{folderName}\\";
 
         var baseData = ReadXmlFromZip(dataDir);
         var projectData = ReadXmlFromDirectory(projectDir);
-        var finalData = new SortedDictionary<DataStatus, XDocument>();
+        var finalData = new SortedDictionary<ResourceDescriptor, XDocument>();
 
         // Replace entries with project data if present
         if (projectData.Count > 0 && !ignoreProject)
@@ -205,17 +205,17 @@ public static class DataHandler
         return finalData;
     }
 
-    public static SortedDictionary<DataStatus, XDocument> ReadLocalization(string folderName, string pakName, bool ignoreProject = false)
+    public static SortedDictionary<ResourceDescriptor, XDocument> ReadLocalization(string folderName, string pakName, bool ignoreProject = false)
     {
         if (Warbox.DataRoot == "")
-            return new SortedDictionary<DataStatus, XDocument>();
+            return new SortedDictionary<ResourceDescriptor, XDocument>();
 
         var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
         var projectDir = $"{Warbox.ProjectDataRoot}\\{folderName}\\{CFG.Current.TextEditor_CurrentLanguage}";
 
         var baseData = ReadXmlFromZip(dataDir);
         var projectData = ReadXmlFromDirectory(projectDir);
-        var finalData = new SortedDictionary<DataStatus, XDocument>();
+        var finalData = new SortedDictionary<ResourceDescriptor, XDocument>();
 
         // Replace entries with project data if present
         if (projectData.Count > 0 && !ignoreProject)
@@ -265,9 +265,9 @@ public static class DataHandler
         return finalData;
     }
 
-    private static SortedDictionary<DataStatus, XDocument> ReadXmlFromZip(string zipPath)
+    private static SortedDictionary<ResourceDescriptor, XDocument> ReadXmlFromZip(string zipPath)
     {
-        var xmlFiles = new SortedDictionary<DataStatus, XDocument>();
+        var xmlFiles = new SortedDictionary<ResourceDescriptor, XDocument>();
 
         try
         {
@@ -289,10 +289,9 @@ public static class DataHandler
                                 {
                                     XDocument xmlDoc = XDocument.Load(stringReader);
 
-                                    var name = Path.GetFileNameWithoutExtension(entry.FullName);
-                                    var dataStatus = new DataStatus(name, entry.FullName);
+                                    var resDescriptor = new ResourceDescriptor(entry.FullName);
 
-                                    xmlFiles[dataStatus] = xmlDoc;
+                                    xmlFiles[resDescriptor] = xmlDoc;
                                 }
                             }
                             catch (Exception ex)
@@ -309,9 +308,9 @@ public static class DataHandler
         return xmlFiles;
     }
 
-    public static SortedDictionary<DataStatus, XDocument> ReadXmlFromDirectory(string directoryPath)
+    public static SortedDictionary<ResourceDescriptor, XDocument> ReadXmlFromDirectory(string directoryPath)
     {
-        var xmlFiles = new SortedDictionary<DataStatus, XDocument>();
+        var xmlFiles = new SortedDictionary<ResourceDescriptor, XDocument>();
 
         try
         {
@@ -332,9 +331,8 @@ public static class DataHandler
                     {
                         XDocument xmlDoc = XDocument.Load(stringReader);
 
-                        var name = Path.GetFileNameWithoutExtension(filePath);
-                        var dataStatus = new DataStatus(name, filePath);
-                        xmlFiles[dataStatus] = xmlDoc;
+                        var resDescriptor = new ResourceDescriptor(filePath);
+                        xmlFiles[resDescriptor] = xmlDoc;
                     }
                 }
                 catch (Exception ex)

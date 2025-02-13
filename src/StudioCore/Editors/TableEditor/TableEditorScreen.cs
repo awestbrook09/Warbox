@@ -64,12 +64,12 @@ public class TableEditorScreen : EditorScreen
             UIHelper.ShowHoverTooltip("Saves all edited tables to your project folder.");
 
             // Save PTF
-            if (ImGui.MenuItem($"Export as PTF Mod", KeyBindings.Current.CORE_Save.HintText))
+            if (ImGui.MenuItem($"Export Table as PTF", KeyBindings.Current.CORE_Save.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
                 SavePTF();
             }
-            UIHelper.ShowHoverTooltip("Creates a patched table file mod based on your current edits. PTF export is found in the PTF folder.");
+            UIHelper.ShowHoverTooltip("Creates a patched table file based on the currently selected table.");
 
             ImGui.EndMenu();
         }
@@ -221,7 +221,7 @@ public class TableEditorScreen : EditorScreen
                 var targetAttributeValue = initcmd[3];
                 var targetIndex = initcmd[4];
 
-                KeyValuePair<DataStatus, XDocument> targetEntry = new KeyValuePair<DataStatus, XDocument>();
+                KeyValuePair<ResourceDescriptor, XDocument> targetEntry = new KeyValuePair<ResourceDescriptor, XDocument>();
 
                 // Set file selection
                 for (int i = 0; i < DataHandler.Tables.Count; i++)

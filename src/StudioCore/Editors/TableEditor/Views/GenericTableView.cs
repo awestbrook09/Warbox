@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
 namespace StudioCore.Editors.TableEditor.Views;
@@ -20,7 +21,7 @@ public class GenericTableView
 {
     private TableEditorScreen Screen;
 
-    public DataStatus ViewStatus;
+    public ResourceDescriptor ViewStatus;
     public XDocument ViewDocument;
 
     private string SearchKeyText = "";
@@ -45,7 +46,7 @@ public class GenericTableView
 
     private List<XElement> Contents = new();
 
-    public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, bool noPrimaryKey, DataStatus viewStatus, XDocument viewDocument)
+    public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, bool noPrimaryKey, ResourceDescriptor viewStatus, XDocument viewDocument)
     {
         Screen = screen;
 
@@ -243,22 +244,35 @@ public class GenericTableView
     /// </summary>
     private void HandleElementEntry(XElement entry, string imguiElementName, int rowIndex)
     {
-        DisplayHeaderRow(entry, imguiElementName, rowIndex);
-
         var attributes = entry.Attributes().ToList();
 
-        for (int i = 0; i < attributes.Count; i++)
+        // Attribute data
+        if (attributes.Count > 0)
         {
-            var attribute = attributes[i];
+            DisplayHeaderRow(entry, imguiElementName, rowIndex);
 
-            DisplayAttributeRow(entry, attribute, i, imguiElementName, rowIndex);
-
-            if (TableMeta.HasMetaData(entry, attribute))
+            for (int i = 0; i < attributes.Count; i++)
             {
-                DisplayMetaDataRow(entry, attribute, i, imguiElementName, rowIndex);
+                var attribute = attributes[i];
+
+                DisplayAttributeRow(entry, attribute, i, imguiElementName, rowIndex);
+
+                if (TableMeta.HasMetaData(entry, attribute))
+                {
+                    DisplayMetaDataRow(entry, attribute, i, imguiElementName, rowIndex);
+                }
             }
         }
-
+        // Element data - Show header only if it contains children
+        else if (entry.Value != "" && entry.Descendants().Count() > 0)
+        {
+            DisplayHeaderRow(entry, imguiElementName, rowIndex);
+        }
+        // Element data - Show data if the element is a child element
+        else if(entry.Value != "" && entry.Descendants().Count() == 0)
+        {
+            DisplayElementRow(entry, imguiElementName, rowIndex);
+        }
         childDepth += 1;
 
         foreach (var child in entry.Elements().ToList())
@@ -315,6 +329,78 @@ public class GenericTableView
 
                 // Inputs Column
                 ImGui.TableSetColumnIndex(1);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handle the display of the element rows
+    /// </summary>
+    private void DisplayElementRow(XElement entry, string imguiElementName, int rowIndex)
+    {
+        var width = ImGui.GetWindowWidth();
+
+        if (entry != null)
+        {
+            if (TextSearchFilters.FilterTableEntry(entry.Value, SearchValueText))
+            {
+                ImGui.TableNextRow();
+
+                // Name Column
+                ImGui.TableSetColumnIndex(0);
+                ImGui.AlignTextToFramePadding();
+
+                var displayName = entry.Name.ToString();
+
+                if (CFG.Current.TableEditor_View_Properties_DisplayNames)
+                {
+                    displayName = TableMeta.GetAttributeNameValue(
+                        "Name",
+                        $"{entry.Name}",
+                        $"{entry.Name}");
+                }
+
+                var description = TableMeta.GetAttributeNameValue(
+                    "Description",
+                    $"{entry.Name}",
+                    $"{entry.Name}");
+
+                ImGui.SetNextItemWidth(width * 0.25f);
+                UIHelper.DisplayHeaderText(displayName);
+                UIHelper.ShowHoverTooltip(description);
+
+                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{entry.Name}{imguiElementName}{childDepth}"))
+                {
+                    if (ImGui.Selectable("Copy Property Name"))
+                    {
+                        PlatformUtils.Instance.SetClipboardText(entry.Name.ToString());
+                    }
+
+                    ImGui.EndPopup();
+                }
+
+                // Inputs Column
+                ImGui.TableSetColumnIndex(1);
+
+                var oldValue = entry.Value;
+                var tValue = entry.Value;
+                var isChanged = false;
+
+                ImGui.AlignTextToFramePadding();
+                ImGui.SetNextItemWidth(width * 0.5f);
+
+                if (ImGui.InputText($"##{ImGuiName}_input_{entry.Name}{imguiElementName}{childDepth}", ref tValue, 255))
+                {
+                    isChanged = true;
+                }
+                if (ImGui.IsItemDeactivatedAfterEdit() || !ImGui.IsAnyItemActive())
+                {
+                    if (isChanged)
+                    {
+                        var action = new ChangeElementValue(entry, oldValue, tValue, this);
+                        Screen.EditorActionManager.ExecuteAction(action);
+                    }
+                }
             }
         }
     }
@@ -423,7 +509,6 @@ public class GenericTableView
             }
         }
     }
-
 
     /// <summary>
     /// Handle the display of missing property addition buttons

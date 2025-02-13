@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using static Assimp.Metadata;
+using static DotNext.Threading.Tasks.DynamicTaskAwaitable;
 
 namespace StudioCore.Editors.TableEditor.Framework;
 public static class TableSaveHandler
@@ -24,12 +25,10 @@ public static class TableSaveHandler
 
         foreach (var entry in DataHandler.Tables)
         {
-            var vanillaEntry = DataHandler.Vanilla_Tables.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
-
             // Only process the current table
             if (entry.Key.Name == status.Name)
             {
-                SaveTable(entry, vanillaEntry, "Data");
+                SaveTable(entry.Key, entry.Value, entry.Value);
             }
         }
     }
@@ -41,9 +40,7 @@ public static class TableSaveHandler
     {
         foreach (var entry in DataHandler.Tables)
         {
-            var vanillaEntry = DataHandler.Vanilla_Tables.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
-
-            SaveTable(entry, vanillaEntry, "Data");
+            SaveTable(entry.Key, entry.Value, entry.Value);
         }
     }
 
@@ -53,53 +50,64 @@ public static class TableSaveHandler
     /// </summary>
     public static void ExportPTF()
     {
+        var status = Warbox.EditorHandler.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
+
         foreach (var entry in DataHandler.Tables)
         {
             var vanillaEntry = DataHandler.Vanilla_Tables.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
 
-            SaveTable(entry, vanillaEntry, "PTF", true);
-        }
-    }
-
-    private static (XDocument, int) GetUniqueEntries(XDocument primaryDoc, XDocument vanillaDoc)
-    {
-        // Database -> List -> Entries
-        var vanillaElements = new HashSet<string>(vanillaDoc.Elements().Elements().Elements().Select(NormalizeElement));
-        var primaryElements = primaryDoc.Elements().Elements().Elements().Where(e => !vanillaElements.Contains(NormalizeElement(e)));
-        var primaryElementCount = primaryElements.Count();
-
-        var primaryElementHeader = primaryDoc.Elements().Elements().FirstOrDefault();
-        if(primaryElementHeader != null)
-        {
-            primaryElementHeader.RemoveAll();
-            foreach(var entry in primaryElements)
+            if (entry.Key.Name == status.Name)
             {
-                primaryElementHeader.Add(entry);
+                XDocument result = RemoveVanillaEntries(entry.Value, vanillaEntry.Value);
+
+                var modName = SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+
+                if(result != null)
+                {
+                    SaveTable(entry.Key, entry.Value, result, $"__{modName}");
+                }
             }
         }
-
-        var newDocument = new XDocument(
-            new XDeclaration("1.0", "us-ascii", null),
-            new XElement("database",
-                new XAttribute(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance"),
-                new XAttribute("name", "barbora"),
-                new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "noNamespaceSchemaLocation", "../database.xsd"),
-                primaryElementHeader
-            )
-        );
-
-        return (newDocument, primaryElementCount);
     }
 
-    private static string NormalizeElement(XElement element)
+    private static void SaveTable(ResourceDescriptor resDesc, XDocument originalDocument, XDocument document, string postfix = "")
     {
-        // Sort attributes by name to ensure consistent representation
-        string attributes = string.Join(" ", element.Attributes()
-            .OrderBy(a => a.Name.ToString())
-            .Select(a => $"{a.Name}='{a.Value}'"));
+        var writeDir = $"{Warbox.ProjectDataRoot}\\Data\\{resDesc.RelativeDirectory}\\";
+        var writePath = $"{Warbox.ProjectDataRoot}\\Data\\{resDesc.RelativeDirectory}\\{resDesc.Name}{postfix}{resDesc.Extension}";
 
-        // Create a normalized string representation
-        return $"<{element.Name} {attributes}>{element.Value.Trim()}</{element.Name}>";
+        if (!Directory.Exists(writeDir))
+            Directory.CreateDirectory(writeDir);
+
+        if (originalDocument.Declaration.Encoding != null)
+        {
+            if (originalDocument.Declaration.Encoding.ToLower() == "us-ascii")
+            {
+                using (var writer = new StreamWriter(writePath, false, Encoding.ASCII))
+                {
+                    document.Save(writer);
+                }
+            }
+            else if (originalDocument.Declaration.Encoding.ToLower() == "windows-1252")
+            {
+                using (var writer = new StreamWriter(writePath, false, Encoding.ASCII))
+                {
+                    document.Save(writer);
+                }
+            }
+            else if (originalDocument.Declaration.Encoding.ToLower() == "utf-8")
+            {
+                using (var writer = new StreamWriter(writePath, false, new UTF8Encoding(false)))
+                {
+                    document.Save(writer);
+                }
+            }
+            else
+            {
+                TaskLogs.AddLog($"Unsupported encoding: {document.Declaration.Encoding}");
+            }
+
+            TaskLogs.AddLog($"{writePath} saved.");
+        }
     }
 
     public static string SanitizeModName(string input)
@@ -114,63 +122,39 @@ public static class TableSaveHandler
         return result.ToLower();
     }
 
-
-    /// <summary>
-    /// Handles the comaprison between the current table and its vanilla equal.
-    /// </summary>
-    private static void SaveTable(KeyValuePair<DataStatus, XDocument> currentEntry, KeyValuePair<DataStatus, XDocument> vanillaEntry, string exportDir, bool saveAsPTF = false)
+    private static XDocument RemoveVanillaEntries(XDocument baseDoc, XDocument vanillaDoc)
     {
-        var modName = SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+        var tempDoc = new XDocument(baseDoc);
 
-        var curStatus = currentEntry.Key;
-        var vanillaStatus = vanillaEntry.Key;
+        // Database -> Header -> Entries
+        var baseElements = tempDoc.Elements().Elements().Descendants().Where(e => e.HasAttributes).ToList();
+        var vanillaElements = vanillaDoc.Elements().Elements().Descendants().Where(e => e.HasAttributes).ToList();
 
-        // Make new documents so we don't affect the in-use versions
-        var curDocument = new XDocument(currentEntry.Value);
-        var vanillaDocument = new XDocument(vanillaEntry.Value);
-
-        // This contains the new 'edits' only document for writing when saving as a PTF
-        //var result = GetUniqueEntries(curDocument, vanillaDocument);
-        //var compareDocument = result.Item1;
-        var compareDifferenceCount = 1; //result.Item2;
-
-        if (compareDifferenceCount > 0)
+        foreach (var baseElement in baseElements.ToList())
         {
-            // Save
-            var outputDir = $"{Warbox.ProjectDataRoot}\\{exportDir}";
-
-            if (!Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
-            var newStatus = new DataStatus(curStatus);
-            newStatus.Name = $"{newStatus.Name}__{modName}.xml";
-
-            var writePath = newStatus.Path.Replace($"{Warbox.ProjectDataRoot}\\Data", "");
-            var fileDir = $"{outputDir}\\{writePath}";
-
-            // If it is a project-specific file, use the status Path as it is a full path
-            if (writePath.Contains(outputDir))
+            if (vanillaElements.Any(vanillaElement => ElementsMatch(baseElement, vanillaElement)))
             {
-                fileDir = $"{writePath}";
+                baseElement.Remove();
             }
-
-            var fileOutputDir = Path.GetDirectoryName(fileDir);
-
-            if (!Directory.Exists(fileOutputDir))
-                Directory.CreateDirectory(fileOutputDir);
-
-            // If saving as PTF, only include the changed lines
-            if (saveAsPTF)
-            {
-                //compareDocument.Save(fileDir);
-            }
-            // Otherwise, save the entire table.
-            else
-            {
-                curDocument.Save(fileDir);
-            }
-            TaskLogs.AddLog($"{fileDir} saved.");
         }
+
+        return tempDoc;
     }
 
+    private static bool ElementsMatch(XElement baseElement, XElement vanillaElement)
+    {
+        // Elements must have the same name
+        if (baseElement.Name != vanillaElement.Name)
+            return false;
+
+        var baseAttributes = baseElement.Attributes().OrderBy(a => a.Name.ToString()).ToList();
+        var vanillaAttributes = vanillaElement.Attributes().OrderBy(a => a.Name.ToString()).ToList();
+
+        // The number of attributes must be the same
+        if (baseAttributes.Count != vanillaAttributes.Count)
+            return false;
+
+        // All attributes and their values must match
+        return baseAttributes.Zip(vanillaAttributes, (b, v) => b.Name == v.Name && b.Value == v.Value).All(match => match);
+    }
 }

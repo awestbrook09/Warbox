@@ -22,7 +22,7 @@ public class TableFileSelectionView
 
     private string SearchText = "";
 
-    private DataStatus SelectedStatus;
+    private ResourceDescriptor SelectedStatus;
     private XDocument SelectedDocument;
 
     private bool SelectNextTable = false;
@@ -59,6 +59,8 @@ public class TableFileSelectionView
     private void DisplayCategories()
     {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen;
+        
+        var modName = TableSaveHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 
         foreach (var entry in CategoryLists)
         {
@@ -72,6 +74,10 @@ public class TableFileSelectionView
                     var selectionRow = entries[i];
                     var name = selectionRow.Key.Name;
 
+                    // Ignore PTF files that are exported for this mod
+                    if (name.Contains($"__{modName}"))
+                        continue;
+
                     if (TextSearchFilters.FilterFileList(name, SearchText))
                     {
                         SelectionRow(i, selectionRow);
@@ -81,7 +87,7 @@ public class TableFileSelectionView
         }
     }
 
-    private void SelectionRow(int index, KeyValuePair<DataStatus, XDocument> entry)
+    private void SelectionRow(int index, KeyValuePair<ResourceDescriptor, XDocument> entry)
     {
         var status = entry.Key;
         var name = entry.Key.Name;
@@ -131,7 +137,7 @@ public class TableFileSelectionView
         }
     }
 
-    public void SetSelection(KeyValuePair<DataStatus, XDocument> entry)
+    public void SetSelection(KeyValuePair<ResourceDescriptor, XDocument> entry)
     {
         SelectedStatus = entry.Key;
         SelectedDocument = entry.Value;
@@ -143,7 +149,7 @@ public class TableFileSelectionView
         return SelectedStatus == null ? "" : SelectedStatus.Name;
     }
 
-    public DataStatus GetSelectedDocumentStatus()
+    public ResourceDescriptor GetSelectedDocumentStatus()
     {
         return SelectedStatus;
     }
@@ -157,7 +163,7 @@ public class TableFileSelectionView
     {
     }
 
-    private SortedDictionary<string, List<KeyValuePair<DataStatus, XDocument>>> CategoryLists = new();
+    private SortedDictionary<string, List<KeyValuePair<ResourceDescriptor, XDocument>>> CategoryLists = new();
 
     private void SetupCategoryLists()
     {
@@ -180,7 +186,7 @@ public class TableFileSelectionView
                         }
                         else
                         {
-                            CategoryLists.Add(category, new List<KeyValuePair<DataStatus, XDocument>>()
+                            CategoryLists.Add(category, new List<KeyValuePair<ResourceDescriptor, XDocument>>()
                         {
                             entry
                         });

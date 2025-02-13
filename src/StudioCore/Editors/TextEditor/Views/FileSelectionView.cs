@@ -25,7 +25,7 @@ public class FileSelectionView
     public bool FocusFileEntry = false;
     public bool SelectNextText = false;
 
-    public DataStatus SelectedStatus;
+    public ResourceDescriptor SelectedStatus;
     public XDocument SelectedDocument;
     public List<XElement> SelectedElements;
 
@@ -85,7 +85,7 @@ public class FileSelectionView
         }
     }
 
-    private void SelectionRow(int index, KeyValuePair<DataStatus, XDocument> entry, DataStatus status, string name)
+    private void SelectionRow(int index, KeyValuePair<ResourceDescriptor, XDocument> entry, ResourceDescriptor status, string name)
     {
         // Focus the newly selected row when set via command queue
         if (FocusFileEntry && SelectedStatus == status)
@@ -112,7 +112,7 @@ public class FileSelectionView
         }
     }
 
-    public void UpdateSelection(KeyValuePair<DataStatus, XDocument> entry, bool focus = false)
+    public void UpdateSelection(KeyValuePair<ResourceDescriptor, XDocument> entry, bool focus = false)
     {
         SelectedStatus = entry.Key;
         SelectedDocument = entry.Value;
