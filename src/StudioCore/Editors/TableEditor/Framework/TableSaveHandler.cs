@@ -111,7 +111,7 @@ public static class TableSaveHandler
 
         result = Regex.Replace(result, @"[^a-zA-Z0-9_]", "");
 
-        return result;
+        return result.ToLower();
     }
 
 

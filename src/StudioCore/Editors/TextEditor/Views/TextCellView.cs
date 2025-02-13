@@ -43,8 +43,8 @@ public class TextCellView
                 if (ImGui.BeginTable($"CellEntries", 2, ImGuiTableFlags.SizingFixedFit))
                 {
                     var id = curCells[0];
-                    var text = curCells[1];
-                    var fallback_text = curCells[2];
+                    var reference_text = curCells[1];
+                    var localized_text = curCells[2];
 
                     ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
                     ImGui.TableSetupColumn("Inputs", ImGuiTableColumnFlags.WidthFixed);
@@ -54,7 +54,7 @@ public class TextCellView
                     ImGui.TableSetColumnIndex(0);
                     ImGui.AlignTextToFramePadding();
 
-                    ImGui.Text("ID");
+                    ImGui.Text("UI String");
 
                     ImGui.TableSetColumnIndex(1);
 
@@ -65,22 +65,22 @@ public class TextCellView
                     ImGui.TableSetColumnIndex(0);
                     ImGui.AlignTextToFramePadding();
 
-                    ImGui.Text("Text");
+                    ImGui.Text("Reference Text");
 
                     ImGui.TableSetColumnIndex(1);
 
-                    HandleCellEntry(text, "text", textInput);
+                    HandleCellEntry(reference_text, "reference_text", textInput);
 
                     // Fallback Text
                     ImGui.TableNextRow();
                     ImGui.TableSetColumnIndex(0);
                     ImGui.AlignTextToFramePadding();
 
-                    ImGui.Text("Fallback Text");
+                    ImGui.Text("Localized Text");
 
                     ImGui.TableSetColumnIndex(1);
 
-                    HandleCellEntry(fallback_text, "fallback_text", textInput);
+                    HandleCellEntry(localized_text, "localized_text", textInput);
 
                     ImGui.TableSetColumnIndex(0);
 

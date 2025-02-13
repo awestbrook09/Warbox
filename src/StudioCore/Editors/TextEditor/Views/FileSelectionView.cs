@@ -36,19 +36,40 @@ public class FileSelectionView
 
     public void Display()
     {
-        var width = ImGui.GetWindowWidth();
+        var languageOptions = DataHandler.GetLanguageOptions();
+        var curLanguage = CFG.Current.TextEditor_CurrentLanguage;
 
         if (ImGui.Begin("Files##textFileView"))
         {
-            ImGui.SetNextItemWidth(width * 0.75f);
+            var width = ImGui.GetWindowWidth();
+
+            // Language
+            ImGui.SetNextItemWidth(width);
+            if (ImGui.BeginCombo("##languageSelection", curLanguage))
+            {
+                foreach(var entry in languageOptions)
+                {
+                    if(ImGui.Selectable($"{entry}"))
+                    {
+                        CFG.Current.TextEditor_CurrentLanguage = entry;
+                        SelectedStatus = null;
+                        SelectedDocument = null;
+                        SelectedElements = null;
+                    }
+                }
+
+                ImGui.EndCombo();
+            }
+
+            ImGui.SetNextItemWidth(width);
             ImGui.InputText($"##textFileViewSearch", ref SearchText, 255);
             UIHelper.ShowHoverTooltip("Filters the list.");
 
             ImGui.BeginChild("fileListSection");
 
-            for (int i = 0; i < DataHandler.Localization.Count; i++)
+            for (int i = 0; i < DataHandler.GetCurrentLocalization().Count; i++)
             {
-                var entry = DataHandler.Localization.ElementAt(i);
+                var entry = DataHandler.GetCurrentLocalization().ElementAt(i);
                 var status = entry.Key;
                 var name = entry.Key.Name;
 

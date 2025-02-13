@@ -280,6 +280,7 @@
 
   <ItemGroup>
     <Folder Include="Editors\TableEditor\Enums\" />
+    <Folder Include="Editors\TextEditor\Enums\" />
   </ItemGroup>
 
 </Project>

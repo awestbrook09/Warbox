@@ -44,6 +44,25 @@ public class CFG
     public bool TableEditor_View_Properties_DisplayNames = true;
 
     //**************
+    // Text Editor
+    //**************
+    public string TextEditor_CurrentLanguage = "English";
+    public bool TextEditor_EnableLanguage_ChineseSimplified = false;
+    public bool TextEditor_EnableLanguage_ChineseTraditional = false;
+    public bool TextEditor_EnableLanguage_Czech = false;
+    public bool TextEditor_EnableLanguage_French = false;
+    public bool TextEditor_EnableLanguage_German = false;
+    public bool TextEditor_EnableLanguage_Italian = false;
+    public bool TextEditor_EnableLanguage_Japanese = false;
+    public bool TextEditor_EnableLanguage_Korean = false;
+    public bool TextEditor_EnableLanguage_Polish = false;
+    public bool TextEditor_EnableLanguage_Portuguese = false;
+    public bool TextEditor_EnableLanguage_Russian = false;
+    public bool TextEditor_EnableLanguage_Spanish = false;
+    public bool TextEditor_EnableLanguage_Turkish = false;
+    public bool TextEditor_EnableLanguage_Ukrainian = false;
+
+    //**************
     // Debug
     //**************
     public bool Debug_FireOnce = false;

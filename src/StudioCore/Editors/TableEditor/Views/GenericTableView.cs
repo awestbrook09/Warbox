@@ -694,7 +694,7 @@ public class GenericTableView
 
         var imguiKey = $"{ImGuiName}_{childDepth}_{localizationFile}_{curImguiKey}";
 
-        var targetFile = DataHandler.Localization.Where(e => e.Key.Name == localizationFile).FirstOrDefault();
+        var targetFile = DataHandler.GetCurrentLocalization().Where(e => e.Key.Name == localizationFile).FirstOrDefault();
         var targetDoc = targetFile.Value;
 
         var rows = targetDoc.Root.Elements("Row").ToList();
@@ -705,13 +705,13 @@ public class GenericTableView
         {
             var cells = row.Elements("Cell").ToList();
 
-            var defString = cells[0].Value;
-            var textString1 = cells[1].Value;
-            var textString2 = cells[2].Value;
+            var ui_string = cells[0].Value;
+            var reference_text = cells[1].Value;
+            var localized_text = cells[2].Value;
 
-            if (defString == targetString)
+            if (ui_string == targetString)
             {
-                displayedName = textString1;
+                displayedName = localized_text;
             }
         }
 
@@ -769,7 +769,7 @@ public class GenericTableView
         if (string.IsNullOrEmpty(textRef))
             return;
 
-        var targetFile = DataHandler.Localization.FirstOrDefault(e => e.Key.Name == textRef).Value;
+        var targetFile = DataHandler.GetCurrentLocalization().FirstOrDefault(e => e.Key.Name == textRef).Value;
         if (targetFile?.Root == null)
             return;
 
@@ -777,7 +777,7 @@ public class GenericTableView
         var rowDictionary = targetFile.Root.Elements("Row")
             .Select(row => row.Elements("Cell").ToList())
             .Where(cells => cells.Count >= 3)
-            .ToDictionary(cells => cells[0].Value, cells => cells[1].Value);
+            .ToDictionary(cells => cells[0].Value, cells => cells[2].Value);
 
         for (int i = 0; i < Contents.Count; i++)
         {

@@ -122,13 +122,13 @@ public class TextEditorScreen : EditorScreen
 
     public void Save()
     {
-        var outputDir = $"{Warbox.ProjectDataRoot}\\Localization";
+        var outputDir = $"{Warbox.ProjectDataRoot}\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
 
         if(!Directory.Exists(outputDir))
             Directory.CreateDirectory(outputDir);
 
         var status = FileSelectionView.SelectedStatus;
-        var document = DataHandler.Localization[status];
+        var document = DataHandler.GetCurrentLocalization()[status];
 
         var writePath = status.Path;
         var fileDir = $"{outputDir}\\{writePath}";
@@ -198,7 +198,7 @@ public class TextEditorScreen : EditorScreen
                 var fileName = initcmd[1];
                 var targetUiString = initcmd[2];
 
-                var targetFile = DataHandler.Localization.Where(e => e.Key.Name == fileName).FirstOrDefault();
+                var targetFile = DataHandler.GetCurrentLocalization().Where(e => e.Key.Name == fileName).FirstOrDefault();
 
                 FileSelectionView.UpdateSelection(targetFile, true);
 

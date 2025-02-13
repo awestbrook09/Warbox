@@ -17,6 +17,9 @@ public class SettingsWindow
     private ProjectStatusTab ProjectStatusTab;
     private ProjectSettingsTab ProjectSettingsTab;
 
+    private TableEditorTab TableEditorSettings;
+    private TextEditorTab TextEditorSettings;
+
     private bool TabInitialized = false;
 
     public SettingsWindow()
@@ -26,6 +29,9 @@ public class SettingsWindow
 
         ProjectStatusTab = new ProjectStatusTab();
         ProjectSettingsTab = new ProjectSettingsTab();
+
+        TableEditorSettings = new TableEditorTab();
+        TextEditorSettings = new TextEditorTab();
     }
 
     public void SaveSettings()
@@ -102,6 +108,12 @@ public class SettingsWindow
                 case SelectedSettingTab.ProjectStatus:
                     ProjectStatusTab.Display();
                     break;
+                case SelectedSettingTab.TableEditor:
+                    TableEditorSettings.Display();
+                    break;
+                case SelectedSettingTab.TextEditor:
+                    TextEditorSettings.Display();
+                    break;
             }
             ImGui.EndChild();
 
@@ -122,6 +134,9 @@ public class SettingsWindow
 
         [Display(Name = "System")] System,
         [Display(Name = "Project")] Project,
-        [Display(Name = "Interface")] Interface
+        [Display(Name = "Interface")] Interface,
+
+        [Display(Name = "Table Editor")] TableEditor,
+        [Display(Name = "Text Editor")] TextEditor
     }
 }

@@ -13,7 +13,7 @@ namespace StudioCore.Core.Data;
 
 public static class DataHandler
 {
-    public static SortedDictionary<DataStatus, XDocument> Localization = new();
+    public static Dictionary<string, SortedDictionary<DataStatus, XDocument>> Localization = new();
 
     /// <summary>
     /// Holds our working tables
@@ -31,8 +31,8 @@ public static class DataHandler
     {
         if (Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
         {
-            Tables = SetupDataFromPak("Data", "Tables");
-            Vanilla_Tables = SetupDataFromPak("Data", "Tables", true);
+            Tables = ReadTables("Data", "Tables");
+            Vanilla_Tables = ReadTables("Data", "Tables", true);
         }
     }
 
@@ -40,17 +40,176 @@ public static class DataHandler
     {
         if (Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
         {
-            Localization = SetupDataFromPak("Localization", "English_xml");
+            Localization.Add("English", ReadLocalization("Localization", "English_xml"));
+
+            if(CFG.Current.TextEditor_EnableLanguage_ChineseSimplified)
+                Localization.Add("Chinese (Simplified)", ReadLocalization("Localization", "Chineses_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_ChineseTraditional)
+                Localization.Add("Chinese (Traditional)", ReadLocalization("Localization", "Chineset_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Czech)
+                Localization.Add("Czech", ReadLocalization("Localization", "Czech_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_French)
+                Localization.Add("French", ReadLocalization("Localization", "French_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_German)
+                Localization.Add("German", ReadLocalization("Localization", "German_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Italian)
+                Localization.Add("Italian", ReadLocalization("Localization", "Italian_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Japanese)
+                Localization.Add("Japanese", ReadLocalization("Localization", "Japanese_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Korean)
+                Localization.Add("Korean", ReadLocalization("Localization", "Korean_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Polish)
+                Localization.Add("Polish", ReadLocalization("Localization", "Polish_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Portuguese)
+                Localization.Add("Portuguese", ReadLocalization("Localization", "Portuguese_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Russian)
+                Localization.Add("Russian", ReadLocalization("Localization", "Russian_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Spanish)
+                Localization.Add("Spanish", ReadLocalization("Localization", "Spanish_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Turkish)
+                Localization.Add("Turkish", ReadLocalization("Localization", "Turkish_xml"));
+
+            if (CFG.Current.TextEditor_EnableLanguage_Ukrainian)
+                Localization.Add("Ukrainian", ReadLocalization("Localization", "Ukrainian_xml"));
         }
     }
 
-    public static SortedDictionary<DataStatus, XDocument> SetupDataFromPak(string folderName, string pakName, bool ignoreProject = false)
+    public static SortedDictionary<DataStatus, XDocument> GetCurrentLocalization()
+    {
+        return DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage];
+    }
+
+    public static List<string> GetLanguageOptions()
+    {
+        var options = new List<string>
+        {
+            "English"
+        };
+
+        if (CFG.Current.TextEditor_EnableLanguage_ChineseSimplified)
+            options.Add("Chinese (Simplified)");
+
+        if (CFG.Current.TextEditor_EnableLanguage_ChineseTraditional)
+            options.Add("Chinese (Traditional)");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Czech)
+            options.Add("Czech");
+
+        if (CFG.Current.TextEditor_EnableLanguage_French)
+            options.Add("French");
+
+        if (CFG.Current.TextEditor_EnableLanguage_German)
+            options.Add("German");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Italian)
+            options.Add("Italian");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Japanese)
+            options.Add("Japanese");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Korean)
+            options.Add("Korean");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Polish)
+            options.Add("Polish");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Portuguese)
+            options.Add("Portuguese");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Russian)
+            options.Add("Russian");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Spanish)
+            options.Add("Spanish");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Turkish)
+            options.Add("Turkish");
+
+        if (CFG.Current.TextEditor_EnableLanguage_Ukrainian)
+            options.Add("Ukrainian");
+
+        return options;
+    }
+
+    public static SortedDictionary<DataStatus, XDocument> ReadTables(string folderName, string pakName, bool ignoreProject = false)
     {
         if (Warbox.DataRoot == "")
             return new SortedDictionary<DataStatus, XDocument>();
 
         var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
         var projectDir = $"{Warbox.ProjectDataRoot}\\{folderName}\\";
+
+        var baseData = ReadXmlFromZip(dataDir);
+        var projectData = ReadXmlFromDirectory(projectDir);
+        var finalData = new SortedDictionary<DataStatus, XDocument>();
+
+        // Replace entries with project data if present
+        if (projectData.Count > 0 && !ignoreProject)
+        {
+            foreach (var bEntry in baseData)
+            {
+                var bDataStatus = bEntry.Key;
+                var hasProjectVersion = false;
+
+                foreach (var pEntry in projectData)
+                {
+                    var pDataStatus = pEntry.Key;
+
+                    // Is match for existing file, override
+                    if (bDataStatus.Name == pDataStatus.Name)
+                    {
+                        hasProjectVersion = true;
+
+                        pEntry.Key.IsProjectData = true;
+                        if (finalData.ContainsKey(pEntry.Key))
+                        {
+                            finalData[pEntry.Key] = pEntry.Value;
+                        }
+                    }
+                    // Is unique to project, new file
+                    else
+                    {
+                        if (!finalData.ContainsKey(pEntry.Key))
+                        {
+                            finalData.Add(pDataStatus, pEntry.Value);
+                        }
+                    }
+                }
+
+                // Is not affected by project, vanilla
+                if (!hasProjectVersion)
+                {
+                    finalData.Add(bDataStatus, bEntry.Value);
+                }
+            }
+        }
+        else
+        {
+            finalData = baseData;
+        }
+
+        return finalData;
+    }
+
+    public static SortedDictionary<DataStatus, XDocument> ReadLocalization(string folderName, string pakName, bool ignoreProject = false)
+    {
+        if (Warbox.DataRoot == "")
+            return new SortedDictionary<DataStatus, XDocument>();
+
+        var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
+        var projectDir = $"{Warbox.ProjectDataRoot}\\{folderName}\\{CFG.Current.TextEditor_CurrentLanguage}";
 
         var baseData = ReadXmlFromZip(dataDir);
         var projectData = ReadXmlFromDirectory(projectDir);
