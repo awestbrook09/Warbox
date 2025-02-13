@@ -20,7 +20,7 @@ namespace StudioCore.Editors.TableEditor.Views;
 
 public class GenericTableView
 {
-    private TableEditorScreen Screen;
+    public TableEditorScreen Screen;
 
     public ResourceDescriptor ViewStatus;
     public XDocument ViewDocument;
@@ -39,13 +39,11 @@ public class GenericTableView
     private bool focusRow = false;
 
     private bool NoPrimaryKey = false;
-
     private int childDepth = 0;
 
-    private bool SetupAliasOverrides = false;
-    private Dictionary<int, string> AliasOverrides = new Dictionary<int, string>();
-
-    private List<XElement> Contents = new();
+    public bool SetupAliasOverrides = false;
+    public Dictionary<int, string> AliasOverrides = new Dictionary<int, string>();
+    public List<XElement> Contents = new();
 
     public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, bool noPrimaryKey, ResourceDescriptor viewStatus, XDocument viewDocument)
     {
@@ -74,7 +72,7 @@ public class GenericTableView
         if (!SetupAliasOverrides)
         {
             SetupAliasOverrides = true;
-            ProcessAliasOverrides();
+            TableRowDecorators.ProcessAliasOverrides(this);
         }
 
         ImGui.SetNextItemWidth(width);
@@ -172,8 +170,8 @@ public class GenericTableView
     /// </summary>
     public void Refresh()
     {
-        ProcessAliasOverrides();
-        GuidResults = new();
+        TableRowDecorators.ProcessAliasOverrides(this);
+        TableMetaDecorators.Reset();
     }
 
     /// <summary>
@@ -259,7 +257,7 @@ public class GenericTableView
 
                 DisplayAttributeRow(entry, attribute, i, imguiElementName, rowIndex);
 
-                if (TableMeta.HasMetaData(entry, attribute))
+                if (TableMetaDecorators.HasRowDecorators(entry, attribute))
                 {
                     DisplayMetaDataRow(entry, attribute, i, imguiElementName, rowIndex);
                 }
@@ -603,387 +601,18 @@ public class GenericTableView
                     var curElement = elements[i];
                     var curImguiKey = $"{imguiElementName}{rowIndex}{attributeIndex}{i}";
 
-                    if (curElement.Attribute("Enum") != null)
-                    {
-                        DisplayEnum(attribute, curElement, curImguiKey);
-                    }
-                    if (curElement.Attribute("FileEnum") != null)
-                    {
-                        DisplayFileEnum(attribute, curElement, curImguiKey);
-                    }
-                    if (curElement.Attribute("TextRef") != null)
-                    {
-                        DisplayTextRef(attribute, curElement, curImguiKey);
-                    }
-                    if (curElement.Attribute("GuidRef") != null)
-                    {
-                        DisplayGuidRef(entry, attribute, curElement, curImguiKey);
-                    }
+                    TableMetaDecorators.HandleRowDecorators(
+                        entry, curElement,
+                        ImGuiName,
+                        childDepth,
+                        attribute,
+                        curImguiKey,
+                        this);
                 }
             }
         }
     }
 
-    private string EnumSearchText = "";
-
-    /// <summary>
-    /// Handle the enum reference meta text for a property that requires it.
-    /// </summary>
-    private void DisplayEnum(XAttribute attribute, XElement metaAttribute, string curImguiKey)
-    {
-        var enumParameters = metaAttribute.Attribute("Enum").Value.Split(",");
-        var enumName = enumParameters[0];
-
-        var imguiKey = $"{ImGuiName}_{childDepth}_{enumName}_{curImguiKey}";
-
-        var targetMeta = TableMeta.GetMetaDocument(ViewStatus.Name);
-        var enumOptions = TableMeta.GetEnumOptions(targetMeta, enumName);
-
-        var displayedName = "";
-
-        foreach (var tElement in enumOptions)
-        {
-            var id = tElement.Attribute("ID").Value;
-            var name = tElement.Attribute("Name").Value;
-
-            if (attribute.Value == id)
-            {
-                displayedName = name;
-            }
-        }
-
-        if (displayedName != "")
-        {
-            var boxWidth = 250;
-            var boxSize = new Vector2(boxWidth, 300);
-
-            UIHelper.DisplayInformationText(displayedName);
-
-            if (ImGui.BeginPopupContextItem($"##enumContextMenu_{imguiKey}"))
-            {
-                // Enum Search
-                ImGui.SetNextItemWidth(boxWidth);
-                ImGui.InputText($"##enumSearch_{imguiKey}", ref EnumSearchText, 255);
-
-                // Enum options
-                if (ImGui.BeginListBox($"##enumListBox_{imguiKey}", boxSize))
-                {
-                    foreach (var tElement in enumOptions)
-                    {
-                        var id = tElement.Attribute("ID").Value;
-                        var name = tElement.Attribute("Name").Value;
-
-                        if (name.Contains(EnumSearchText) || EnumSearchText == "")
-                        {
-                            if (ImGui.Selectable($"{id}: {name}"))
-                            {
-                                var action = new ChangeAttributeValue(attribute, attribute.Value, id, this);
-                                Screen.EditorActionManager.ExecuteAction(action);
-                                break;
-                            }
-                        }
-                    }
-
-                    ImGui.EndListBox();
-                }
-
-                ImGui.EndPopup();
-            }
-
-        }
-    }
-
-    /// <summary>
-    /// Handle the file enum reference meta text for a property that requires it.
-    /// </summary>
-    private void DisplayFileEnum(XAttribute attribute, XElement metaAttribute, string curImguiKey)
-    {
-        var enumParameters = metaAttribute.Attribute("FileEnum").Value.Split(",");
-        var fileName = enumParameters[0];
-        var listKey = enumParameters[1];
-        var enumId = enumParameters[2];
-        var enumName = enumParameters[3];
-
-        var imguiKey = $"{ImGuiName}_{childDepth}_{fileName}_{curImguiKey}";
-
-        var targetFile = DataHandler.Tables.Where(e => e.Key.Name == fileName).FirstOrDefault();
-        var targetDoc = targetFile.Value;
-
-        var targetElements = targetDoc.Descendants($"{listKey}").ToList();
-
-        var displayedName = "";
-
-        foreach (var tElement in targetElements)
-        {
-            var id = tElement.Attribute(enumId).Value;
-            var name = tElement.Attribute(enumName).Value;
-
-            if (attribute.Value == id)
-            {
-                displayedName = name;
-            }
-        }
-
-        if (displayedName != "")
-        {
-            var boxWidth = 250;
-            var boxSize = new Vector2(boxWidth, 300);
-
-            UIHelper.DisplayInformationText(displayedName);
-
-            if (ImGui.BeginPopupContextItem($"##fileEnumContextMenu_{imguiKey}"))
-            {
-                // Go to file -> entry
-                if (ImGui.Selectable($"Go to {fileName} -> {attribute.Value}##goToEnumFile_{imguiKey}"))
-                {
-                    EditorCommandQueue.AddCommand($"table/select/{fileName}/{attribute.Name}/{attribute.Value}/-1");
-                }
-
-                // Enum Search
-                ImGui.SetNextItemWidth(boxWidth);
-                ImGui.InputText($"##fileEnumSearch_{imguiKey}", ref EnumSearchText, 255);
-
-                // Enum options
-                if (ImGui.BeginListBox($"##fileEnumListBox_{imguiKey}", boxSize))
-                {
-                    foreach (var tElement in targetElements)
-                    {
-                        var id = tElement.Attribute(enumId).Value;
-                        var name = tElement.Attribute(enumName).Value;
-
-                        if (name.Contains(EnumSearchText) || EnumSearchText == "")
-                        {
-                            if (ImGui.Selectable($"{id}: {name}"))
-                            {
-                                var action = new ChangeAttributeValue(attribute, attribute.Value, id, this);
-                                Screen.EditorActionManager.ExecuteAction(action);
-                                break;
-                            }
-                        }
-                    }
-
-                    ImGui.EndListBox();
-                }
-
-                ImGui.EndPopup();
-            }
-
-        }
-    }
-
-    /// <summary>
-    /// Handle the text reference meta text for a property that requires it.
-    /// </summary>
-    private void DisplayTextRef(XAttribute attribute, XElement metaElement, string curImguiKey)
-    {
-        var localizationFile = metaElement.Attribute("TextRef").Value;
-        var targetString = attribute.Value.ToString();
-
-        var imguiKey = $"{ImGuiName}_{childDepth}_{localizationFile}_{curImguiKey}";
-
-        var targetFile = DataHandler.GetCurrentLocalization().Where(e => e.Key.Name == localizationFile).FirstOrDefault();
-        var targetDoc = targetFile.Value;
-
-        var rows = targetDoc.Root.Elements("Row").ToList();
-
-        var displayedName = "";
-
-        foreach (var row in rows)
-        {
-            var cells = row.Elements("Cell").ToList();
-
-            var ui_string = cells[0].Value;
-            var reference_text = cells[1].Value;
-            var localized_text = cells[2].Value;
-
-            if (ui_string == targetString)
-            {
-                displayedName = localized_text;
-            }
-        }
-
-        if (displayedName != "")
-        {
-            if (displayedName.Contains("%"))
-            {
-                displayedName = displayedName.Replace("%", "%%");
-            }
-
-            UIHelper.DisplayInformationText(displayedName, true);
-
-            if (ImGui.BeginPopupContextItem($"##textRefContextMenu_{imguiKey}"))
-            {
-                // Go to file -> entry
-                if (ImGui.Selectable($"Go to {localizationFile} -> {attribute.Value}##goToTextRef_{imguiKey}"))
-                {
-                    EditorCommandQueue.AddCommand($"text/select/{localizationFile}/{attribute.Value}/-1");
-                }
-
-                ImGui.EndPopup();
-            }
-        }
-    }
-
-    private Dictionary<string, List<GuidSearchResult>> GuidResults = new();
-
-    /// <summary>
-    /// Handle the GUID reference meta text for a property that requires it.
-    /// </summary>
-    private void DisplayGuidRef(XElement entry, XAttribute attribute, XElement metaElement, string curImguiKey)
-    {
-        var imguiKey = $"{ImGuiName}_{childDepth}_temp_{curImguiKey}";
-
-        var targetGuid = attribute.Value;
-
-        if (targetGuid == null || targetGuid == "")
-            return;
-
-        var guidParameters = metaElement.Attribute("GuidRef").Value.Split(",");
-        var targetFileName = guidParameters[0];
-        var targetProperty = guidParameters[1];
-        var localizationFile = guidParameters[2];
-        var localizationProperty = guidParameters[3];
-
-        if (GuidResults.ContainsKey(targetGuid))
-        {
-            DisplayGuidRefEntry(GuidResults[targetGuid], targetGuid, guidParameters, imguiKey);
-            return;
-        }
-        else
-        {
-            GuidResults = new Dictionary<string, List<GuidSearchResult>>
-            {
-                { targetGuid, new List<GuidSearchResult>() }
-            };
-        }
-
-        foreach (var view in Warbox.EditorHandler.TableEditor.TableDataView.GetTableViews())
-        {
-            var viewName = view.Key;
-            var curView = view.Value;
-
-            if (viewName.Contains(targetFileName))
-            {
-                var results = TableGuidTools.FindAttributebyNameAndValue(curView.ViewDocument, targetProperty, targetGuid);
-                
-                foreach (var res in results)
-                {
-                    var guidResult = new GuidSearchResult(curView.ViewStatus.Name, res.Item1, res.Item2, res.Item3, res.Item4);
-
-                    GuidResults[targetGuid].Add(guidResult);
-                }
-            }
-        }
-    }
-
-    private void DisplayGuidRefEntry(List<GuidSearchResult> results, string targetValue, string[] guidParameters, string curImguiKey)
-    {
-        var displayedName = "";
-
-        var targetFileName = guidParameters[0];
-        var targetProperty = guidParameters[1];
-        var localizationFile = guidParameters[2];
-        var localizationProperty = guidParameters[3];
-
-        // If individual result, show directly.
-        if (results.Count > 0)
-        {
-            // Only show first result
-            var result = results[0];
-
-            var locAttribute = result.Descendant.Attribute(localizationProperty);
-            if(locAttribute != null) 
-            {
-                var target_ui_string = locAttribute.Value;
-
-                var targetDoc = DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage].Where(e => e.Key.Name == localizationFile).FirstOrDefault();
-
-                if(targetDoc.Value != null)
-                {
-                    var rows = targetDoc.Value.Root.Elements("Row").ToList();
-
-                    foreach (var row in rows)
-                    {
-                        var cells = row.Elements("Cell").ToList();
-
-                        var ui_string = cells[0].Value;
-                        var reference_text = cells[1].Value;
-                        var localized_text = cells[2].Value;
-
-                        if (ui_string == target_ui_string)
-                        {
-                            displayedName = localized_text;
-                        }
-                    }
-                }
-
-                if (displayedName != "")
-                {
-                    UIHelper.DisplayInformationText(displayedName);
-
-                    if (ImGui.BeginPopupContextItem($"##guidRefContextMenu_{curImguiKey}"))
-                    {
-                        // Go to file -> entry
-                        if (ImGui.Selectable($"Go to {result.File} -> {targetValue}##goToEnumFile_{curImguiKey}"))
-                        {
-                            EditorCommandQueue.AddCommand($"table/select/{result.File}/{targetProperty}/{targetValue}/-1");
-                        }
-
-                        ImGui.EndPopup();
-                    }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Fill out the alias override dictionary for the current document
-    /// </summary>
-    private void ProcessAliasOverrides()
-    {
-        AliasOverrides = new();
-
-        const string targetAttributeName = "UIName";
-
-        var metaDocument = TableMeta.GetMetaDocument(ViewStatus.Name);
-
-        if (metaDocument?.Root == null)
-            return;
-
-        var metaElementList = metaDocument.Root.Descendants("entries").Elements();
-        var targetMetaEntry = metaElementList.FirstOrDefault(e => e.Name == targetAttributeName);
-
-        if (targetMetaEntry == null)
-            return;
-
-        var textRef = targetMetaEntry.Attribute("TextRef")?.Value;
-        if (string.IsNullOrEmpty(textRef))
-            return;
-
-        var targetFile = DataHandler.GetCurrentLocalization().FirstOrDefault(e => e.Key.Name == textRef).Value;
-        if (targetFile?.Root == null)
-            return;
-
-        // Preload rows for fast lookup
-        var rowDictionary = targetFile.Root.Elements("Row")
-            .Select(row => row.Elements("Cell").ToList())
-            .Where(cells => cells.Count >= 3)
-            .ToDictionary(cells => cells[0].Value, cells => cells[2].Value);
-
-        for (int i = 0; i < Contents.Count; i++)
-        {
-            var elementEntry = Contents[i];
-
-            var attribute = elementEntry.Attribute(targetAttributeName);
-            if (attribute == null)
-            {
-                continue;
-            }
-
-            rowDictionary.TryGetValue(attribute.Value, out string displayedName);
-            AliasOverrides[i] = displayedName ?? "";
-        }
-    }
 
     /// <summary>
     /// Duplicate the currently selected row

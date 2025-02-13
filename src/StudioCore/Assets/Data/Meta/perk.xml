@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta AliasOverrideAttribute="UIName">
+    <perk Name="Perks" />
+    <perk__combat Name="Perks: Combat" />
+    <perk__kcd2 Name="Perks: KCD2" />
+    <perk__recipe Name="Perks: Recipe" />
+    
+    <headers>
+        <perk 
+        Name="Perk" 
+        Description="" />
+    </headers>
+    
+	<entries>
+		<autolearnable 
+        Name="Is Automatically Learned"
+        Description="" 
+        IsBool="" />
+        
+		<icon_id 
+        Name="Icon ID"
+        Description="" />
+        
+		<perk_id 
+        Name="Perk GUID"
+        Description="" />
+        
+		<perk_name 
+        Name="Name"
+        Description="" />
+        
+		<perk_ui_name 
+        Name="UI Name"
+        Description="" 
+        TextRef="text_ui_soul" />
+        
+		<perk_ui_desc 
+        Name="UI Description"
+        Description="" 
+        TextRef="text_ui_soul" />
+        
+		<perk_ui_lore_desc 
+        Name="UI Lore Description"
+        Description="" 
+        TextRef="text_ui_soul" />
+        
+		<visibility 
+        Name="Visibility"
+        Description="" />
+        
+        <skill_selector
+        Name="Associated Skill"
+        Description="" 
+        Enum="SKILL_SELECTOR" />
+        
+        <stat_selector
+        Name="Associated Stat"
+        Description="" 
+        Enum="STAT_SELECTOR" />
+        
+        <level
+        Name="Level Requirement"
+        Description="" />
+        
+		<metaperk_id 
+        Name="Meta Perk GUID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+	</entries>
+    
+    <enums>
+        <enum Name="STAT_SELECTOR" >
+            <Option ID="0" Name="Strength" />
+            <Option ID="1" Name="Agility" />
+            <Option ID="2" Name="Vitality" />
+            <Option ID="3" Name="Speech" />
+        </enum>
+        <enum Name="SKILL_SELECTOR" >
+            <Option ID="0" Name="Stealth" />
+            <Option ID="1" Name="Horsemanship" />
+            <Option ID="2" Name="Warfare" />
+            <Option ID="3" Name="Bard (unused)" />
+            <Option ID="4" Name="Thievery" />
+            <Option ID="5" Name="Pickpocketing (unused)" />
+            <Option ID="6" Name="Alchemy" />
+            <Option ID="7" Name="Cooking" />
+            <Option ID="8" Name="Craftsmanship" />
+            <Option ID="9" Name="Smithing (unused)" />
+            <Option ID="10" Name="Fishing (unused)" />
+            <Option ID="11" Name="Mining (unused)" />
+            <Option ID="12" Name="First Aid (unused)" />
+            <Option ID="13" Name="Drinking" />
+            <Option ID="14" Name="Survival" />
+            <Option ID="15" Name="Defense" />
+            <Option ID="16" Name="Sword" />
+            <Option ID="17" Name="Heavy weapon" />
+            <Option ID="18" Name="Bow (unused)" />
+            <Option ID="19" Name="Marksmanship" />
+            <Option ID="20" Name="Shield" />
+            <Option ID="21" Name="Mace (unused)" />
+            <Option ID="22" Name="Dager" />
+            <Option ID="23" Name="Large weapon" />
+            <Option ID="24" Name="Unarmed" />
+            <Option ID="25" Name="Herbalism (unsed)" />
+            <Option ID="26" Name="Scholarship" />
+            <Option ID="27" Name="Tailoring (unsed)" />
+            <Option ID="28" Name="Armourer (unsed)" />
+            <Option ID="29" Name="Weaponsmithing (unsed)" />
+            <Option ID="30" Name="Shoemaking (unsed)" />
+            <Option ID="31" Name="Gunsmithing (unsed)" />
+            <Option ID="32" Name="Bowyery (unsed)" />
+            <Option ID="33" Name="Gambling (unsed)" />
+            <Option ID="34" Name="Houndmaster" />
+            <Option ID="35" Name="Strength" />
+            <Option ID="36" Name="Agility" />
+            <Option ID="37" Name="Vitality" />
+            <Option ID="38" Name="Speech" />
+        </enum>
+    </enums>
+</meta>

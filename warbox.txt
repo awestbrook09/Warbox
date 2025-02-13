@@ -7,5 +7,10 @@ FEAT: add basic meta for all tables
 
 FEAT: add mass edit for properties
 
-FEAT: add meta elements:
- - GuidRef // The attribute value points to a GUID, relevant file is passed in the parameters
+FIX: guid ref isn't working correctly if there are multiple present
+
+# Refs
+FileEnum="<table file>,<table list entry>,<enum id property>,<enum name property>"
+TextRef="<localization filename>"
+GuidRef="<table file>,<value property>,<localization file>,<ui string property>" />
+ConditionalFileEnum="<header name>,<table file>,<table list entry>,<enum id property>,<enum name property>"

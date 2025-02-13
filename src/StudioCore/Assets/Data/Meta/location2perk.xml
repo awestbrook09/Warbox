@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <location2perk Name="Location to Perk Connection" />
+    
+    <headers>
+        <location2perk 
+        Name="Location to Perk" 
+        Description="" />
+    </headers>
+	<entries>
+		<location_id 
+        Name="Location ID"
+        Description="" 
+        GuidRef="location,location_id,text_ui_quest,location_name" />
+        
+		<perk_id 
+        Name="Perk ID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+	</entries>
+</meta>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="us-ascii"?>
-<meta>
+<meta AliasOverrideAttribute="UIName">
     <!-- Toggles -->
     <SuppressAdditionButtons Enable="" />
 
@@ -231,7 +231,8 @@
         
 		<Type 
         Name="Type"
-        Description="" />
+        Description="" 
+        ConditionalFileEnum="Ointment,ointment_item_type,ointment_item_type,ointment_item_type_id,ointment_item_type_name" />
         
 		<Model 
         Name="Model"
@@ -475,7 +476,7 @@
         <!-- Dice Badge -->
 		<SubType
         Name="Sub Type"
-        Description="" />
+        ConditionalFileEnum="Ointment,ointment_item_subtype,ointment_item_subtype,ointment_item_subtype_id,ointment_item_subtype_name" />
         
 		<PickpocketInPouch
         Name="Pickpocket in Pouch"

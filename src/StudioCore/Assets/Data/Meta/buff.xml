@@ -35,7 +35,8 @@
         
 		<duration
         Name="Duration"
-        Description="Used by some implementations like Cpp:BasicTimed and Cpp:Fading" />
+        Description="Used by some implementations like Cpp:BasicTimed and Cpp:Fading" 
+        DurationHelper="" />
         
 		<buff_exclusivity_id
         Name="Exclusivity ID"
@@ -100,6 +101,11 @@
 		<buff_id
         Name="Buff"
         Description="" />
+        
+        <buff_family_id
+        Name="Buff Family Type"
+        Description="" 
+        FileEnum="buff_family,buff_family,buff_family_id,buff_family_name" />
 	</entries>
     
     <enums>

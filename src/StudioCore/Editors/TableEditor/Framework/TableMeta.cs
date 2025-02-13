@@ -210,44 +210,6 @@ public static class TableMeta
         return false;
     }
 
-    /// <summary>
-    /// Check if the attribute has any relevant metadata tags, 
-    /// if so, we will display the secondary row to contain it.
-    /// </summary>
-    public static bool HasMetaData(XElement entry, XAttribute attribute)
-    {
-        var elementName = entry.Name.ToString();
-        var attributeName = attribute.Name.ToString();
-        var documentName = GetDocumentName(elementName);
-
-        var metaDoc = GetMetaDocument(documentName);
-        if (metaDoc != null)
-        {
-            List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
-
-            foreach (var element in elements)
-            {
-                if (element.Attribute("Enum") != null)
-                {
-                    return true;
-                }
-                if (element.Attribute("FileEnum") != null)
-                {
-                    return true;
-                }
-                if (element.Attribute("TextRef") != null)
-                {
-                    return true;
-                }
-                if (element.Attribute("GuidRef") != null)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
     public static List<XElement> GetAttributeList(XElement entry)
     {
