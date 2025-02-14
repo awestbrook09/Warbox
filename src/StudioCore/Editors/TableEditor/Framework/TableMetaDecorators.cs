@@ -395,7 +395,7 @@ public static class TableMetaDecorators
         var targetFileName = guidParameters[0];
         var targetProperty = guidParameters[1];
 
-        if(targetFileName.Contains("__"))
+        if (targetFileName.Contains("__"))
         {
             targetFileName = targetFileName.Split("__")[0];
         }
@@ -455,6 +455,12 @@ public static class TableMetaDecorators
         var localizationFile = guidParameters[2];
         var localizationProperty = guidParameters[3];
 
+        // This is a fallback check if the row doesn't use the main loc property
+        var fallbackNameProperty = "";
+
+        if (guidParameters.Length >= 4)
+            fallbackNameProperty = guidParameters[4];
+
         // If individual result, show directly.
         if (results.Count > 0)
         {
@@ -489,25 +495,31 @@ public static class TableMetaDecorators
                         }
                     }
                 }
-                else
+            }
+
+            // Failed to find loc name, use fallback property to get script name
+            if (displayedName == "" && fallbackNameProperty != "")
+            {
+                var fallbackAttribute = result.Descendant.Attribute(fallbackNameProperty);
+                if (fallbackAttribute != null)
                 {
-                    // TODO: grab the attribute value from the referenced targetProperty
+                    displayedName = fallbackAttribute.Value;
                 }
+            }
 
-                if (displayedName != "")
+            if (displayedName != "")
+            {
+                UIHelper.DisplayInformationText(displayedName);
+
+                if (ImGui.BeginPopupContextItem($"##guidRefContextMenu_{curImguiKey}"))
                 {
-                    UIHelper.DisplayInformationText(displayedName);
-
-                    if (ImGui.BeginPopupContextItem($"##guidRefContextMenu_{curImguiKey}"))
+                    // Go to file -> entry
+                    if (ImGui.Selectable($"Go to {result.File} -> {targetValue}##goToEnumFile_{curImguiKey}"))
                     {
-                        // Go to file -> entry
-                        if (ImGui.Selectable($"Go to {result.File} -> {targetValue}##goToEnumFile_{curImguiKey}"))
-                        {
-                            EditorCommandQueue.AddCommand($"table/select/{result.File}/{targetProperty}/{targetValue}/-1");
-                        }
-
-                        ImGui.EndPopup();
+                        EditorCommandQueue.AddCommand($"table/select/{result.File}/{targetProperty}/{targetValue}/-1");
                     }
+
+                    ImGui.EndPopup();
                 }
             }
         }

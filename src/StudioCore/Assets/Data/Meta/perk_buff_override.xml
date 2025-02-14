@@ -11,16 +11,16 @@
 		<perk_id 
         Name="Associated Perk ID"
         Description="" 
-        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name,perk_name" />
         
 		<source_buff_id 
         Name="Source Buff ID"
         Description="" 
-        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name" />
+        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name,buff_name" />
         
 		<target_buff_id 
         Name="Target Buff ID"
         Description="" 
-        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name" />
+        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name,buff_name" />
 	</entries>
 </meta>

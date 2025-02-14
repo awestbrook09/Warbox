@@ -340,7 +340,7 @@
 		<BuffDefinitionId 
         Name="Buff Definition ID"
         Description="" 
-        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name" />
+        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name,buff_name" />
         
 		<UiSound 
         Name="UI Sound"

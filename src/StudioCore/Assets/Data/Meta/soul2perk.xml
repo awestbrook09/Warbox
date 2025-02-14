@@ -11,11 +11,11 @@
 		<perk_id 
         Name="Perk ID"
         Description="" 
-        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name,perk_name" />
         
 		<soul_id 
         Name="Soul ID"
         Description="" 
-        GuidRef="soul,soul,text_ui_soul,skald_character_name" />
+        GuidRef="soul,soul,text_ui_soul,skald_character_name,soul_name" />
 	</entries>
 </meta>

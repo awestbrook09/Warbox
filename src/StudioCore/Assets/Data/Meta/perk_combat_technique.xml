@@ -15,6 +15,6 @@
 		<perk_id 
         Name="Associated Perk ID"
         Description="" 
-        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name,perk_name" />
 	</entries>
 </meta>

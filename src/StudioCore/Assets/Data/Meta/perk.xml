@@ -24,7 +24,7 @@
 		<parent_id 
         Name="Parent GUID"
         Description="" 
-        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name,perk_name" />
         
 		<perk_id 
         Name="Perk GUID"
@@ -71,7 +71,7 @@
 		<metaperk_id 
         Name="Meta Perk GUID"
         Description="" 
-        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name,perk_name" />
 	</entries>
     
     <enums>

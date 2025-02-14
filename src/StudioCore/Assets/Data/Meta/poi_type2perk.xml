@@ -11,7 +11,7 @@
 		<perk_id 
         Name="Perk ID"
         Description="" 
-        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name,perk_name" />
         
 		<poi_type_id 
         Name="POI ID"

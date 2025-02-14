@@ -11,11 +11,11 @@
 		<buff_id 
         Name="Buff ID"
         Description="" 
-        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name" />
+        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name,buff_name" />
         
 		<perk_id 
         Name="Associated Perk ID"
         Description="" 
-        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name,perk_name" />
 	</entries>
 </meta>
