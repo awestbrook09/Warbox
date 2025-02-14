@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using NativeFileDialogSharp;
 using StudioCore.Configuration;
 using StudioCore.Core.Data;
 using StudioCore.Editor;
@@ -135,7 +136,27 @@ public class TableToolsView
 
     public void DisplayMassEdit()
     {
+        var width = ImGui.GetWindowWidth();
+        var buttonSize = new Vector2(width, 24);
 
+        ImGui.Separator();
+        UIHelper.WrappedText("Selection Criteria");
+        UIHelper.ShowHoverTooltip("Determine which map objects will be affected by the mass edit.");
+        ImGui.Separator();
+
+        TableMassEdit.ConfigureSelection();
+
+        ImGui.Separator();
+        UIHelper.WrappedText("Edit Commands");
+        UIHelper.ShowHoverTooltip("Determine which property to affect and the value change to apply for this mass edit.");
+        ImGui.Separator();
+
+        TableMassEdit.ConfigureEdit();
+
+        if (ImGui.Button("Apply", buttonSize))
+        {
+            TableMassEdit.ProcessMassEdit();
+        }
     }
 }
 
