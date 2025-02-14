@@ -90,7 +90,14 @@ public static class DataHandler
 
     public static SortedDictionary<ResourceDescriptor, XDocument> GetCurrentLocalization()
     {
-        return DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage];
+        if(CFG.Current.TextEditor_CurrentLanguage == "" || CFG.Current.TextEditor_CurrentLanguage == null)
+        {
+            return Localization["English"];
+        }
+        else
+        {
+            return Localization[CFG.Current.TextEditor_CurrentLanguage];
+        }
     }
 
     public static List<string> GetLanguageOptions()

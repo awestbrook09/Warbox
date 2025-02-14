@@ -127,7 +127,7 @@ public class ProjectModal
                     "Select game directory...",
                     out var path))
             {
-                newProject.Config.GameRoot = Path.GetDirectoryName(path);
+                newProject.Config.GameRoot = path;
             }
         }
 
