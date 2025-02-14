@@ -458,7 +458,7 @@ public static class TableMetaDecorators
         // This is a fallback check if the row doesn't use the main loc property
         var fallbackNameProperty = "";
 
-        if (guidParameters.Length >= 4)
+        if (guidParameters.Length >= 5)
             fallbackNameProperty = guidParameters[4];
 
         // If individual result, show directly.

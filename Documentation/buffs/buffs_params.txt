@@ -246,7 +246,7 @@ PerfectThrowMultiplier5
 ?
 
 # bnc
-?
+Dice badge not consumed chance
 
 # hac
 HaggleAdditionalChances

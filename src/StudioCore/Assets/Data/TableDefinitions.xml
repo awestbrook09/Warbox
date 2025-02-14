@@ -825,10 +825,10 @@
         Name="perk_soul_ability" AliasNameKey="" RowNameKey="perk_id"  />
         
 		<entry Category="RPG"
-        Name="perk_visibility" AliasNameKey="" RowNameKey="perk_visibility_id" />
+        Name="perk_visibility" AliasNameKey="perk_visibility_name" RowNameKey="perk_visibility_id" />
         
 		<entry Category="RPG"
-        Name="perk2perk_exclusivity" AliasNameKey="first_perk_id" RowNameKey="first_perk_id" />
+        Name="perk2perk_exclusivity" AliasNameKey="" RowNameKey="first_perk_id" />
         
 		<entry Category="RPG"
         Name="poi_type" AliasNameKey="label" RowNameKey="poi_type_id" />

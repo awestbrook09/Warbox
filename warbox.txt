@@ -1,17 +1,16 @@
 #-----------------------------------------------
 # Warbox
 #-----------------------------------------------
-FEAT: support nested entries with the PTF save (currently it won't work correctly for tables with them).
-
-FEAT: add basic meta for all tables
-
-FEAT: add mass edit for properties
-
-FIX: project creation truncates the game directory incorrectly (misses the last folder)
-FIX: guid ref isn't working correctly if there are multiple present
-
 # Refs
 FileEnum="<table file>,<table list entry>,<enum id property>,<enum name property>"
 TextRef="<localization filename>"
 GuidRef="<table file>,<value property>,<localization file>,<ui string property>" />
 ConditionalFileEnum="<header name>,<table file>,<table list entry>,<enum id property>,<enum name property>"
+
+FEAT: add mass edit for properties
+
+FEAT: add diff engine so modified can be implemented
+
+FEAT: add basic meta for all tables
+
+FEAT: support nested entries with the PTF save (currently it won't work correctly for tables with them).

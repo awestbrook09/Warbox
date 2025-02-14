@@ -15,7 +15,9 @@ public static class TextSearchFilters
         "prop: <property name>\n" +
         "This will filter the entry list to only entries with the specified property present.\n\n" +
         "propval: <property name> <operation> <value>\n" +
-        "This will filter the entry list to only entries with the specified property present, where the value is equal, less than or greather than the specified value.\n\n";
+        "This will filter the entry list to only entries with the specified property present, where the value is equal (=), less than (<) or greater than (>) the specified value.\n\n" +
+        "propstring: <property name> <comparison type> <value>\n" +
+        "This will filter the entry list to only entries with the specified property present, where the value is exactly (=), or the property contains the value (~).\n\n";
 
     public static bool FilterTableRowEntry(XElement element, string name, string input)
     {
@@ -115,6 +117,43 @@ public static class TextSearchFilters
             }
         }
 
+        if (preppedInput.Contains("propstring:"))
+        {
+            var propInput = preppedInput.Replace("propstring:", "");
+            var inputParts = propInput.Split(" ");
+            if (inputParts.Length >= 3)
+            {
+                var propName = inputParts[0];
+                var propOperation = inputParts[1];
+                var propValue = inputParts[2];
+
+                var attributes = element.Attributes().ToList();
+
+                foreach (var attrib in attributes)
+                {
+                    var attribName = $"{attrib.Name}".ToLower().Trim();
+
+                    if (attribName.Contains(propName))
+                    {
+                        if (propOperation == "=")
+                        {
+                            if (attrib.Value == propValue)
+                            {
+                                isValid = true;
+                            }
+                        }
+
+                        if (propOperation == "~")
+                        {
+                            if (attrib.Value.Contains(propValue))
+                            {
+                                isValid = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         if (preppedName.Contains(preppedInput))
         {
