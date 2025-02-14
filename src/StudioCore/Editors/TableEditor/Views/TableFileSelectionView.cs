@@ -20,14 +20,12 @@ public class TableFileSelectionView
 {
     private TableEditorScreen Screen;
 
-    private string SearchText = "";
-
     private ResourceDescriptor SelectedStatus;
     private XDocument SelectedDocument;
 
     private bool SelectNextTable = false;
 
-    private bool focusRow = false;
+    public bool focusRow = false;
 
     public TableFileSelectionView(TableEditorScreen screen)
     {
@@ -43,7 +41,7 @@ public class TableFileSelectionView
         if (ImGui.Begin("Files##tableFileView"))
         {
             ImGui.SetNextItemWidth(width * 0.75f);
-            ImGui.InputText($"##tableFileSearchBar", ref SearchText, 255);
+            ImGui.InputText($"##tableFileSearchBar", ref CFG.Current.TableEditor_FileFilterText, 255);
             UIHelper.ShowHoverTooltip("Filters the list.");
 
             ImGui.BeginChild("tableListSection");
@@ -81,7 +79,7 @@ public class TableFileSelectionView
                     if (name.Contains($"__{modName}"))
                         continue;
 
-                    if (TextSearchFilters.FilterFileList(name, SearchText))
+                    if (TextSearchFilters.FilterFileList(name, CFG.Current.TableEditor_FileFilterText))
                     {
                         SelectionRow(i, selectionRow);
                     }
@@ -140,11 +138,11 @@ public class TableFileSelectionView
         }
     }
 
-    public void SetSelection(KeyValuePair<ResourceDescriptor, XDocument> entry)
+    public void SetSelection(KeyValuePair<ResourceDescriptor, XDocument> entry, bool FocusRow = false)
     {
         SelectedStatus = entry.Key;
         SelectedDocument = entry.Value;
-        focusRow = true;
+        focusRow = FocusRow;
     }
 
     public string GetSelectedDocumentName()

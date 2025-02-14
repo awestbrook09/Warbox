@@ -22,8 +22,6 @@ public class TextRowView
 {
     private TextEditorScreen Screen;
 
-    private string SearchText = "";
-
     public int TextEntryIndex = -1;
 
     private bool SelectNextTextRow = false;
@@ -45,7 +43,7 @@ public class TextRowView
         if (ImGui.Begin("Rows##textRowView"))
         {
             ImGui.SetNextItemWidth(width * 0.75f);
-            ImGui.InputText($"##textRowViewSearch", ref SearchText, 255);
+            ImGui.InputText($"##textRowViewSearch", ref CFG.Current.TextEditor_RowFilterText, 255);
             UIHelper.ShowHoverTooltip("Filters the list.");
 
             ImGui.BeginChild("rowListSection");
@@ -62,7 +60,7 @@ public class TextRowView
                     var text = cells[1].Value;
                     var fallback_text = cells[2].Value;
 
-                    if (TextSearchFilters.FilterRowList(id, text, fallback_text, SearchText))
+                    if (TextSearchFilters.FilterRowList(id, text, fallback_text, CFG.Current.TextEditor_RowFilterText))
                     {
                         SelectionRow(curElements, entry, id, text, fallback_text, i);
                     }

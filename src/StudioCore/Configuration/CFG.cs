@@ -43,6 +43,10 @@ public class CFG
     public bool TableEditor_View_Window_Tools = true;
     public bool TableEditor_View_Properties_DisplayNames = true;
 
+    public string TableEditor_FileFilterText = "";
+    public string TableEditor_RowFilterText = "";
+    public string TableEditor_PropertyFilterText = "";
+
     //**************
     // Text Editor
     //**************
@@ -61,6 +65,9 @@ public class CFG
     public bool TextEditor_EnableLanguage_Spanish = false;
     public bool TextEditor_EnableLanguage_Turkish = false;
     public bool TextEditor_EnableLanguage_Ukrainian = false;
+
+    public string TextEditor_FileFilterText = "";
+    public string TextEditor_RowFilterText = "";
 
     //**************
     // Debug

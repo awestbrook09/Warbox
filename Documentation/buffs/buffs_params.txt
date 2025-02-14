@@ -252,7 +252,7 @@ Dice badge not consumed chance
 HaggleAdditionalChances
 
 # hde
-?
+Haggling is denied whilst this is above 0
 
 # lfu
 LockFailUnlockProb
@@ -514,7 +514,7 @@ PickpocketProtection
 -- Derived from soul.soul_vip_class_id. 
 
 # ltp
-?
+Loot protection
 
 # upr
 UnconsciousnessProtection
@@ -524,7 +524,7 @@ UnconsciousnessProtection
 StealthKillProtection
 
 # kopr
-?
+Knockout protection
 
 # cds
 ClothDirtyingSpeedKm 
@@ -583,7 +583,7 @@ Owl
 RealMoveSpeedMod
 
 # deb
-?
+Bonus after Sex (debonair?)
 
 # ach
 ?
@@ -617,7 +617,7 @@ Badassness
 -- lerp(Morale, Strength / StatCap, ThreatenStrenghtWeight) 
 
 # nrv
-?
+Nervousness
 
 # vag
 ?
@@ -632,7 +632,8 @@ Badassness
 ?
 
 # drv
-?
+Disable revive
+
 
 # pmc
 ?

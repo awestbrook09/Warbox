@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml;
 using static Assimp.Metadata;
+using StudioCore.Editors.TableEditor.Framework;
 
 namespace StudioCore.Core.Data;
 
@@ -34,6 +35,12 @@ public static class DataHandler
             Tables = ReadTables("Data", "Tables");
             Vanilla_Tables = ReadTables("Data", "Tables", true);
         }
+    }
+
+    public static void SetupTableViews()
+    {
+        Warbox.EditorHandler.TableEditor.TableDataView.SetupTableViews();
+        TableMeta.Setup();
     }
 
     public static void SetupLocalization()
@@ -90,14 +97,12 @@ public static class DataHandler
 
     public static SortedDictionary<ResourceDescriptor, XDocument> GetCurrentLocalization()
     {
-        if(CFG.Current.TextEditor_CurrentLanguage == "" || CFG.Current.TextEditor_CurrentLanguage == null)
+        if (Localization.Count < 1)
         {
-            return Localization["English"];
+            return null;
         }
-        else
-        {
-            return Localization[CFG.Current.TextEditor_CurrentLanguage];
-        }
+
+        return Localization[CFG.Current.TextEditor_CurrentLanguage];
     }
 
     public static List<string> GetLanguageOptions()

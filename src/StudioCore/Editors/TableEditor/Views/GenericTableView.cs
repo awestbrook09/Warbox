@@ -25,9 +25,6 @@ public class GenericTableView
     public ResourceDescriptor ViewStatus;
     public XDocument ViewDocument;
 
-    private string SearchKeyText = "";
-    private string SearchValueText = "";
-
     public string Name = "";
     private string ImGuiName = "";
 
@@ -76,7 +73,7 @@ public class GenericTableView
         }
 
         ImGui.SetNextItemWidth(width);
-        ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref SearchKeyText, 255);
+        ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref CFG.Current.TableEditor_RowFilterText, 255);
         UIHelper.ShowHoverTooltip($"Filters the list.\n\n{TextSearchFilters.SearchCommandsHint}");
 
         ImGui.Separator();
@@ -108,7 +105,7 @@ public class GenericTableView
                 }
             }
 
-            if (!TextSearchFilters.FilterTableRowEntry(entry, alias, SearchKeyText))
+            if (!TextSearchFilters.FilterTableRowEntry(entry, alias, CFG.Current.TableEditor_RowFilterText))
             {
                 continue;
             }
@@ -191,7 +188,7 @@ public class GenericTableView
         var width = ImGui.GetWindowWidth();
 
         ImGui.SetNextItemWidth(width);
-        ImGui.InputText($"##{ImGuiName}_ValueSearchBar", ref SearchValueText, 255);
+        ImGui.InputText($"##{ImGuiName}_ValueSearchBar", ref CFG.Current.TableEditor_PropertyFilterText, 255);
         UIHelper.ShowHoverTooltip("Filters the list.");
 
         ImGui.BeginChild($"{ImGuiName}PropertySection");
@@ -292,7 +289,7 @@ public class GenericTableView
 
         if (entry != null)
         {
-            if (TextSearchFilters.FilterTableEntry(entry.Name.ToString(), SearchValueText))
+            if (TextSearchFilters.FilterTableEntry(entry.Name.ToString(), CFG.Current.TableEditor_PropertyFilterText))
             {
                 ImGui.TableNextRow();
 
@@ -342,7 +339,7 @@ public class GenericTableView
 
         if (entry != null)
         {
-            if (TextSearchFilters.FilterTableEntry(entry.Value, SearchValueText))
+            if (TextSearchFilters.FilterTableEntry(entry.Value, CFG.Current.TableEditor_PropertyFilterText))
             {
                 ImGui.TableNextRow();
 
@@ -414,7 +411,7 @@ public class GenericTableView
 
         if (attribute != null)
         {
-            if (TextSearchFilters.FilterTableEntry(attribute.Value, SearchValueText))
+            if (TextSearchFilters.FilterTableEntry(attribute.Value, CFG.Current.TableEditor_PropertyFilterText))
             {
                 ImGui.TableNextRow();
 
@@ -575,7 +572,7 @@ public class GenericTableView
 
         if (attribute != null)
         {
-            if (TextSearchFilters.FilterTableEntry(attribute.Value, SearchValueText))
+            if (TextSearchFilters.FilterTableEntry(attribute.Value, CFG.Current.TableEditor_PropertyFilterText))
             {
                 var elementName = entry.Name.ToString();
                 var attributeName = attribute.Name.ToString();

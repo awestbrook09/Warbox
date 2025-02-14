@@ -331,12 +331,17 @@ public static class TableMetaDecorators
     /// </summary>
     public static void DisplayTextRef(string imguiName, int childDepth, XAttribute attribute, XElement metaElement, string curImguiKey)
     {
+        var curLocalization = DataHandler.GetCurrentLocalization();
+
+        if (curLocalization == null)
+            return;
+
         var localizationFile = metaElement.Attribute("TextRef").Value;
         var targetString = attribute.Value.ToString();
 
         var imguiKey = $"{imguiName}_{childDepth}_{localizationFile}_{curImguiKey}";
 
-        var targetFile = DataHandler.GetCurrentLocalization().Where(e => e.Key.Name == localizationFile).FirstOrDefault();
+        var targetFile = curLocalization.Where(e => e.Key.Name == localizationFile).FirstOrDefault();
         var targetDoc = targetFile.Value;
 
         var rows = targetDoc.Root.Elements("Row").ToList();

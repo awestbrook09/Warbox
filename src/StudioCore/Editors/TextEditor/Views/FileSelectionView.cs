@@ -20,8 +20,6 @@ public class FileSelectionView
 {
     private TextEditorScreen Screen;
 
-    private string SearchText = "";
-
     public bool FocusFileEntry = false;
     public bool SelectNextText = false;
 
@@ -38,6 +36,10 @@ public class FileSelectionView
     {
         var languageOptions = DataHandler.GetLanguageOptions();
         var curLanguage = CFG.Current.TextEditor_CurrentLanguage;
+        var curLocalization = DataHandler.GetCurrentLocalization();
+
+        if (curLocalization == null)
+            return;
 
         if (ImGui.Begin("Files##textFileView"))
         {
@@ -62,18 +64,18 @@ public class FileSelectionView
             }
 
             ImGui.SetNextItemWidth(width);
-            ImGui.InputText($"##textFileViewSearch", ref SearchText, 255);
+            ImGui.InputText($"##textFileViewSearch", ref CFG.Current.TextEditor_FileFilterText, 255);
             UIHelper.ShowHoverTooltip("Filters the list.");
 
             ImGui.BeginChild("fileListSection");
 
-            for (int i = 0; i < DataHandler.GetCurrentLocalization().Count; i++)
+            for (int i = 0; i < curLocalization.Count; i++)
             {
-                var entry = DataHandler.GetCurrentLocalization().ElementAt(i);
+                var entry = curLocalization.ElementAt(i);
                 var status = entry.Key;
                 var name = entry.Key.Name;
 
-                if (TextSearchFilters.FilterFileList(name, SearchText))
+                if (TextSearchFilters.FilterFileList(name, CFG.Current.TextEditor_FileFilterText))
                 {
                     SelectionRow(i, entry, status, name);
                 }

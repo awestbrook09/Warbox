@@ -104,6 +104,13 @@ public class EditorHandler
                 ImGui.EndMenu();
             }
 
+            DisplayTaskStatus();
+            if (ImGui.MenuItem("Close Project", "", false, MayChangeProject()))
+            {
+                Warbox.ProjectHandler.ClearProject();
+                CFG.Current.Project_LoadRecentProjectOnStart = false;
+            }
+
             // Open in Explorer
             if (ImGui.BeginMenu("Open in Explorer",
                     !TaskManager.AnyActiveTasks() && CFG.Current.RecentProjects.Count > 0))

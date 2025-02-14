@@ -17,6 +17,11 @@ public static class TableRowDecorators
     /// </summary>
     public static void ProcessAliasOverrides(GenericTableView curView)
     {
+        var curLocalization = DataHandler.GetCurrentLocalization();
+
+        if (curLocalization == null)
+            return;
+
         curView.AliasOverrides = new();
 
         var metaDoc = TableMeta.GetMetaDocument(curView.Screen.FileSelectionView.GetSelectedDocumentName());
@@ -43,7 +48,7 @@ public static class TableRowDecorators
         if (string.IsNullOrEmpty(textRef))
             return;
 
-        var targetFile = DataHandler.GetCurrentLocalization().FirstOrDefault(e => e.Key.Name == textRef).Value;
+        var targetFile = curLocalization.FirstOrDefault(e => e.Key.Name == textRef).Value;
         if (targetFile?.Root == null)
             return;
 

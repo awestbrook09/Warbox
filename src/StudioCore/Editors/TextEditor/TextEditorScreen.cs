@@ -122,8 +122,13 @@ public class TextEditorScreen : EditorScreen
 
     public void Save()
     {
+        var curLocalization = DataHandler.GetCurrentLocalization();
+
+        if (curLocalization == null)
+            return;
+
         var resDesc = FileSelectionView.SelectedStatus;
-        var document = DataHandler.GetCurrentLocalization()[resDesc];
+        var document = curLocalization[resDesc];
 
         var writeDir = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
         var writePath = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}{resDesc.Extension}";
@@ -195,10 +200,15 @@ public class TextEditorScreen : EditorScreen
         {
             if (initcmd.Length > 2)
             {
+                var curLocalization = DataHandler.GetCurrentLocalization();
+
+                if (curLocalization == null)
+                    return;
+
                 var fileName = initcmd[1];
                 var targetUiString = initcmd[2];
 
-                var targetFile = DataHandler.GetCurrentLocalization().Where(e => e.Key.Name == fileName).FirstOrDefault();
+                var targetFile = curLocalization.Where(e => e.Key.Name == fileName).FirstOrDefault();
 
                 FileSelectionView.UpdateSelection(targetFile, true);
 

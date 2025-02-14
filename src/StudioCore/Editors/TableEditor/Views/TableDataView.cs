@@ -24,6 +24,14 @@ public class TableDataView
     {
         Screen = screen;
 
+        SetupTableViews();
+        TableMeta.Setup();
+    }
+
+    public void SetupTableViews()
+    {
+        TableViews = new();
+
         foreach (var entry in TableDefinition.Definitions)
         {
             var defName = entry.Attribute("Name").Value;
@@ -54,14 +62,12 @@ public class TableDataView
 
                 if (docName == defName)
                 {
-                    var newView = new GenericTableView(screen, docFullName, aliasKey, noPrimaryKey, status, document);
+                    var newView = new GenericTableView(Screen, docFullName, aliasKey, noPrimaryKey, status, document);
 
                     TableViews.Add(docFullName, newView);
                 }
             }
         }
-
-        TableMeta.Setup();
     }
 
     public SortedDictionary<string, GenericTableView> GetTableViews()

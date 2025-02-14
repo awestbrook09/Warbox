@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Octokit;
 using StudioCore.Utilities;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,9 @@ public static class TableMeta
 
     public static void Setup()
     {
+        Meta = new();
+        DocumentMappings = new();
+
         // Table Meta
         var metaDir = $"{AppContext.BaseDirectory}\\Assets\\Data\\Meta\\";
 

@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using StudioCore.Core.Data;
 using StudioCore.Platform;
 using StudioCore.UserProject;
 using System;
@@ -128,6 +129,10 @@ public class ProjectHandler
 
         // Re-create this so project setup settings don't persist between projects (e.g. Import Row Names)
         ProjectModal = new ProjectModal();
+
+        DataHandler.SetupLocalization();
+        DataHandler.SetupTables();
+        DataHandler.SetupTableViews();
 
         return true;
     }

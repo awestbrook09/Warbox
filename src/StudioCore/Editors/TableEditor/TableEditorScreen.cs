@@ -282,7 +282,7 @@ public class TableEditorScreen : EditorScreen
 
                     if (name == fileName)
                     {
-                        FileSelectionView.SetSelection(targetEntry);
+                        FileSelectionView.SetSelection(targetEntry, true);
                         break;
                     }
                 }
