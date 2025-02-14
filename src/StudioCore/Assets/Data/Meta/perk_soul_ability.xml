@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
-    <perk_buff Name="Perk to Buff" />
+    <perk_soul_ability Name="Perk to Soul Ability" />
     
     <headers>
-        <perk_buff 
-        Name="Perk to Buff" 
+        <perk_soul_ability 
+        Name="Perk to Soul Ability" 
         Description="" />
     </headers>
 	<entries>
-		<buff_id 
-        Name="Buff ID"
+		<soul_ability_id
+        Name="Soul Ability ID"
         Description="" 
-        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name" />
+        GuidRef="soul_ability,soul_ability_id,null,soul_ability_name" />
         
 		<perk_id 
         Name="Associated Perk ID"

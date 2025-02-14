@@ -14,7 +14,7 @@
         GuidRef="location,location_id,text_ui_quest,location_name" />
         
 		<perk_id 
-        Name="Perk ID"
+        Name="Associated Perk ID"
         Description="" 
         GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
 	</entries>

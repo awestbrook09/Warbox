@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <perk2perk_exclusivity Name="Perk Exclusivity" />
+    
+    <headers>
+        <perk2perk_exclusivity 
+        Name="Perk Exclusivity" 
+        Description="" />
+    </headers>
+	<entries>
+		<first_perk_id 
+        Name="First Perk ID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        
+		<second_perk_id 
+        Name="First Perk ID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+	</entries>
+</meta>

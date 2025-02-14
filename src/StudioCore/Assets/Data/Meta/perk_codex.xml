@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <perk_codex Name="Perk Codex" />
+    
+    <headers>
+        <perk_codex 
+        Name="Perk Codex" 
+        Description="" />
+    </headers>
+	<entries>
+		<codex_ui_image 
+        Name="UI Image"
+        Description="" />
+        
+		<codex_ui_layout_id 
+        Name="UI Layout Type"
+        Description="" />
+        
+		<codex_ui_page_id 
+        Name="UI Page Type"
+        Description="" />
+        
+		<codex_ui_text 
+        Name="UI Text"
+        Description="" 
+        TextRef="text_ui_menus" />
+        
+		<default_learned 
+        Name="Is Learned by Default"
+        Description="" 
+        IsBool="" />
+        
+		<perk_id 
+        Name="Associated Perk ID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+	</entries>
+</meta>

@@ -400,9 +400,9 @@ public static class TableMetaDecorators
             targetFileName = targetFileName.Split("__")[0];
         }
 
-        if (GuidResults.ContainsKey(targetGuid))
+        if (GuidResults.ContainsKey(imguiKey))
         {
-            DisplayGuidRefEntry(GuidResults[targetGuid], targetGuid, guidParameters, imguiKey);
+            DisplayGuidRefEntry(GuidResults[imguiKey], targetGuid, guidParameters, imguiKey);
         }
         else
         {
@@ -410,12 +410,12 @@ public static class TableMetaDecorators
             {
                 GuidResults = new Dictionary<string, List<GuidSearchResult>>
                 {
-                    { targetGuid, new List<GuidSearchResult>() }
+                    { imguiKey, new List<GuidSearchResult>() }
                 };
             }
             else
             {
-                GuidResults.Add(targetGuid, new List<GuidSearchResult>());
+                GuidResults.Add(imguiKey, new List<GuidSearchResult>());
             }
 
             foreach (var view in Warbox.EditorHandler.TableEditor.TableDataView.GetTableViews())
@@ -423,7 +423,14 @@ public static class TableMetaDecorators
                 var viewName = view.Key;
                 var curView = view.Value;
 
-                if (viewName.Contains(targetFileName))
+                var baseName = viewName;
+
+                if (baseName.Contains("__"))
+                {
+                    baseName = viewName.Split("__")[0];
+                }
+
+                if (baseName == targetFileName)
                 {
                     var results = TableGuidTools.FindAttributebyNameAndValue(curView.ViewDocument, targetProperty, targetGuid);
 
@@ -431,7 +438,7 @@ public static class TableMetaDecorators
                     {
                         var guidResult = new GuidSearchResult(curView.ViewStatus.Name, res.Item1, res.Item2, res.Item3, res.Item4);
 
-                        GuidResults[targetGuid].Add(guidResult);
+                        GuidResults[imguiKey].Add(guidResult);
                     }
                 }
             }
@@ -459,25 +466,32 @@ public static class TableMetaDecorators
             {
                 var target_ui_string = locAttribute.Value;
 
-                var targetDoc = DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage].Where(e => e.Key.Name == localizationFile).FirstOrDefault();
-
-                if (targetDoc.Value != null)
+                if (localizationFile != "null")
                 {
-                    var rows = targetDoc.Value.Root.Elements("Row").ToList();
+                    var targetDoc = DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage].Where(e => e.Key.Name == localizationFile).FirstOrDefault();
 
-                    foreach (var row in rows)
+                    if (targetDoc.Value != null)
                     {
-                        var cells = row.Elements("Cell").ToList();
+                        var rows = targetDoc.Value.Root.Elements("Row").ToList();
 
-                        var ui_string = cells[0].Value;
-                        var reference_text = cells[1].Value;
-                        var localized_text = cells[2].Value;
-
-                        if (ui_string == target_ui_string)
+                        foreach (var row in rows)
                         {
-                            displayedName = localized_text;
+                            var cells = row.Elements("Cell").ToList();
+
+                            var ui_string = cells[0].Value;
+                            var reference_text = cells[1].Value;
+                            var localized_text = cells[2].Value;
+
+                            if (ui_string == target_ui_string)
+                            {
+                                displayedName = localized_text;
+                            }
                         }
                     }
+                }
+                else
+                {
+                    // TODO: grab the attribute value from the referenced targetProperty
                 }
 
                 if (displayedName != "")

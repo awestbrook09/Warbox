@@ -39,6 +39,32 @@ public static class TableSaveHandler
         }
     }
 
+    public static void PackageAll()
+    {
+        if (!Directory.Exists($"{Warbox.ProjectDataRoot}\\Source\\Data\\"))
+        {
+            TaskLogs.AddLog($"No Data folder exists yet.");
+            return;
+        }
+
+        if (!Directory.Exists($"{Warbox.ProjectDataRoot}\\Data\\"))
+        {
+            Directory.CreateDirectory($"{Warbox.ProjectDataRoot}\\Data\\");
+        }
+
+        var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+
+        // Output it in the normal Data folder so it can be read by the game
+        // (assuming we are in the Game/Mods/<mod name>/ structure
+        var outputPath = $"{Warbox.ProjectDataRoot}\\Data\\{modName}.pak";
+        ZipDirectory($"{Warbox.ProjectDataRoot}\\Source\\Data\\", outputPath);
+
+        TaskLogs.AddLog($"Created PAK file from Data files: {outputPath}");
+
+        ManifestHandler.CreateManisfestIfMissing();
+    }
+
+
     public static void ExportPTF()
     {
         var status = Warbox.EditorHandler.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
@@ -67,8 +93,8 @@ public static class TableSaveHandler
 
     private static void SaveTable(string saveDir, ResourceDescriptor resDesc, XDocument originalDocument, XDocument document, string postfix = "")
     {
-        var writeDir = $"{Warbox.ProjectDataRoot}\\{saveDir}\\{resDesc.RelativeDirectory}\\";
-        var writePath = $"{Warbox.ProjectDataRoot}\\{saveDir}\\{resDesc.RelativeDirectory}\\{resDesc.Name}{postfix}{resDesc.Extension}";
+        var writeDir = $"{Warbox.ProjectDataRoot}\\{saveDir}\\{resDesc.RelativeDirectory}";
+        var writePath = $"{writeDir}\\{resDesc.Name}{postfix}{resDesc.Extension}";
 
         if (!Directory.Exists(writeDir))
             Directory.CreateDirectory(writeDir);

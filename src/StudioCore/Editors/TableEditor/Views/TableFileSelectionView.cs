@@ -59,6 +59,9 @@ public class TableFileSelectionView
     private void DisplayCategories()
     {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen;
+
+        if (Warbox.ProjectHandler.CurrentProject == null)
+            return;
         
         var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 

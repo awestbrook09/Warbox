@@ -67,21 +67,20 @@ public class ResourceDescriptor : IComparable<ResourceDescriptor>
             Postfix = Name.Split("__")[1];
         }
 
-        var directory = $"{path}".Replace(Name, "");
-        directory = directory.Replace(Extension, "");
+        var directory = $"{path}".Replace($"{Name}{Extension}", "");
 
         // If reading a project-specific file, strip the project data root from the path
         if(directory.Contains(Warbox.ProjectDataRoot))
         {
             directory = directory.Replace(Warbox.ProjectDataRoot, "");
         }
-        if (directory.Contains("Source\\Data"))
+        if (directory.Contains("Source\\Data\\"))
         {
-            directory = directory.Replace("Source\\Data", "");
+            directory = directory.Replace("Source\\Data\\", "");
         }
-        if (directory.Contains("Source\\Localization"))
+        if (directory.Contains("Source\\Localization\\"))
         {
-            directory = directory.Replace("Source\\Localization", "");
+            directory = directory.Replace("Source\\Localization\\", "");
         }
 
         RelativeDirectory = $"{directory}";

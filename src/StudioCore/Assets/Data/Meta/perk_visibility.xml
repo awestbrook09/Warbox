@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <perk_visibility Name="Perk Visibility" />
+    
+    <headers>
+        <perk_visibility 
+        Name="Perk Visibility" 
+        Description="" />
+    </headers>
+	<entries>
+		<_comment
+        Name="Developer Comment"
+        Description="" />
+        
+		<perk_visibility_id 
+        Name="Perk Visibility ID"
+        Description="" />
+        
+		<perk_visibility_name 
+        Name="Perk Visibility Name"
+        Description="" />
+	</entries>
+</meta>

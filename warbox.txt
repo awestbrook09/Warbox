@@ -7,6 +7,7 @@ FEAT: add basic meta for all tables
 
 FEAT: add mass edit for properties
 
+FIX: project creation truncates the game directory incorrectly (misses the last folder)
 FIX: guid ref isn't working correctly if there are multiple present
 
 # Refs

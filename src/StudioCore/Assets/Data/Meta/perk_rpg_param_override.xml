@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <perk_rpg_param_override Name="Perk to RPG Parameter Override" />
+    
+    <headers>
+        <perk_rpg_param_override 
+        Name="Perk to RPG Parameter Override" 
+        Description="" />
+    </headers>
+	<entries>
+		<rpg_param_key
+        Name="RPG Parameter"
+        Description="" />
+        
+		<rpg_param_value
+        Name="RPG Parameter Value"
+        Description="" />
+        
+		<perk_id 
+        Name="Associated Perk ID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+	</entries>
+</meta>

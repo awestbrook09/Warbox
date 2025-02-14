@@ -81,7 +81,16 @@ public class TableEditorScreen : EditorScreen
             UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
             */
 
-            // Save All Patched Table Files
+            // Package All Tables
+            if (ImGui.MenuItem($"Package All Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
+            {
+                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                PackageAll();
+            }
+            UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
+
+
+            // Package Patched Tables
             if (ImGui.MenuItem($"Package Patched Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
             {
                 Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
@@ -185,6 +194,11 @@ public class TableEditorScreen : EditorScreen
     public void SaveAll()
     {
         TableSaveHandler.ExportAll();
+    }
+
+    public void PackageAll()
+    {
+        TableSaveHandler.PackageAll();
     }
 
     public void ExportPTF()

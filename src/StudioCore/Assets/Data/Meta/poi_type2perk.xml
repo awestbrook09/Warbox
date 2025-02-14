@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <poi_type2perk Name="POI Type to Perk" />
+    
+    <headers>
+        <poi_type2perk 
+        Name="POI Type to Perk" 
+        Description="" />
+    </headers>
+	<entries>
+		<perk_id 
+        Name="Perk ID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        
+		<poi_type_id 
+        Name="POI ID"
+        Description="" 
+        GuidRef="poi_type,poi_type,text_ui_quest,label" />
+	</entries>
+</meta>

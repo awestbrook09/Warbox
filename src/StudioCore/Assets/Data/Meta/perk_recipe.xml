@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
-    <perk_buff Name="Perk to Buff" />
+    <perk_combat_technique Name="Perk to Recipe" />
     
     <headers>
-        <perk_buff 
-        Name="Perk to Buff" 
+        <perk_recipe 
+        Name="Perk to Recipe" 
         Description="" />
     </headers>
 	<entries>
-		<buff_id 
-        Name="Buff ID"
-        Description="" 
-        GuidRef="buff,buff_id,text_ui_soul,buff_ui_name" />
+		<perk_recipe 
+        Name="Recipe ID"
+        Description="" />
         
 		<perk_id 
         Name="Associated Perk ID"

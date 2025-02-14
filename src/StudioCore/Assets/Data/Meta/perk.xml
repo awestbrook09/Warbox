@@ -21,6 +21,11 @@
         Name="Icon ID"
         Description="" />
         
+		<parent_id 
+        Name="Parent GUID"
+        Description="" 
+        GuidRef="perk,perk_id,text_ui_soul,perk_ui_name" />
+        
 		<perk_id 
         Name="Perk GUID"
         Description="" />
@@ -46,7 +51,8 @@
         
 		<visibility 
         Name="Visibility"
-        Description="" />
+        Description="" 
+        FileEnum="perk_visibility,perk_visibility,perk_visibility_id,perk_visibility_name" />
         
         <skill_selector
         Name="Associated Skill"
