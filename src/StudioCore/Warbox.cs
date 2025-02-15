@@ -1,11 +1,20 @@
 ﻿using ImGuiNET;
 using Silk.NET.SDL;
 using StudioCore.Configuration;
+using StudioCore.Configuration.Keybinds;
+using StudioCore.Configuration.Settings;
+using StudioCore.Core.Project;
 using StudioCore.Editor;
+using StudioCore.Editors.TableEditor;
 using StudioCore.Graphics;
+using StudioCore.Interface;
 using StudioCore.Platform;
+using StudioCore.TextEditor;
+using StudioCore.Tools;
+using StudioCore.Tools.Development;
 using StudioCore.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -16,24 +25,20 @@ using Veldrid;
 using Veldrid.Sdl2;
 using Renderer = StudioCore.Scene.Renderer;
 using Thread = System.Threading.Thread;
-using Version = System.Version;
-using StudioCore.Interface;
-using StudioCore.Core;
-using StudioCore.Tools;
-using StudioCore.Core.Project;
-using StudioCore.Core.Data;
 
 namespace StudioCore;
 
 public class Warbox
 {
-    public static EditorHandler EditorHandler;
-    public static WindowHandler WindowHandler;
-    public static ProjectHandler ProjectHandler;
+    public static Project Project;
+    public static bool ProjectChanged = false;
+    public static bool ProjectInitialized = false;
 
-    public static string DataRoot = "";
-    public static string ProjectDataRoot = "";
-    public static string ProjectDataStore = AppContext.BaseDirectory; // Fallback directory
+    public List<EditorScreen> EditorList;
+    public EditorScreen FocusedEditor;
+
+    public static TableEditorScreen TableEditor;
+    public static TextEditorScreen TextEditor;
 
     private static double _desiredFrameLengthSeconds = 1.0 / 20.0f;
     private static readonly bool _limitFrameRate = true;
@@ -52,19 +57,12 @@ public class Warbox
 
     private readonly string _version;
 
-    private bool _programUpdateAvailable;
-    private string _releaseUrl = "";
-    private bool _showImGuiDebugLogWindow;
-
-    // ImGui Debug windows
-    private bool _showImGuiDemoWindow;
-    private bool _showImGuiMetricsWindow;
-    private bool _showImGuiStackToolWindow;
-
     public static EventHandler UIScaleChanged;
 
     public unsafe Warbox(IGraphicsContext context, string version)
     {
+        Project = new Project();
+
         _version = version;
         _programTitle = $"Version {_version}";
 
@@ -91,10 +89,15 @@ public class Warbox
         PlatformUtils.InitializeWindows(context.Window.SdlWindowHandle);
 
         // Handlers
-        ProjectHandler = new ProjectHandler();
+        TextEditor = new TextEditorScreen(_context.Window, _context.Device);
+        TableEditor = new TableEditorScreen(_context.Window, _context.Device);
 
-        EditorHandler = new EditorHandler(_context);
-        WindowHandler = new WindowHandler(_context);
+        EditorList = [
+            TableEditor,
+            TextEditor
+        ];
+
+        FocusedEditor = TableEditor;
 
         ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
         SetupFonts();
@@ -102,11 +105,6 @@ public class Warbox
 
         ImGuiStylePtr style = ImGui.GetStyle();
         style.TabBorderSize = 0;
-    }
-
-    public static void SetProgramTitle(string projectName)
-    {
-        _context.Window.Title = $"{projectName} - {_programTitle}";
     }
 
     private unsafe void SetupFonts()
@@ -275,7 +273,7 @@ public class Warbox
             {
                 ctx = Tracy.TracyCZoneNC(1, "Draw", 0xFFFF0000);
 
-                _context.Draw(EditorHandler.EditorList, EditorHandler.FocusedEditor);
+                _context.Draw(EditorList, FocusedEditor);
 
                 Tracy.TracyCZoneEnd(ctx);
             }
@@ -389,22 +387,6 @@ public class Warbox
                     MessageBoxIcon.Warning);
             }
         }
-
-        if (CFG.Current.System_EnableRecoveryFolder)
-        {
-            var success = ProjectHandler.CreateRecoveryProject();
-            if (success)
-            {
-                PlatformUtils.Instance.MessageBox(
-                    $"Attempted to save project files to {ProjectDataRoot} for manual recovery.\n" +
-                    "You must manually replace your project files with these recovery files should you wish to restore them.\n" +
-                    "Given the program has crashed, these files may be corrupt and you should backup your last good saved\n" +
-                    "files before attempting to use these.",
-                    "Saved recovery",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-            }
-        }
     }
 
     private unsafe void Update(float deltaseconds)
@@ -413,6 +395,15 @@ public class Warbox
 
         UpdateDpi();
         var scale = GetUIScale();
+
+        if (Project.ProjectName != "")
+        {
+            _context.Window.Title = $"{Project.ProjectName} - {_programTitle}";
+        }
+        else
+        {
+            _context.Window.Title = $"No Project - {_programTitle}";
+        }
 
         if (FontRebuildRequest)
         {
@@ -466,9 +457,100 @@ public class Warbox
 
         if (ImGui.BeginMainMenuBar())
         {
-            EditorHandler.HandleEditorSharedBar();
-            EditorHandler.FocusedEditor.DrawEditorMenu();
-            WindowHandler.HandleWindowIconBar();
+            ImGui.Separator();
+
+            // Dropdown: File
+            if (ImGui.BeginMenu("File"))
+            {
+                // New Project
+                DisplayTaskStatus();
+                if (ImGui.MenuItem("New Project", "", false, MayChangeProject()))
+                {
+                    ProjectHandler.ClearProject();
+                    ProjectModal.DisplayProjectCreation = true;
+                    ImGui.OpenPopup("projectCreationModal");
+                }
+
+                // Open Project
+                DisplayTaskStatus();
+                if (ImGui.MenuItem("Open Project", "", false, MayChangeProject()))
+                {
+                    ProjectHandler.OpenProjectLoadDialog();
+                }
+
+                // Recent Projects
+                DisplayTaskStatus();
+                if (ImGui.BeginMenu("Recent Projects", MayChangeProject() && CFG.Current.RecentProjects.Count > 0))
+                {
+                    ProjectHandler.DisplayRecentProjects();
+
+                    ImGui.EndMenu();
+                }
+
+                DisplayTaskStatus();
+                if (ImGui.MenuItem("Close Project", "", false, MayChangeProject()))
+                {
+                    ProjectHandler.ClearProject();
+                }
+
+                // Open in Explorer
+                if (ImGui.BeginMenu("Open in Explorer",
+                        !TaskManager.AnyActiveTasks() && CFG.Current.RecentProjects.Count > 0))
+                {
+                    if (ImGui.MenuItem("Project Folder", "", false))
+                    {
+                        var projectPath = Project.ProjectDirectory;
+                        Process.Start("explorer.exe", projectPath);
+                    }
+
+                    if (ImGui.MenuItem("Game Folder", "", false))
+                    {
+                        var gamePath = Project.GameDirectory;
+                        Process.Start("explorer.exe", gamePath);
+                    }
+
+                    if (ImGui.MenuItem("Config Folder", "", false))
+                    {
+                        var configPath = CFG.GetConfigFolderPath();
+                        Process.Start("explorer.exe", configPath);
+                    }
+
+                    ImGui.EndMenu();
+                }
+
+                ImGui.EndMenu();
+            }
+
+            ImGui.Separator();
+
+            FocusedEditor.DrawEditorMenu();
+
+            ImGui.Separator();
+
+            if (ImGui.Button($"Keybinds##KeybindWindow"))
+            {
+                KeybindWindow.ToggleMenuVisibility();
+            }
+            UIHelper.ShowHoverTooltip($"Keybinds\n{KeyBindings.Current.CORE_KeybindConfigWindow.HintText}");
+
+            ImGui.Separator();
+
+            if (ImGui.Button($"Settings##SettingsWindow"))
+            {
+                SettingsWindow.ToggleMenuVisibility();
+            }
+            UIHelper.ShowHoverTooltip($"Configuration\n{KeyBindings.Current.CORE_ConfigurationWindow.HintText}");
+
+            if (CFG.Current.DisplayDebugTools)
+            {
+                ImGui.Separator();
+
+                if (ImGui.Button($"Debugging##DebugWindow"))
+                {
+                    DebugWindow.ToggleMenuVisibility();
+                }
+                UIHelper.ShowHoverTooltip($"Debug Tools");
+            }
 
             TaskLogs.Display();
 
@@ -483,24 +565,24 @@ public class Warbox
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(14.0f, 8.0f) * scale);
 
         // ImGui Debug windows
-        if (WindowHandler.DebugWindow._showImGuiDemoWindow)
+        if (DebugWindow._showImGuiDemoWindow)
         {
-            ImGui.ShowDemoWindow(ref WindowHandler.DebugWindow._showImGuiDemoWindow);
+            ImGui.ShowDemoWindow(ref DebugWindow._showImGuiDemoWindow);
         }
 
-        if (WindowHandler.DebugWindow._showImGuiMetricsWindow)
+        if (DebugWindow._showImGuiMetricsWindow)
         {
-            ImGui.ShowMetricsWindow(ref WindowHandler.DebugWindow._showImGuiMetricsWindow);
+            ImGui.ShowMetricsWindow(ref DebugWindow._showImGuiMetricsWindow);
         }
 
-        if (WindowHandler.DebugWindow._showImGuiDebugLogWindow)
+        if (DebugWindow._showImGuiDebugLogWindow)
         {
-            ImGui.ShowDebugLogWindow(ref WindowHandler.DebugWindow._showImGuiDebugLogWindow);
+            ImGui.ShowDebugLogWindow(ref DebugWindow._showImGuiDebugLogWindow);
         }
 
-        if (WindowHandler.DebugWindow._showImGuiStackToolWindow)
+        if (DebugWindow._showImGuiStackToolWindow)
         {
-            ImGui.ShowStackToolWindow(ref WindowHandler.DebugWindow._showImGuiStackToolWindow);
+            ImGui.ShowStackToolWindow(ref DebugWindow._showImGuiStackToolWindow);
         }
 
         ImGui.PopStyleVar(3);
@@ -512,7 +594,7 @@ public class Warbox
 
         ctx = Tracy.TracyCZoneN(1, "Editor");
 
-        foreach (EditorScreen editor in EditorHandler.EditorList)
+        foreach (EditorScreen editor in EditorList)
         {
             string[] commands = null;
             if (commandsplit != null && commandsplit[0] == editor.CommandEndpoint)
@@ -538,7 +620,7 @@ public class Warbox
                 ImGui.PopStyleVar(1);
                 editor.OnGUI(commands);
                 ImGui.End();
-                EditorHandler.FocusedEditor = editor;
+                FocusedEditor = editor;
                 editor.Update(deltaseconds);
             }
             else
@@ -547,17 +629,33 @@ public class Warbox
                 ImGui.PopStyleVar(1);
                 ImGui.End();
             }
+
+            if (ProjectChanged)
+            {
+                ProjectChanged = false;
+                editor.OnProjectChanged();
+            }
         }
 
         // Global shortcut keys
-        if (!EditorHandler.FocusedEditor.InputCaptured())
+        if (!FocusedEditor.InputCaptured())
         {
-            EditorHandler.HandleEditorShortcuts();
-            WindowHandler.HandleWindowShortcuts();
+            // Shortcut: Open Settings Window
+            if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_ConfigurationWindow))
+            {
+                SettingsWindow.ToggleMenuVisibility();
+            }
+
+            // Shortcut: Open Keybind Window
+            if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_KeybindConfigWindow))
+            {
+                KeybindWindow.ToggleMenuVisibility();
+            }
         }
 
-        ProjectHandler.OnGui();
-        WindowHandler.OnGui();
+        SettingsWindow.Display();
+        KeybindWindow.Display();
+        DebugWindow.Display();
 
         // Tool windows
         ColorPicker.DisplayColorPicker();
@@ -580,6 +678,16 @@ public class Warbox
         }
 
         _firstframe = false;
+
+        // Empty project is preset, try to load stored project from previous session
+        if(!ProjectInitialized && Project.ProjectName == "")
+        {
+            ProjectInitialized = true;
+
+            ProjectHandler.LoadProjectOnStart();
+        }
+
+        ProjectModal.Display();
     }
 
     private const float DefaultDpi = 96f;
@@ -618,6 +726,30 @@ public class Warbox
         if (CFG.Current.System_ScaleByDPI)
             scale = scale / DefaultDpi * Dpi;
         return scale;
+    }
+    private bool MayChangeProject()
+    {
+        if (TaskManager.AnyActiveTasks())
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void DisplayTaskStatus()
+    {
+        var status = "";
+
+        if (TaskManager.AnyActiveTasks())
+        {
+            status = status + "Active tasks still on going.\n";
+        }
+
+        if (status != "")
+        {
+            UIHelper.ShowHoverTooltip(status);
+        }
     }
 }
 

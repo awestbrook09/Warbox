@@ -23,7 +23,8 @@ public partial class ProjectConfigurationSerializationContext
 public class ProjectConfiguration
 {
     public string ProjectName { get; set; } = "";
-    public string GameRoot { get; set; } = "";
+    public string GameDirectory { get; set; } = "";
+    public string ProjectDirectory { get; set; } = "";
 
     [JsonExtensionData] public IDictionary<string, JsonElement> AdditionalData { get; set; }
 }

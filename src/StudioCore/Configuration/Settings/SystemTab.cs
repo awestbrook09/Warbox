@@ -12,11 +12,9 @@ using System.Threading.Tasks;
 
 namespace StudioCore.Configuration.Settings;
 
-public class SystemTab
+public static class SystemTab
 {
-    public SystemTab() { }
-
-    public void Display()
+    public static void Display()
     {
         if (ImGui.CollapsingHeader("General", ImGuiTreeNodeFlags.DefaultOpen))
         {

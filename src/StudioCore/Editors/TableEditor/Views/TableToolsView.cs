@@ -32,6 +32,9 @@ public class TableToolsView
 
     public void Display()
     {
+        if (!Warbox.Project.IsValid())
+            return;
+
         var width = ImGui.GetWindowWidth();
 
         if (ImGui.Begin("Tools##tableToolsView"))

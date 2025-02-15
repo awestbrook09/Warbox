@@ -34,6 +34,9 @@ public class FileSelectionView
 
     public void Display()
     {
+        if (!Warbox.Project.IsValid())
+            return;
+
         var languageOptions = DataHandler.GetLanguageOptions();
         var curLanguage = CFG.Current.TextEditor_CurrentLanguage;
         var curLocalization = DataHandler.GetCurrentLocalization();

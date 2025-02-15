@@ -17,15 +17,11 @@ public class TableDataView
 {
     private TableEditorScreen Screen;
 
-    private SortedDictionary<string, GenericTableView> TableViews = new();
-    private SortedDictionary<string, string> XmlNames = new();
+    public SortedDictionary<string, GenericTableView> TableViews = new();
 
     public TableDataView(TableEditorScreen screen)
     {
         Screen = screen;
-
-        SetupTableViews();
-        TableMeta.Setup();
     }
 
     public void SetupTableViews()
@@ -99,6 +95,9 @@ public class TableDataView
 
     public void Display()
     {
+        if (!Warbox.Project.IsValid())
+            return;
+
         var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
 
         if (ImGui.Begin("Rows##tableRowView"))

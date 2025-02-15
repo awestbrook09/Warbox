@@ -9,11 +9,9 @@ using System.Threading.Tasks;
 
 namespace StudioCore.Configuration.Settings;
 
-public class TextEditorTab
+public static class TextEditorTab
 {
-    public TextEditorTab() { }
-
-    public void Display()
+    public static void Display()
     {
         if (ImGui.CollapsingHeader("Languages", ImGuiTreeNodeFlags.DefaultOpen))
         {
@@ -61,7 +59,7 @@ public class TextEditorTab
 
             if(ImGui.Button("Reload Languages"))
             {
-                DataHandler.SetupLocalization();
+                DataHandler.SetupTextEditor();
                 TaskLogs.AddLog("Reloaded the localization files.");
             }
         }

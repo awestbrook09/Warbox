@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Octokit;
 using StudioCore.Interface;
 using StudioCore.Platform;
 using StudioCore.Utilities;
@@ -9,41 +10,41 @@ using System.Numerics;
 
 namespace StudioCore.Core.Project;
 
-public class ProjectModal
+public static class ProjectModal
 {
-    public Project newProject;
+    public static Project NewProject = new();
 
-    public string newProjectDirectory = "";
+    public static string NewProjectDirectory = "";
 
-    public ProjectModal()
+    public static bool DisplayProjectCreation = false;
+
+    public static void Display()
     {
-        newProject = new Project();
+        if (ImGui.BeginPopupModal("Project Creation##projectCreationModal", ref DisplayProjectCreation, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize))
+        {
+            ImGui.BeginTabBar("ProjectModelTabs");
 
-        newProjectDirectory = "";
+            if (ImGui.BeginTabItem("Create Project"))
+            {
+                DisplayNewProjectCreation();
+
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Load Project"))
+            {
+                DisplayProjectLoadOptions();
+
+                ImGui.EndTabItem();
+            }
+
+            ImGui.EndTabBar();
+
+            ImGui.EndPopup();
+        }
     }
 
-    public void Display()
-    {
-        ImGui.BeginTabBar("ProjectModelTabs");
-
-        if (ImGui.BeginTabItem("Create Project"))
-        {
-            DisplayNewProjectCreation();
-
-            ImGui.EndTabItem();
-        }
-
-        if (ImGui.BeginTabItem("Load Project"))
-        {
-            DisplayProjectLoadOptions();
-
-            ImGui.EndTabItem();
-        }
-
-        ImGui.EndTabBar();
-    }
-
-    public void DisplayProjectLoadOptions()
+    public static void DisplayProjectLoadOptions()
     {
         var scale = Warbox.GetUIScale();
         var width = ImGui.GetWindowWidth();
@@ -55,26 +56,26 @@ public class ProjectModal
             UIHelper.WrappedText("Recent Projects");
             ImGui.Separator();
 
-            Warbox.ProjectHandler.DisplayRecentProjects();
+            ProjectHandler.DisplayRecentProjects();
 
             ImGui.Separator();
         }
 
         if (ImGui.Button("Load New Project", buttonSize))
         {
-            Warbox.ProjectHandler.OpenProjectDialog();
+            ProjectHandler.OpenProjectLoadDialog();
         }
         ImGui.SameLine();
         if (CFG.Current.LastProjectFile != "")
         {
             if (ImGui.Button("Load Recent Project", buttonSize))
             {
-                Warbox.ProjectHandler.LoadRecentProject();
+                ProjectHandler.LoadProject(CFG.Current.LastProjectFile);
             }
         }
     }
 
-    public void DisplayNewProjectCreation()
+    public static void DisplayNewProjectCreation()
     {
         var width = ImGui.GetWindowWidth();
         var buttonSize = new Vector2(400, 24) * Warbox.GetUIScale();
@@ -85,38 +86,45 @@ public class ProjectModal
         UIHelper.ShowHoverTooltip("The name of this project. Used when generating the mod.manifest and patched table files.");
         ImGui.SameLine();
 
-        var pname = newProject.Config != null ? newProject.Config.ProjectName : "Blank";
+        var pname = NewProject.Config != null ? NewProject.Config.ProjectName : "Blank";
 
         if (ImGui.InputText("##pname", ref pname, 255))
         {
-            newProject.Config.ProjectName = pname;
+            NewProject.Config.ProjectName = pname;
         }
 
         // Project Directory
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Project Directory: ");
+        ImGui.Text("Project Directory:");
         UIHelper.ShowHoverTooltip("The directory that contains the data for this project.");
         ImGui.SameLine();
-        ImGui.InputText("##pdir", ref newProjectDirectory, 255);
+
+        var projectDirectory = NewProject.Config != null ? NewProject.Config.ProjectDirectory : "";
+        if (ImGui.InputText("##projectDirectoryInput", ref projectDirectory, 255))
+        {
+            NewProject.Config.ProjectDirectory = projectDirectory;
+        }
+
         ImGui.SameLine();
+
         if (ImGui.Button($@"{ForkAwesome.FileO}"))
         {
             if (PlatformUtils.Instance.OpenFolderDialog("Select project directory...", out var path))
             {
-                newProjectDirectory = path;
+                NewProject.Config.ProjectDirectory = path;
             }
         }
 
         // Data Directory
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Data Directory:    ");
+        ImGui.Text("Game Directory:");
         UIHelper.ShowHoverTooltip("The directory that contains the game data.");
         ImGui.SameLine();
 
-        var gname = newProject.Config != null ? newProject.Config.GameRoot : "";
-        if (ImGui.InputText("##dataDirectoryInput", ref gname, 255))
+        var gname = NewProject.Config != null ? NewProject.Config.GameDirectory : "";
+        if (ImGui.InputText("##gameDirectoryInput", ref gname, 255))
         {
-            newProject.Config.GameRoot = gname;
+            NewProject.Config.GameDirectory = gname;
         }
 
         ImGui.SameLine();
@@ -127,7 +135,7 @@ public class ProjectModal
                     "Select game directory...",
                     out var path))
             {
-                newProject.Config.GameRoot = path;
+                NewProject.Config.GameDirectory = path;
             }
         }
 
@@ -136,45 +144,36 @@ public class ProjectModal
         // Create
         if (ImGui.Button("Create", buttonSize))
         {
-            newProject.ProjectJsonPath = $@"{newProjectDirectory}\project.json";
-
             bool validProject = CanCreateNewProject();
 
             if (validProject)
             {
-                Warbox.ProjectHandler.WriteProjectConfig(newProject);
-
-                Warbox.ProjectHandler.CurrentProject = newProject;
-
-                // Only proceed if load is successful
-                if (Warbox.ProjectHandler.LoadProject(newProject.ProjectJsonPath))
-                    Warbox.ProjectHandler.IsInitialLoad = false;
+                ProjectHandler.WriteProjectConfig(NewProject);
+                ProjectHandler.LoadProject(NewProject.ProjectDirectory);
             }
         }
     }
 
-    public bool CanCreateNewProject()
+    public static bool CanCreateNewProject()
     {
         var validated = true;
 
-        if (newProject.Config.GameRoot == null ||
-            !Directory.Exists(newProject.Config.GameRoot))
+        if (NewProject.Config.GameDirectory == null || !Directory.Exists(NewProject.Config.GameDirectory))
         {
             PlatformUtils.Instance.MessageBox(
                 "Your game directory path does not exist. Please select a valid directory.", "Error",
                 MessageBoxButtons.OK);
             validated = false;
         }
-
-
-        if (validated && (newProjectDirectory == null || !Directory.Exists(newProjectDirectory)))
+        if (NewProject.Config.ProjectDirectory == null || !Directory.Exists(NewProject.Config.ProjectDirectory))
         {
-            PlatformUtils.Instance.MessageBox("Your selected project directory is not valid.", "Error",
+            PlatformUtils.Instance.MessageBox(
+                "Your project directory path does not exist. Please select a valid directory.", "Error",
                 MessageBoxButtons.OK);
             validated = false;
         }
 
-        if (validated && File.Exists($@"{newProjectDirectory}\project.json"))
+        if (validated && File.Exists($@"{NewProjectDirectory}\project.json"))
         {
             DialogResult message = PlatformUtils.Instance.MessageBox(
                 "Your selected project directory already contains a project.json. Would you like to replace it?",
@@ -186,7 +185,7 @@ public class ProjectModal
             }
         }
 
-        if (validated && (newProject.Config.ProjectName == null || newProject.Config.ProjectName == ""))
+        if (validated && (NewProject.Config.ProjectName == null || NewProject.Config.ProjectName == ""))
         {
             PlatformUtils.Instance.MessageBox("You must specify a project name.", "Error",
                 MessageBoxButtons.OK);

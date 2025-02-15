@@ -20,8 +20,8 @@ public class TableFileSelectionView
 {
     private TableEditorScreen Screen;
 
-    private ResourceDescriptor SelectedStatus;
-    private XDocument SelectedDocument;
+    public ResourceDescriptor SelectedStatus;
+    public XDocument SelectedDocument;
 
     private bool SelectNextTable = false;
 
@@ -34,6 +34,9 @@ public class TableFileSelectionView
 
     public void Display()
     {
+        if (!Warbox.Project.IsValid())
+            return;
+
         SetupCategoryLists();
 
         var width = ImGui.GetWindowWidth();
@@ -58,11 +61,6 @@ public class TableFileSelectionView
     {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen;
 
-        if (Warbox.ProjectHandler.CurrentProject == null)
-            return;
-        
-        var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
-
         foreach (var entry in CategoryLists)
         {
             var category = entry.Key;
@@ -76,7 +74,7 @@ public class TableFileSelectionView
                     var name = selectionRow.Key.Name;
 
                     // Ignore PTF files that are exported for this mod
-                    if (name.Contains($"__{modName}"))
+                    if (name.Contains($"__{Warbox.Project.ProjectID}"))
                         continue;
 
                     if (TextSearchFilters.FilterFileList(name, CFG.Current.TableEditor_FileFilterText))
@@ -113,7 +111,7 @@ public class TableFileSelectionView
         if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", SelectedStatus == status))
         {
             SetSelection(entry);
-            Screen.TableDataView.RefreshTableViews();
+                Screen.TableDataView.RefreshTableViews();
         }
 
         // Arrow Selection

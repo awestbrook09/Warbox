@@ -36,6 +36,9 @@ public class TextRowView
 
     public void Display()
     {
+        if (!Warbox.Project.IsValid())
+            return;
+
         var width = ImGui.GetWindowWidth();
 
         var curElements = Screen.FileSelectionView.SelectedElements;

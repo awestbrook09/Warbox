@@ -206,7 +206,7 @@ public static class TableMassEdit
     /// </summary>
     public static void ProcessMassEdit()
     {
-        var fileView = Warbox.EditorHandler.TableEditor.FileSelectionView;
+        var fileView = Warbox.TableEditor.FileSelectionView;
         var curDocument = fileView.GetSelectedDocument();
 
         var actions = new List<EditorAction>();

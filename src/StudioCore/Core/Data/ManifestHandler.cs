@@ -20,7 +20,7 @@ public static class ManifestHandler
 
     public static bool HasManifest()
     {
-        var path = $"{Warbox.ProjectDataRoot}\\mod.manifest";
+        var path = $"{Warbox.Project.ProjectDirectory}\\mod.manifest";
 
         if(File.Exists(path))
         {
@@ -32,14 +32,13 @@ public static class ManifestHandler
 
     public static void CreateManifest()
     {
-        var path = $"{Warbox.ProjectDataRoot}\\mod.manifest";
-        var modName = SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
+        var path = $"{Warbox.Project.ProjectDirectory}\\mod.manifest";
 
         var xmlString = $"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
             $"<kcd_mod>\r\n  " +
             $"<info>\r\n    " +
-            $"<name>{Warbox.ProjectHandler.CurrentProject.Config.ProjectName}</name>\r\n    " +
-            $"<modid>{modName}</modid>\r\n    " +
+            $"<name>{Warbox.Project.ProjectName}</name>\r\n    " +
+            $"<modid>{Warbox.Project.ProjectID}</modid>\r\n    " +
             $"<description></description>\r\n    " +
             $"<author></author>\r\n    " +
             $"<version>1.0</version>\r\n    " +
@@ -51,17 +50,5 @@ public static class ManifestHandler
             $"</kcd_mod>";
 
         File.WriteAllText(path, xmlString);
-    }
-
-    public static string SanitizeModName(string input)
-    {
-        if (input == null)
-            return string.Empty;
-
-        string result = input.Replace(' ', '_');
-
-        result = Regex.Replace(result, @"[^a-zA-Z0-9_]", "");
-
-        return result.ToLower();
     }
 }

@@ -38,6 +38,11 @@ public class CFG
 #pragma warning restore IDE0051
 
     //**************
+    // Project
+    //**************
+    public bool Project_LoadPreviousProject = true;
+
+    //**************
     // Table Editor
     //**************
     public bool TableEditor_View_Window_Tools = true;
@@ -73,15 +78,8 @@ public class CFG
     // Debug
     //**************
     public bool Debug_FireOnce = false;
-
     public bool ShowDeveloperTools = false;
-
     public bool DisplayDebugTools = false;
-
-    //**************
-    // Project
-    //**************
-    public bool Project_LoadRecentProjectOnStart = true;
 
     //**************
     // Interface
@@ -215,8 +213,6 @@ public class CFG
     public bool System_EnableAutoSave = true;
     public int System_AutoSaveIntervalSeconds = 300;
     public bool System_EnableAutoSave_Project = true;
-
-    public bool System_EnableRecoveryFolder = true;
 
     //****************************
     // Settings: Viewport Grid
@@ -486,8 +482,6 @@ public class CFG
         {
             Current.RecentProjects.RemoveAt(Current.RecentProjects.Count - 1);
         }
-
-        Current.LastProjectFile = proj.ProjectFile;
 
         Save();
     }

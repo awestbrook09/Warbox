@@ -19,7 +19,7 @@ public static class TableSaveHandler
 {
     public static void Export()
     {
-        var status = Warbox.EditorHandler.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
+        var status = Warbox.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
 
         foreach (var entry in DataHandler.Tables)
         {
@@ -41,23 +41,21 @@ public static class TableSaveHandler
 
     public static void PackageAll()
     {
-        if (!Directory.Exists($"{Warbox.ProjectDataRoot}\\Source\\Data\\"))
+        if (!Directory.Exists($"{Warbox.Project.ProjectDirectory}\\Source\\Data\\"))
         {
             TaskLogs.AddLog($"No Data folder exists yet.");
             return;
         }
 
-        if (!Directory.Exists($"{Warbox.ProjectDataRoot}\\Data\\"))
+        if (!Directory.Exists($"{Warbox.Project.ProjectDirectory}\\Data\\"))
         {
-            Directory.CreateDirectory($"{Warbox.ProjectDataRoot}\\Data\\");
+            Directory.CreateDirectory($"{Warbox.Project.ProjectDirectory}\\Data\\");
         }
-
-        var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 
         // Output it in the normal Data folder so it can be read by the game
         // (assuming we are in the Game/Mods/<mod name>/ structure
-        var outputPath = $"{Warbox.ProjectDataRoot}\\Data\\{modName}.pak";
-        ZipDirectory($"{Warbox.ProjectDataRoot}\\Source\\Data\\", outputPath);
+        var outputPath = $"{Warbox.Project.ProjectDirectory}\\Data\\{Warbox.Project.ProjectID}.pak";
+        ZipDirectory($"{Warbox.Project.ProjectDirectory}\\Source\\Data\\", outputPath);
 
         TaskLogs.AddLog($"Created PAK file from Data files: {outputPath}");
 
@@ -67,7 +65,7 @@ public static class TableSaveHandler
 
     public static void ExportPTF()
     {
-        var status = Warbox.EditorHandler.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
+        var status = Warbox.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
 
         foreach (var entry in DataHandler.Tables)
         {
@@ -77,11 +75,9 @@ public static class TableSaveHandler
             {
                 (bool, string, XDocument) result = RemoveVanillaEntries(entry.Key, entry.Value, vanillaEntry.Value);
 
-                var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
-
                 if(result.Item1 && result.Item3 != null)
                 {
-                    SaveTable("Source\\PTF", entry.Key, entry.Value, result.Item3, $"__{modName}");
+                    SaveTable("Source\\PTF", entry.Key, entry.Value, result.Item3, $"__{Warbox.Project.ProjectID}");
                 }
                 else if (result.Item2 != "")
                 {
@@ -93,7 +89,7 @@ public static class TableSaveHandler
 
     private static void SaveTable(string saveDir, ResourceDescriptor resDesc, XDocument originalDocument, XDocument document, string postfix = "")
     {
-        var writeDir = $"{Warbox.ProjectDataRoot}\\{saveDir}\\{resDesc.RelativeDirectory}";
+        var writeDir = $"{Warbox.Project.ProjectDirectory}\\{saveDir}\\{resDesc.RelativeDirectory}";
         var writePath = $"{writeDir}\\{resDesc.Name}{postfix}{resDesc.Extension}";
 
         if (!Directory.Exists(writeDir))
@@ -299,23 +295,21 @@ public static class TableSaveHandler
 
     public static void PackagePTF()
     {
-        if(!Directory.Exists($"{Warbox.ProjectDataRoot}\\Source\\PTF\\"))
+        if(!Directory.Exists($"{Warbox.Project.ProjectDirectory}\\Source\\PTF\\"))
         {
             TaskLogs.AddLog($"No PTF folder exists yet.");
             return;
         }
 
-        if(!Directory.Exists($"{Warbox.ProjectDataRoot}\\Data\\"))
+        if(!Directory.Exists($"{Warbox.Project.ProjectDirectory}\\Data\\"))
         {
-            Directory.CreateDirectory($"{Warbox.ProjectDataRoot}\\Data\\");
+            Directory.CreateDirectory($"{Warbox.Project.ProjectDirectory}\\Data\\");
         }
-
-        var modName = ManifestHandler.SanitizeModName(Warbox.ProjectHandler.CurrentProject.Config.ProjectName);
 
         // Output it in the normal Data folder so it can be read by the game
         // (assuming we are in the Game/Mods/<mod name>/ structure
-        var outputPath = $"{Warbox.ProjectDataRoot}\\Data\\{modName}.pak";
-        ZipDirectory($"{Warbox.ProjectDataRoot}\\Source\\PTF\\", outputPath);
+        var outputPath = $"{Warbox.Project.ProjectDirectory}\\Data\\{Warbox.Project.ProjectID}.pak";
+        ZipDirectory($"{Warbox.Project.ProjectDirectory}\\Source\\PTF\\", outputPath);
 
         TaskLogs.AddLog($"Created PAK file from PTF files: {outputPath}");
 

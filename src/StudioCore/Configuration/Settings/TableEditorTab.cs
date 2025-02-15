@@ -12,12 +12,9 @@ using System.Threading.Tasks;
 
 namespace StudioCore.Configuration.Settings;
 
-
-public class TableEditorTab
+public static class TableEditorTab
 {
-    public TableEditorTab() { }
-
-    public void Display()
+    public static void Display()
     {
         if (ImGui.CollapsingHeader("Properties", ImGuiTreeNodeFlags.DefaultOpen))
         {

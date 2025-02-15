@@ -7,43 +7,23 @@ using StudioCore.Interface;
 
 namespace StudioCore.Configuration.Settings;
 
-public class SettingsWindow
+public static class SettingsWindow
 {
-    public bool MenuOpenState;
+    public static bool MenuOpenState;
 
-    private SystemTab SystemSettings;
-    private InterfaceTab InterfaceSettings;
+    private static bool TabInitialized = false;
 
-    private ProjectStatusTab ProjectStatusTab;
-    private ProjectSettingsTab ProjectSettingsTab;
-
-    private TableEditorTab TableEditorSettings;
-    private TextEditorTab TextEditorSettings;
-
-    private bool TabInitialized = false;
-
-    public SettingsWindow()
-    {
-        SystemSettings = new SystemTab();
-        InterfaceSettings = new InterfaceTab();
-
-        ProjectStatusTab = new ProjectStatusTab();
-        ProjectSettingsTab = new ProjectSettingsTab();
-
-        TableEditorSettings = new TableEditorTab();
-        TextEditorSettings = new TextEditorTab();
-    }
-
-    public void SaveSettings()
+    public static void SaveSettings()
     {
         CFG.Save();
     }
-    public void ToggleMenuVisibility()
+
+    public static void ToggleMenuVisibility()
     {
         MenuOpenState = !MenuOpenState;
     }
 
-    public void Display()
+    public static void Display()
     {
         var scale = Warbox.GetUIScale();
 
@@ -97,10 +77,10 @@ public class SettingsWindow
             switch (SelectedTab)
             {
                 case SelectedSettingTab.System:
-                    SystemSettings.Display();
+                    SystemTab.Display();
                     break;
                 case SelectedSettingTab.Interface:
-                    InterfaceSettings.Display();
+                    InterfaceTab.Display();
                     break;
                 case SelectedSettingTab.Project:
                     ProjectSettingsTab.Display();
@@ -109,10 +89,10 @@ public class SettingsWindow
                     ProjectStatusTab.Display();
                     break;
                 case SelectedSettingTab.TableEditor:
-                    TableEditorSettings.Display();
+                    TableEditorTab.Display();
                     break;
                 case SelectedSettingTab.TextEditor:
-                    TextEditorSettings.Display();
+                    TextEditorTab.Display();
                     break;
             }
             ImGui.EndChild();
@@ -126,7 +106,7 @@ public class SettingsWindow
         ImGui.PopStyleColor(5);
     }
 
-    private SelectedSettingTab SelectedTab = SelectedSettingTab.System;
+    private static SelectedSettingTab SelectedTab = SelectedSettingTab.System;
 
     public enum SelectedSettingTab
     {

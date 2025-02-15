@@ -9,27 +9,23 @@ using StudioCore.Interface;
 
 namespace StudioCore.Tools.Development;
 
-public class DebugWindow
+public static class DebugWindow
 {
-    private bool MenuOpenState;
+    private static bool MenuOpenState;
 
-    public bool _showImGuiDemoWindow = false;
-    public bool _showImGuiMetricsWindow = false;
-    public bool _showImGuiDebugLogWindow = false;
-    public bool _showImGuiStackToolWindow = false;
+    public static bool _showImGuiDemoWindow = false;
+    public static bool _showImGuiMetricsWindow = false;
+    public static bool _showImGuiDebugLogWindow = false;
+    public static bool _showImGuiStackToolWindow = false;
 
-    public DebugWindow()
-    {
-    }
-
-    public void ToggleMenuVisibility()
+    public static void ToggleMenuVisibility()
     {
         MenuOpenState = !MenuOpenState;
     }
 
-    private Task _loadingTask;
+    private static Task _loadingTask;
 
-    private SelectedDebugTab SelectedTab = SelectedDebugTab.DisplayTaskStatus;
+    private static SelectedDebugTab SelectedTab = SelectedDebugTab.DisplayTaskStatus;
 
     public enum SelectedDebugTab
     {
@@ -43,7 +39,7 @@ public class DebugWindow
         [Display(Name = "ImGui Stack Tool")] ImGuiStackTool
     }
 
-    public void Display()
+    public static void Display()
     {
         var scale = Warbox.GetUIScale();
 
@@ -128,7 +124,7 @@ public class DebugWindow
     }
 
     // Information
-    private void DisplayTasks()
+    private static void DisplayTasks()
     {
         ImGui.Text("Currently running tasks:");
         ImGui.Text("");
@@ -143,7 +139,7 @@ public class DebugWindow
     }
 
     // ImGui
-    private void DisplayImGuiDemo()
+    private static void DisplayImGuiDemo()
     {
         var buttonSize = new Vector2(ImGui.GetWindowWidth(), 32);
 
@@ -152,7 +148,7 @@ public class DebugWindow
             _showImGuiDemoWindow = !_showImGuiDemoWindow;
         }
     }
-    private void DisplayImGuiMetrics()
+    private static void DisplayImGuiMetrics()
     {
         var buttonSize = new Vector2(ImGui.GetWindowWidth(), 32);
 
@@ -161,7 +157,7 @@ public class DebugWindow
             _showImGuiMetricsWindow = !_showImGuiMetricsWindow;
         }
     }
-    private void DisplayImGuiDebugLog()
+    private static void DisplayImGuiDebugLog()
     {
         var buttonSize = new Vector2(ImGui.GetWindowWidth(), 32);
 
@@ -170,7 +166,7 @@ public class DebugWindow
             _showImGuiDebugLogWindow = !_showImGuiDebugLogWindow;
         }
     }
-    private void DisplayImGuiStackTool()
+    private static void DisplayImGuiStackTool()
     {
         var buttonSize = new Vector2(ImGui.GetWindowWidth(), 32);
 

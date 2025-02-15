@@ -31,7 +31,7 @@ public class TextEditorScreen : EditorScreen
 
     public TextEditorScreen(Sdl2Window window, GraphicsDevice device)
     {
-        DataHandler.SetupLocalization();
+        DataHandler.SetupTextEditor();
 
         FileSelectionView = new(this);
         TextRowView = new(this);
@@ -45,14 +45,14 @@ public class TextEditorScreen : EditorScreen
             // Package Localization Files
             if (ImGui.MenuItem($"Package", KeyBindings.Current.CORE_PackageLocalizationFiles.HintText))
             {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                Warbox.Project.UpdateProjectJSON();
                 Package();
             }
 
             // Save
             if (ImGui.MenuItem($"Save", KeyBindings.Current.CORE_SaveLocalizationFile.HintText))
             {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                Warbox.Project.UpdateProjectJSON();
                 Save();
             }
 
@@ -117,6 +117,13 @@ public class TextEditorScreen : EditorScreen
 
     public void OnProjectChanged()
     {
+        FileSelectionView.SelectedStatus = null;
+        FileSelectionView.SelectedDocument = null;
+        FileSelectionView.SelectedElements = null;
+
+        TextRowView.TextEntryIndex = -1;
+        TextRowView.SelectedCells = null;
+
         ResetActionManager();
     }
 
@@ -130,8 +137,8 @@ public class TextEditorScreen : EditorScreen
         var resDesc = FileSelectionView.SelectedStatus;
         var document = curLocalization[resDesc];
 
-        var writeDir = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
-        var writePath = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}{resDesc.Extension}";
+        var writeDir = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
+        var writePath = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}{resDesc.Extension}";
 
         if (!Directory.Exists(writeDir))
             Directory.CreateDirectory(writeDir);
@@ -146,8 +153,8 @@ public class TextEditorScreen : EditorScreen
         // Save first so the files are up to date.
         Save();
 
-        var sourceDir = $"{Warbox.ProjectDataRoot}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
-        var writeDir = $"{Warbox.ProjectDataRoot}\\Localization\\";
+        var sourceDir = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
+        var writeDir = $"{Warbox.Project.ProjectDirectory}\\Localization\\";
 
         foreach(var entry in DataHandler.Localization)
         {
@@ -172,13 +179,13 @@ public class TextEditorScreen : EditorScreen
     {
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveLocalizationFile))
         {
-            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            Warbox.Project.UpdateProjectJSON();
             Save();
         }
 
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_PackageLocalizationFiles))
         {
-            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            Warbox.Project.UpdateProjectJSON();
             Package();
         }
 

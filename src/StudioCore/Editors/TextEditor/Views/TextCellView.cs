@@ -30,6 +30,9 @@ public class TextCellView
 
     public void Display()
     {
+        if (!Warbox.Project.IsValid())
+            return;
+
         var width = ImGui.GetWindowWidth();
         var idInput = new Vector2(width * 0.75f, 24 * Warbox.GetUIScale());
         var textInput = new Vector2(width * 0.75f, 300 * Warbox.GetUIScale());

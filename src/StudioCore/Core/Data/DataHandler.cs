@@ -28,30 +28,44 @@ public static class DataHandler
 
     //public Dictionary<DataStatus, XDocument> Scripts = new Dictionary<DataStatus, XDocument>();
 
-    public static void SetupTables()
+    public static void ClearData()
     {
-        if (Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
+        Localization = new();
+        Tables = new();
+        Vanilla_Tables = new();
+    }
+
+    /// <summary>
+    /// Data setup for the Table Editor
+    /// </summary>
+    public static void SetupTableEditor()
+    {
+        Tables = new();
+        Vanilla_Tables = new();
+
+        if (Warbox.Project.IsValid())
         {
             Tables = ReadTables("Data", "Tables");
             Vanilla_Tables = ReadTables("Data", "Tables", true);
+
+            TableMeta.Setup();
+            TableDefinition.Setup();
+            Warbox.TableEditor.TableDataView.SetupTableViews();
         }
     }
 
-    public static void SetupTableViews()
-    {
-        Warbox.EditorHandler.TableEditor.TableDataView.SetupTableViews();
-        TableMeta.Setup();
-    }
-
-    public static void SetupLocalization()
+    /// <summary>
+    /// Data setup for the Text Editor
+    /// </summary>
+    public static void SetupTextEditor()
     {
         Localization = new();
 
-        if (Warbox.DataRoot != "" && Warbox.ProjectDataRoot != "")
+        if (Warbox.Project.IsValid())
         {
             Localization.Add("English", ReadLocalization("Localization", "English_xml"));
 
-            if(CFG.Current.TextEditor_EnableLanguage_ChineseSimplified)
+            if (CFG.Current.TextEditor_EnableLanguage_ChineseSimplified)
                 Localization.Add("Chinese (Simplified)", ReadLocalization("Localization", "Chineses_xml"));
 
             if (CFG.Current.TextEditor_EnableLanguage_ChineseTraditional)
@@ -159,11 +173,8 @@ public static class DataHandler
 
     public static SortedDictionary<ResourceDescriptor, XDocument> ReadTables(string folderName, string pakName, bool ignoreProject = false)
     {
-        if (Warbox.DataRoot == "")
-            return new SortedDictionary<ResourceDescriptor, XDocument>();
-
-        var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
-        var projectDir = $"{Warbox.ProjectDataRoot}\\Source\\{folderName}\\";
+        var dataDir = $"{Warbox.Project.GameDirectory}\\{folderName}\\{pakName}.pak";
+        var projectDir = $"{Warbox.Project.ProjectDirectory}\\Source\\{folderName}\\";
 
         var baseData = ReadXmlFromZip(dataDir);
         var projectData = ReadXmlFromDirectory(projectDir);
@@ -219,11 +230,8 @@ public static class DataHandler
 
     public static SortedDictionary<ResourceDescriptor, XDocument> ReadLocalization(string folderName, string pakName, bool ignoreProject = false)
     {
-        if (Warbox.DataRoot == "")
-            return new SortedDictionary<ResourceDescriptor, XDocument>();
-
-        var dataDir = $"{Warbox.DataRoot}\\{folderName}\\{pakName}.pak";
-        var projectDir = $"{Warbox.ProjectDataRoot}\\Source\\{folderName}\\{CFG.Current.TextEditor_CurrentLanguage}";
+        var dataDir = $"{Warbox.Project.GameDirectory}\\{folderName}\\{pakName}.pak";
+        var projectDir = $"{Warbox.Project.ProjectDirectory}\\Source\\{folderName}\\{CFG.Current.TextEditor_CurrentLanguage}";
 
         var baseData = ReadXmlFromZip(dataDir);
         var projectData = ReadXmlFromDirectory(projectDir);

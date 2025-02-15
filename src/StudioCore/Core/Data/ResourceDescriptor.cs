@@ -70,9 +70,9 @@ public class ResourceDescriptor : IComparable<ResourceDescriptor>
         var directory = $"{path}".Replace($"{Name}{Extension}", "");
 
         // If reading a project-specific file, strip the project data root from the path
-        if(directory.Contains(Warbox.ProjectDataRoot))
+        if(directory.Contains(Warbox.Project.ProjectDirectory))
         {
-            directory = directory.Replace(Warbox.ProjectDataRoot, "");
+            directory = directory.Replace(Warbox.Project.ProjectDirectory, "");
         }
         if (directory.Contains("Source\\Data\\"))
         {

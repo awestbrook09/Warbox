@@ -35,9 +35,6 @@ public class TableEditorScreen : EditorScreen
 
     public TableEditorScreen(Sdl2Window window, GraphicsDevice device)
     {
-        DataHandler.SetupTables();
-        TableDefinition.Setup();
-
         FileSelectionView = new(this);
         TableDataView = new(this);
         TableToolsView = new(this);
@@ -50,7 +47,7 @@ public class TableEditorScreen : EditorScreen
             // Save Table File
             if (ImGui.MenuItem($"Save Table File", KeyBindings.Current.CORE_SaveTable.HintText))
             {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                Warbox.Project.UpdateProjectJSON();
                 Save();
             }
             UIHelper.ShowHoverTooltip("Save the current table file in its entirety.");
@@ -58,7 +55,7 @@ public class TableEditorScreen : EditorScreen
             // Save All Table Files
             if (ImGui.MenuItem($"Save All Table Files", KeyBindings.Current.CORE_SaveAllTables.HintText))
             {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                Warbox.Project.UpdateProjectJSON();
                 SaveAll();
             }
             UIHelper.ShowHoverTooltip("Save all table files in their entirety.");
@@ -66,7 +63,7 @@ public class TableEditorScreen : EditorScreen
             // Save Patched Table File
             if (ImGui.MenuItem($"Save Patched Table File", KeyBindings.Current.CORE_SavePatchedTableFile.HintText))
             {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                Warbox.Project.UpdateProjectJSON();
                 ExportPTF();
             }
             UIHelper.ShowHoverTooltip("Saves the current table file changes to its own patched table file for this project.");
@@ -84,7 +81,7 @@ public class TableEditorScreen : EditorScreen
             // Package All Tables
             if (ImGui.MenuItem($"Package All Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
             {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                Warbox.Project.UpdateProjectJSON();
                 PackageAll();
             }
             UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
@@ -93,7 +90,7 @@ public class TableEditorScreen : EditorScreen
             // Package Patched Tables
             if (ImGui.MenuItem($"Package Patched Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
             {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+                Warbox.Project.UpdateProjectJSON();
                 PackagePTF();
             }
             UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
@@ -183,6 +180,9 @@ public class TableEditorScreen : EditorScreen
 
     public void OnProjectChanged()
     {
+        FileSelectionView.SelectedStatus = null;
+        FileSelectionView.SelectedDocument = null;
+
         ResetActionManager();
     }
 
@@ -220,19 +220,19 @@ public class TableEditorScreen : EditorScreen
     {
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveTable))
         {
-            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            Warbox.Project.UpdateProjectJSON();
             Save();
         }
 
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveAllTables))
         {
-            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            Warbox.Project.UpdateProjectJSON();
             SaveAll();
         }
 
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SavePatchedTableFile))
         {
-            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            Warbox.Project.UpdateProjectJSON();
             ExportPTF();
         }
 
@@ -246,7 +246,7 @@ public class TableEditorScreen : EditorScreen
 
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_PackagePatchedTables))
         {
-            Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
+            Warbox.Project.UpdateProjectJSON();
             PackagePTF();
         }
 

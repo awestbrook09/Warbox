@@ -47,7 +47,7 @@ public static class TableGuidTools
     {
         GuidFinderResults = new();
 
-        foreach (var view in Warbox.EditorHandler.TableEditor.TableDataView.GetTableViews())
+        foreach (var view in Warbox.TableEditor.TableDataView.GetTableViews())
         {
             var viewName = view.Key;
             var curView = view.Value;

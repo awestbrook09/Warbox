@@ -634,24 +634,23 @@ Nervousness
 # drv
 Disable revive
 
-
 # pmc
-?
+Permanent corpse (state?)
 
 # sdn
-?
+Related to being branded
 
 # brn
-?
+Related to being branded (reputation reduction?)
 
 # plr
-?
+Pillory punishment effect strength (UI related?)
 
 # bea
-?
+Beating punishment effect strength (UI related?)
 
 # kko
-?
+Simulated knockout
 
 # sse
 Strength influence on Takedowns or Stealth kills

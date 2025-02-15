@@ -13,16 +13,11 @@ using System.Threading.Tasks;
 
 namespace StudioCore.Configuration.Settings;
 
-public class InterfaceTab
+public static class InterfaceTab
 {
-    private float _tempScale;
+    private static float _tempScale = CFG.Current.System_UI_Scale;
 
-    public InterfaceTab()
-    {
-        _tempScale = CFG.Current.System_UI_Scale;
-    }
-
-    public void Display()
+    public static void Display()
     {
         if (ImGui.CollapsingHeader("General", ImGuiTreeNodeFlags.DefaultOpen))
         {
