@@ -73,7 +73,8 @@ public static class TableSaveHandler
 
             if (entry.Key.Name == status.Name)
             {
-                (bool, string, XDocument) result = RemoveVanillaEntries(entry.Key, entry.Value, vanillaEntry.Value);
+                (bool, string, XDocument) result = BuildPatchDocument(entry.Key, entry.Value, vanillaEntry.Value);
+                //(bool, string, XDocument) result = RemoveVanillaEntries(entry.Key, entry.Value, vanillaEntry.Value);
 
                 if(result.Item1 && result.Item3 != null)
                 {
@@ -130,6 +131,57 @@ public static class TableSaveHandler
     }
 
     private static Dictionary<string, List<RemovalTag>> Removals = new();
+
+    private static (bool, string, XDocument) BuildPatchDocument(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)
+    {
+        var tempDoc = new XDocument(baseDoc);
+
+        var databaseTier = tempDoc.Elements().ToList();
+        var propertyGroupTier = tempDoc.Elements().Elements().ToList();
+        var propertyEntryTier = tempDoc.Elements().Elements().Elements().ToList();
+
+        foreach (var entry in propertyEntryTier)
+        {
+            // Attributes on this tier
+            var attributes = entry.Attributes().ToList();
+
+            foreach (var attribute in attributes)
+            {
+                var check = attribute.ToString();
+                var stop = "";
+            }
+
+            // Inner tier 1
+            var subListTier = entry.Elements().ToList();
+            foreach (var subEntry in subListTier)
+            {
+                // Attributes on this tier
+                var subAttributes = subEntry.Attributes().ToList();
+
+                foreach (var subAttribute in subAttributes)
+                {
+                    var check = subAttribute.ToString();
+                    var stop = "";
+                }
+
+                // Inner tier 2
+                var subListTier2 = subListTier.Elements().ToList();
+                foreach (var subEntry2 in subListTier2)
+                {
+                    // Attributes on this tier
+                    var subAttributes2 = subEntry2.Attributes().ToList();
+
+                    foreach (var subAttribute2 in subAttributes2)
+                    {
+                        var check = subAttribute2.ToString();
+                        var stop = "";
+                    }
+                }
+            }
+        }
+
+        return (true, "", tempDoc);
+    }
 
     // TODO: fix this so it works with nested elements
     private static (bool, string, XDocument) RemoveVanillaEntries(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)

@@ -97,7 +97,7 @@ public static class ProjectHandler
             RemoveRecentProject(project);
         }
 
-        if (ImGui.MenuItem($@"Projects: {project.Name}##project{id}"))
+        if (ImGui.MenuItem($@"Project: {project.Name}##project{id}"))
         {
             if (File.Exists(project.ProjectFile))
             {
@@ -171,30 +171,22 @@ public static class ProjectHandler
         }
 
         Warbox.Project.Setup();
-
-        AddProjectToRecentList(Warbox.Project);
-
-        CFG.Current.LastProjectFile = path;
         Warbox.ProjectChanged = true;
 
-        return true;
-    }
-
-    public static void AddProjectToRecentList(Project targetProject)
-    {
         // Add to recent project list
         CFG.RecentProject recent = new()
         {
-            Name = targetProject.Config.ProjectName,
-            ProjectFile = targetProject.ProjectJsonPath
+            Name = Warbox.Project.Config.ProjectName,
+            ProjectFile = $"{Warbox.Project.ProjectDirectory}/project.json"
         };
 
-        if (targetProject.ProjectName != "")
+        if (Warbox.Project.Config.ProjectName != "")
         {
             CFG.AddMostRecentProject(recent);
         }
-    }
 
+        return true;
+    }
     public static ProjectConfiguration ReadProjectConfig(string path)
     {
         var config = new ProjectConfiguration();
@@ -205,6 +197,13 @@ public static class ProjectHandler
             {
                 config = JsonSerializer.Deserialize(stream, ProjectConfigurationSerializationContext.Default.ProjectConfiguration);
             }
+
+            CFG.Current.LastProjectFile = path;
+        }
+        else
+        {
+            // Invalidate this if the file doesn't exist
+            CFG.Current.LastProjectFile = "";
         }
 
         return config;
@@ -216,7 +215,7 @@ public static class ProjectHandler
             return;
 
         var config = targetProject.Config;
-        var writePath = targetProject.ProjectJsonPath;
+        var writePath = $"{targetProject.Config.ProjectDirectory}/project.json";
 
         if (writePath != "")
         {

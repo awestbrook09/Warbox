@@ -15,5 +15,3 @@ FEAT: add basic meta for all tables
 
 FEAT: support nested entries with the PTF save (currently it won't work correctly for tables with them).
 
-TableView is not being cleared incorrectly
-New Project modal is not working

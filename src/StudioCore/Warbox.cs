@@ -459,60 +459,68 @@ public class Warbox
         {
             ImGui.Separator();
 
-            // Dropdown: File
-            if (ImGui.BeginMenu("File"))
+            // Settings
+            if (ImGui.BeginMenu("Settings"))
+            {
+                if (ImGui.MenuItem($"Configuration##SettingsWindow"))
+                {
+                    SettingsWindow.ToggleMenuVisibility();
+                }
+                UIHelper.ShowHoverTooltip($"Configuration\n{KeyBindings.Current.CORE_ConfigurationWindow.HintText}");
+
+                if (ImGui.MenuItem($"Keybinds##KeybindWindow"))
+                {
+                    KeybindWindow.ToggleMenuVisibility();
+                }
+                UIHelper.ShowHoverTooltip($"Keybinds\n{KeyBindings.Current.CORE_KeybindConfigWindow.HintText}");
+
+                if (CFG.Current.DisplayDebugTools)
+                {
+                    if (ImGui.MenuItem($"Debugging##DebugWindow"))
+                    {
+                        DebugWindow.ToggleMenuVisibility();
+                    }
+                    UIHelper.ShowHoverTooltip($"Debug Tools");
+                }
+
+                ImGui.EndMenu();
+            }
+
+            ImGui.Separator();
+
+            // Project
+            if (ImGui.BeginMenu("Project"))
             {
                 // New Project
                 DisplayTaskStatus();
-                if (ImGui.MenuItem("New Project", "", false, MayChangeProject()))
+                if (ImGui.MenuItem("Create New Project", "", false, MayChangeProject()))
                 {
                     ProjectHandler.ClearProject();
-                    ProjectModal.DisplayProjectCreation = true;
-                    ImGui.OpenPopup("projectCreationModal");
+                    ProjectCreationWindow.ToggleMenuVisibility();
                 }
+                UIHelper.ShowHoverTooltip("Create a new project.");
+
+                // Close Project
+                DisplayTaskStatus();
+                if (ImGui.MenuItem("Close Current Project", "", false, MayChangeProject()))
+                {
+                    ProjectHandler.ClearProject();
+                }
+                UIHelper.ShowHoverTooltip("Close the currently loaded project.");
 
                 // Open Project
                 DisplayTaskStatus();
-                if (ImGui.MenuItem("Open Project", "", false, MayChangeProject()))
+                if (ImGui.BeginMenu("Load Existing Project", MayChangeProject()))
                 {
-                    ProjectHandler.OpenProjectLoadDialog();
-                }
-
-                // Recent Projects
-                DisplayTaskStatus();
-                if (ImGui.BeginMenu("Recent Projects", MayChangeProject() && CFG.Current.RecentProjects.Count > 0))
-                {
-                    ProjectHandler.DisplayRecentProjects();
-
-                    ImGui.EndMenu();
-                }
-
-                DisplayTaskStatus();
-                if (ImGui.MenuItem("Close Project", "", false, MayChangeProject()))
-                {
-                    ProjectHandler.ClearProject();
-                }
-
-                // Open in Explorer
-                if (ImGui.BeginMenu("Open in Explorer",
-                        !TaskManager.AnyActiveTasks() && CFG.Current.RecentProjects.Count > 0))
-                {
-                    if (ImGui.MenuItem("Project Folder", "", false))
+                    if (ImGui.MenuItem("Select Project"))
                     {
-                        var projectPath = Project.ProjectDirectory;
-                        Process.Start("explorer.exe", projectPath);
+                        ProjectHandler.OpenProjectLoadDialog();
                     }
+                    UIHelper.ShowHoverTooltip("Load an existing project by selecting its project.json.");
 
-                    if (ImGui.MenuItem("Game Folder", "", false))
+                    if (CFG.Current.RecentProjects.Count > 0)
                     {
-                        var gamePath = Project.GameDirectory;
-                        Process.Start("explorer.exe", gamePath);
-                    }
-
-                    if (ImGui.MenuItem("Config Folder", "", false))
-                    {
-                        var configPath = CFG.GetConfigFolderPath();
-                        Process.Start("explorer.exe", configPath);
+                        ProjectHandler.DisplayRecentProjects();
                     }
 
                     ImGui.EndMenu();
@@ -524,33 +532,6 @@ public class Warbox
             ImGui.Separator();
 
             FocusedEditor.DrawEditorMenu();
-
-            ImGui.Separator();
-
-            if (ImGui.Button($"Keybinds##KeybindWindow"))
-            {
-                KeybindWindow.ToggleMenuVisibility();
-            }
-            UIHelper.ShowHoverTooltip($"Keybinds\n{KeyBindings.Current.CORE_KeybindConfigWindow.HintText}");
-
-            ImGui.Separator();
-
-            if (ImGui.Button($"Settings##SettingsWindow"))
-            {
-                SettingsWindow.ToggleMenuVisibility();
-            }
-            UIHelper.ShowHoverTooltip($"Configuration\n{KeyBindings.Current.CORE_ConfigurationWindow.HintText}");
-
-            if (CFG.Current.DisplayDebugTools)
-            {
-                ImGui.Separator();
-
-                if (ImGui.Button($"Debugging##DebugWindow"))
-                {
-                    DebugWindow.ToggleMenuVisibility();
-                }
-                UIHelper.ShowHoverTooltip($"Debug Tools");
-            }
 
             TaskLogs.Display();
 
@@ -657,8 +638,8 @@ public class Warbox
         KeybindWindow.Display();
         DebugWindow.Display();
 
-        // Tool windows
         ColorPicker.DisplayColorPicker();
+        ProjectCreationWindow.Display();
 
         ImGui.PopStyleVar(2);
         UnapplyStyle();
@@ -680,14 +661,19 @@ public class Warbox
         _firstframe = false;
 
         // Empty project is preset, try to load stored project from previous session
-        if(!ProjectInitialized && Project.ProjectName == "")
+        if(!ProjectInitialized)
         {
             ProjectInitialized = true;
 
-            ProjectHandler.LoadProjectOnStart();
+            if (CFG.Current.Project_LoadPreviousProject && CFG.Current.LastProjectFile != "")
+            {
+                ProjectHandler.LoadProjectOnStart();
+            }
+            else
+            {
+                ProjectCreationWindow.ToggleMenuVisibility();
+            }
         }
-
-        ProjectModal.Display();
     }
 
     private const float DefaultDpi = 96f;

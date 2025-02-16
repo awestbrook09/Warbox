@@ -33,14 +33,14 @@ public static class UIHelper
         }
     }
 
-    public static void ShowHoverTooltip(string desc)
+    public static void ShowHoverTooltip(string desc, float width = 450.0f)
     {
         if (CFG.Current.System_Show_UI_Tooltips)
         {
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.PushTextWrapPos(450.0f);
+                ImGui.PushTextWrapPos(width);
                 ImGui.TextUnformatted(desc);
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();

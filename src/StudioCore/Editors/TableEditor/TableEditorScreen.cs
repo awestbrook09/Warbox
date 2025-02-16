@@ -42,52 +42,45 @@ public class TableEditorScreen : EditorScreen
 
     public void DrawEditorMenu()
     {
-        if (ImGui.BeginMenu("File"))
+        // Save
+        if (ImGui.BeginMenu("Save"))
         {
-            // Save Table File
-            if (ImGui.MenuItem($"Save Table File", KeyBindings.Current.CORE_SaveTable.HintText))
+            if (ImGui.MenuItem($"Save Table", KeyBindings.Current.CORE_SaveTable.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
                 Save();
             }
             UIHelper.ShowHoverTooltip("Save the current table file in its entirety.");
 
-            // Save All Table Files
-            if (ImGui.MenuItem($"Save All Table Files", KeyBindings.Current.CORE_SaveAllTables.HintText))
+            if (ImGui.MenuItem($"Save All Tables", KeyBindings.Current.CORE_SaveAllTables.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
                 SaveAll();
             }
             UIHelper.ShowHoverTooltip("Save all table files in their entirety.");
 
-            // Save Patched Table File
-            if (ImGui.MenuItem($"Save Patched Table File", KeyBindings.Current.CORE_SavePatchedTableFile.HintText))
+            if (ImGui.MenuItem($"Save Patched Table", KeyBindings.Current.CORE_SavePatchedTableFile.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
                 ExportPTF();
             }
             UIHelper.ShowHoverTooltip("Saves the current table file changes to its own patched table file for this project.");
 
-            // Save All Patched Table Files
-            /*
-            if (ImGui.MenuItem($"Save All Patched Table Files", KeyBindings.Current.CORE_SaveAllPatchedTableFiles.HintText))
-            {
-                Warbox.ProjectHandler.WriteProjectConfig(Warbox.ProjectHandler.CurrentProject);
-                ExportAllPTF();
-            }
-            UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
-            */
+            ImGui.EndMenu();
+        }
 
-            // Package All Tables
-            if (ImGui.MenuItem($"Package All Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
+        ImGui.Separator();
+
+        // Package
+        if (ImGui.BeginMenu("Package"))
+        {
+            if (ImGui.MenuItem($"Package Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
                 PackageAll();
             }
             UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
 
-
-            // Package Patched Tables
             if (ImGui.MenuItem($"Package Patched Tables", KeyBindings.Current.CORE_PackagePatchedTables.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
@@ -95,9 +88,13 @@ public class TableEditorScreen : EditorScreen
             }
             UIHelper.ShowHoverTooltip("Saves the all table file changes to their own patched table files for this project.");
 
+
             ImGui.EndMenu();
         }
 
+        ImGui.Separator();
+
+        // Edit
         if (ImGui.BeginMenu("Edit"))
         {
             if (ImGui.MenuItem($"Undo", KeyBindings.Current.CORE_UndoAction.HintText, false,
@@ -123,16 +120,23 @@ public class TableEditorScreen : EditorScreen
 
         ImGui.Separator();
 
-        if (ImGui.BeginMenu("View"))
+        // Views
+        if (ImGui.BeginMenu("Views"))
         {
-            if (ImGui.MenuItem($"Window: Tools"))
+            if (ImGui.MenuItem($"Tools"))
             {
                 CFG.Current.TableEditor_View_Window_Tools = !CFG.Current.TableEditor_View_Window_Tools;
             }
             UIHelper.ShowActiveStatus(CFG.Current.TableEditor_View_Window_Tools);
 
-            ImGui.Separator();
+            ImGui.EndMenu();
+        }
 
+        ImGui.Separator();
+
+        // Toggles
+        if (ImGui.BeginMenu("Toggles"))
+        {
             if (ImGui.MenuItem($"Properties: Display Names"))
             {
                 CFG.Current.TableEditor_View_Properties_DisplayNames = !CFG.Current.TableEditor_View_Properties_DisplayNames;

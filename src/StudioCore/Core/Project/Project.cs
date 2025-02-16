@@ -107,7 +107,7 @@ public class Project
 
             try
             {
-                var fs = new FileStream(ProjectDirectory, FileMode.Create);
+                var fs = new FileStream($"{ProjectDirectory}/project.json", FileMode.Create);
                 var data = Encoding.ASCII.GetBytes(jsonString);
                 fs.Write(data, 0, data.Length);
                 fs.Flush();

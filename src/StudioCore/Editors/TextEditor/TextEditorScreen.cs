@@ -40,25 +40,37 @@ public class TextEditorScreen : EditorScreen
 
     public void DrawEditorMenu()
     {
-        if (ImGui.BeginMenu("File"))
+        // Save
+        if (ImGui.BeginMenu("Save"))
         {
-            // Package Localization Files
-            if (ImGui.MenuItem($"Package", KeyBindings.Current.CORE_PackageLocalizationFiles.HintText))
-            {
-                Warbox.Project.UpdateProjectJSON();
-                Package();
-            }
-
-            // Save
-            if (ImGui.MenuItem($"Save", KeyBindings.Current.CORE_SaveLocalizationFile.HintText))
+            if (ImGui.MenuItem($"Save Localization", KeyBindings.Current.CORE_SaveLocalizationFile.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
                 Save();
             }
+            UIHelper.ShowHoverTooltip("Save the current localization file.");
 
             ImGui.EndMenu();
         }
 
+        ImGui.Separator();
+
+        // Package
+        if (ImGui.BeginMenu("Package"))
+        {
+            if (ImGui.MenuItem($"Package Localization", KeyBindings.Current.CORE_PackageLocalizationFiles.HintText))
+            {
+                Warbox.Project.UpdateProjectJSON();
+                Package();
+            }
+            UIHelper.ShowHoverTooltip("Package the localization files for the current language.");
+
+            ImGui.EndMenu();
+        }
+
+        ImGui.Separator();
+
+        // Edit
         if (ImGui.BeginMenu("Edit"))
         {
             if (ImGui.MenuItem($"Undo", KeyBindings.Current.CORE_UndoAction.HintText, false,
@@ -81,6 +93,26 @@ public class TextEditorScreen : EditorScreen
 
             ImGui.EndMenu();
         }
+
+        // Views
+        /*
+        ImGui.Separator();
+
+        if (ImGui.BeginMenu("Views"))
+        {
+
+            ImGui.EndMenu();
+        }
+
+        ImGui.Separator();
+
+        // Toggles
+        if (ImGui.BeginMenu("Toggles"))
+        {
+
+            ImGui.EndMenu();
+        }
+        */
     }
 
     public void OnGUI(string[] initcmd)
