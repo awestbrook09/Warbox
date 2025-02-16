@@ -2,6 +2,7 @@
 using StudioCore.Configuration;
 using StudioCore.Core.Data;
 using StudioCore.Editors.TableEditor.Framework;
+using StudioCore.Editors.TableEditor.Tools;
 using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Interface;
 using StudioCore.TextEditor;
@@ -111,8 +112,25 @@ public class TableFileSelectionView
         if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", SelectedStatus == status))
         {
             SetSelection(entry);
-                Screen.TableDataView.RefreshTableViews();
+            Screen.TableDataView.RefreshTableViews();
         }
+
+        // Modified tag
+        /*
+        var curTableView = Screen.TableDataView.GetSpecificTableView(name);
+        if(curTableView != null)
+        {
+            if(TableDifferenceEngine.TableDifferenceCache.ContainsKey(curTableView))
+            {
+                var isModified = TableDifferenceEngine.TableDifferenceCache[curTableView];
+
+                if(isModified)
+                {
+                    UIHelper.DisplayAlias("MODIFIED");
+                }
+            }
+        }
+        */
 
         // Arrow Selection
         if (ImGui.IsItemHovered() && SelectNextTable)

@@ -207,6 +207,8 @@ public class GenericTableView
     {
         TableRowDecorators.ProcessAliasOverrides(this);
         TableMetaDecorators.Reset();
+        
+        //TableDifferenceEngine.Refresh();
     }
 
     /// <summary>

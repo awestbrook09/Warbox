@@ -7,11 +7,11 @@ TextRef="<localization filename>"
 GuidRef="<table file>,<value property>,<localization file>,<ui string property>" />
 ConditionalFileEnum="<header name>,<table file>,<table list entry>,<enum id property>,<enum name property>"
 
+FIX: remove entry undo in Table Editor will fail to undo action if the source row has disappeared (due to other actions changing the state of the row list).
+
 FEAT: add mass edit for properties
 
 FEAT: add diff engine so modified can be implemented
 
 FEAT: add basic meta for all tables
-
-FEAT: support nested entries with the PTF save (currently it won't work correctly for tables with them).
 

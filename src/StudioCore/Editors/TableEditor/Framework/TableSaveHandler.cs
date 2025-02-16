@@ -230,12 +230,6 @@ public static class TableSaveHandler
                         }
                     }
                 }
-
-                // Sub Elements
-                if (entry.Elements().Count() > 0)
-                {
-                    var stop = "";
-                }
             }
 
             // Add the entry to the output doc if there is a difference found

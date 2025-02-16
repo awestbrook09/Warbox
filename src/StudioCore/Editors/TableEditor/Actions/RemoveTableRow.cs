@@ -28,7 +28,6 @@ public class RemoveTableRow : EditorAction
             return; 
         }
 
-
         PreviousRow = curView.GetPreviousRow();
         NextRow = curView.GetNextRow();
         OldRow = new XElement(SourceRow);

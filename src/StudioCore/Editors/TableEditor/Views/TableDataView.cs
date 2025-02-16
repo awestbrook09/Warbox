@@ -76,6 +76,18 @@ public class TableDataView
         }
     }
 
+    public GenericTableView GetSpecificTableView(string name)
+    {
+        if (TableViews.ContainsKey(name))
+        {
+            return TableViews[name];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public GenericTableView GetSelectedTableView()
     {
         var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
