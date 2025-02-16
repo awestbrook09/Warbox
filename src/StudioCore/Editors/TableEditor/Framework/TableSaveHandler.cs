@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic;
 using StudioCore.Core.Data;
 using StudioCore.Editors.TextEditor.Views;
+using StudioCore.Platform;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -62,10 +63,17 @@ public static class TableSaveHandler
         ManifestHandler.CreateManisfestIfMissing();
     }
 
+    private static List<string> ExcludedTables = new List<string>();
 
     public static void ExportPTF()
     {
         var status = Warbox.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
+
+        if(ExcludedTables.Contains(status.Name))
+        {
+            PlatformUtils.Instance.MessageBox("This table does not support patching.", "Warning", MessageBoxButtons.OK);
+            return;
+        }
 
         foreach (var entry in DataHandler.Tables)
         {
@@ -73,7 +81,7 @@ public static class TableSaveHandler
 
             if (entry.Key.Name == status.Name)
             {
-                (bool, string, XDocument) result = BuildPatchDocument(entry.Key, entry.Value, vanillaEntry.Value);
+                (bool, string, XDocument) result = BuildOutputDocument(entry.Key, entry.Value, vanillaEntry.Value);
                 //(bool, string, XDocument) result = RemoveVanillaEntries(entry.Key, entry.Value, vanillaEntry.Value);
 
                 if(result.Item1 && result.Item3 != null)
@@ -130,27 +138,99 @@ public static class TableSaveHandler
         }
     }
 
-    private static Dictionary<string, List<RemovalTag>> Removals = new();
-
-    private static (bool, string, XDocument) BuildPatchDocument(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)
+    private static (bool, string, XDocument) BuildOutputDocument(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)
     {
+        var tableDef = TableDefinition.Definitions.Where(e => e.Attribute("Name").Value == resDesc.BaseName).FirstOrDefault();
+
         var tempDoc = new XDocument(baseDoc);
+        var outputDoc = new XDocument(baseDoc);
 
-        var databaseTier = tempDoc.Elements().ToList();
-        var propertyGroupTier = tempDoc.Elements().Elements().ToList();
-        var propertyEntryTier = tempDoc.Elements().Elements().Elements().ToList();
-
-        foreach (var entry in propertyEntryTier)
+        if (tableDef == null)
         {
-            // Attributes on this tier
-            var attributes = entry.Attributes().ToList();
+            return (true, "Table is not defined in TableDefinitions.xml.", tempDoc);
+        }
 
-            foreach (var attribute in attributes)
+        // Clear all entries in the output doc
+        XElement container = outputDoc.Elements().Elements().FirstOrDefault();
+        if(container == null)
+        {
+            return (true, "Failed to find XML container element", tempDoc);
+        }
+
+        container.Elements().Remove();
+
+        // This is used to link X entry (base) with Y entry (vanilla) so the attributes can then be compared
+        var primaryKeyAttribute = tableDef.Attribute("RowNameKey");
+
+        // If the primary key is not defined at all, return.
+        if (primaryKeyAttribute == null)
+        {
+            return (true, "RowNameKey is not set in TableDefinitions.xml for this table.", tempDoc);
+        }
+
+        // If the primary key is blank, this table cannot be supported.
+        if(primaryKeyAttribute.Value == "")
+        {
+            return (true, "Patching is not supported for this table.", tempDoc);
+        }
+
+        // Find entries that should be added to output doc 
+        var baseEntries = tempDoc.Elements().Elements().Elements().ToList();
+        var vanillaEntries = vanillaDoc.Elements().Elements().Elements().ToList();
+
+        foreach (var entry in baseEntries)
+        {
+            var keyAtttribute = entry.Attribute(primaryKeyAttribute.Value);
+
+            if (keyAtttribute == null)
+                continue;
+
+            var primaryKey = keyAtttribute.Value;
+
+            // Get the vanilla entry based on the primary key
+            var vanillaEntry = vanillaEntries.Where(
+                e => e.Attribute(primaryKeyAttribute.Value) != null &&
+                e.Attribute(primaryKeyAttribute.Value).Value == primaryKey).FirstOrDefault();
+
+            if (vanillaEntry == null)
+                continue;
+
+            var addEntry = false;
+
+            // Element Value check
+            if (entry.Value != vanillaEntry.Value)
             {
-                var check = attribute.ToString();
-                var stop = "";
+                addEntry = true;
+                // Add this entry to output doc
             }
 
+            // Attribute Value check
+            var baseAttributes = entry.Attributes().ToList();
+            var vanillaAttributes = vanillaEntry.Attributes().ToList();
+
+            foreach(var bAttribute in baseAttributes)
+            {
+                var attributeName = bAttribute.Name;
+                var vanillaEqual = vanillaAttributes.Where(e => e.Name == attributeName).FirstOrDefault();
+
+                if (vanillaEqual == null)
+                    continue;
+
+                if(bAttribute.Value != vanillaEqual.Value)
+                {
+                    addEntry = true;
+                    // Add this entry to output doc
+                }
+            }
+
+            // Add the entry to the output doc if there is a difference found
+            if(addEntry)
+            {
+                container.Add(entry);
+            }
+
+            // TODO: add checking for sub list and sub-sub list attributes so we can add the parent element if they differ
+            /*
             // Inner tier 1
             var subListTier = entry.Elements().ToList();
             foreach (var subEntry in subListTier)
@@ -178,10 +258,13 @@ public static class TableSaveHandler
                     }
                 }
             }
+            */
         }
 
-        return (true, "", tempDoc);
+        return (true, "", outputDoc);
     }
+    
+    private static Dictionary<string, List<RemovalTag>> Removals = new();
 
     // TODO: fix this so it works with nested elements
     private static (bool, string, XDocument) RemoveVanillaEntries(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)

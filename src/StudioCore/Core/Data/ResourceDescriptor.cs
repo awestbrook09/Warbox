@@ -66,6 +66,10 @@ public class ResourceDescriptor : IComparable<ResourceDescriptor>
             BaseName = Name.Split("__")[0];
             Postfix = Name.Split("__")[1];
         }
+        else
+        {
+            BaseName = Name;
+        }
 
         var directory = $"{path}".Replace($"{Name}{Extension}", "");
 
