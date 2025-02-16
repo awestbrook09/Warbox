@@ -38,7 +38,16 @@ public class AddTextRow : EditorAction
     {
         var newRow = new XElement(StoredRow);
 
-        WorkingRowList.Add(newRow);
+        var index = WorkingRowList.IndexOf(StoredRow);
+
+        if (index == -1)
+        {
+            WorkingRowList.Add(newRow);
+        }
+        else
+        {
+            WorkingRowList.Insert(index, newRow);
+        }
         Container.ReplaceNodes(WorkingRowList);
 
         return ActionEvent.NoEvent;

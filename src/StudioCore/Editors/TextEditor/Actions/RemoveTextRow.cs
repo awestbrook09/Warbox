@@ -35,7 +35,17 @@ public class RemoveTextRow : EditorAction
 
     public override ActionEvent Execute()
     {
-        WorkingRowList.Remove(StoredRow);
+        var index = WorkingRowList.IndexOf(StoredRow);
+
+        if (index == -1)
+        {
+            WorkingRowList.Remove(StoredRow);
+        }
+        else
+        {
+            WorkingRowList.RemoveAt(index);
+        }
+
         Container.ReplaceNodes(WorkingRowList);
 
         return ActionEvent.NoEvent;
