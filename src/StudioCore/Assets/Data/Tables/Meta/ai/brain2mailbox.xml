@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <brain2mailbox 
+        Name="Brain to Mailbox" 
+        Description="" />
+    </headers>
+	<entries>
+        <brain_id
+        Name="Brain ID"
+        Description="" 
+        FileEnum="brain,brain,brain_id,brain_name"/>
+        
+        <mailbox_id
+        Name="Mailbox ID"
+        Description="" 
+        FileEnum="mailbox,mailbox,mailbox_id,mailbox_name" />
+        
+        <priority
+        Name="Priority"
+        Description="" />
+        
+	</entries>
+</meta>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <actor_action_type_group 
+        Name="Actor Action Type Group" 
+        Description="" />
+    </headers>
+	<entries>
+        <actor_action_type_group_id
+        Name="Actor Action Type Group ID"
+        Description="" />
+        
+        <actor_action_type_id
+        Name="Actor Action Type ID"
+        Description="" 
+        FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name"/>
+        
+	</entries>
+</meta>

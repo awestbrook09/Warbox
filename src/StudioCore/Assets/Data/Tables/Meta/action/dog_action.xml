@@ -1,52 +1,74 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
     <headers>
-        <actor_action_transition_to_combat 
-        Name="Actor Action Transition to Combat" 
+        <dog_action 
+        Name="Dog Action" 
         Description="" />
     </headers>
 	<entries>
-        <actor_action_type_id
+		<actor_action_type_id 
         Name="Actor Action Type ID"
         Description="" 
         FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name" />
         
-        <actor_action_type_id_request
+		<actor_action_type_id_request
         Name="Actor Action Type ID Request"
-        Description="" />
+        Description="" 
+        FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name" />
         
-        <actor_class_hash
+		<actor_class_hash
         Name="Actor Class Hash"
         Description="" />
         
-        <animation_duration
+		<animation_duration
         Name="Animation Duration"
         Description="" />
         
-        <hasAlignProcclip
+        <actor_side_id
+        Name="Actor Side ID"
+        Description="" 
+        FileEnum="actor_side,actor_side,actor_side_id,actor_side_name" />
+        
+		<animation_id
+        Name="Animation ID"
+        Description="" />
+        
+		<fade_in
+        Name="Fade-in Duration"
+        Description="" />
+        
+		<hasAlignProcclip
         Name="Has Alignment ProcClip"
         Description="" 
         IsBool="" />
         
-        <isfullbody
+		<init_align0
+        Name="Initialization Alignment: 0"
+        Description="" />
+        
+		<init_align1
+        Name="Initialization Alignment: 1"
+        Description="" />
+        
+		<init_sec_align0
+        Name="Initialization Secondary Alignment: 0"
+        Description="" />
+        
+		<init_sec_align1
+        Name="Initialization Secondary Alignment: 1"
+        Description="" />
+        
+		<isfullbody
         Name="Is Full Body"
         Description="" 
         IsBool="" />
         
-        <isOneShot
+		<isOneShot
         Name="Is One Shot"
         Description="" 
         IsBool="" />
         
-        <l_man_id
-        Name="Left Man ID"
-        Description="" />
-        
-        <l_pick_man_id
-        Name="Left Pick Man ID"
-        Description="" />
-        
-        <mn_fragment_guid
+		<mn_fragment_guid
         Name="Fragment GUID"
         Description="" 
         GuidTag="" />
@@ -72,14 +94,6 @@
         Name="Player"
         Description="" 
         IsBool="" />
-        
-        <r_man_id
-        Name="Right Man ID"
-        Description="" />
-        
-        <r_pick_man_id
-        Name="Right Pick Man ID"
-        Description="" />
         
         <timestamp
         Name="Timestamp"

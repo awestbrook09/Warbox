@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <DeltaMovementParamsDatabase 
+        Name="Delta Movement" 
+        Description="" />
+        
+        <DeltaMovementParamsEntityClassNode 
+        Name="Delta Movement Parameter Class Node" 
+        Description="" />
+        
+        <DeltaMovementParams 
+        Name="Delta Movement Parameters" 
+        Description="" />
+        
+        <LogicalSpeedParams 
+        Name="Logical Speed Parameters" 
+        Description="" />
+        
+        <DeltaMovementParamsNode 
+        Name="Delta Movement Parameter Node" 
+        Description="" />
+        
+        <RotationParams 
+        Name="Rotation Parameters" 
+        Description="" />
+        
+        <SpeedParams 
+        Name="Speed Parameters" 
+        Description="" />
+        
+        <SubRanges 
+        Name="Sub-ranges" 
+        Description="" />
+        
+        <DeltaMovementSpeedParamsSubRange 
+        Name="Speed Sub-Range" 
+        Description="" />
+        
+        <SurroundingDef 
+        Name="Surrounding Definition" 
+        Description="" />
+        
+        <SurroundingRequirements 
+        Name="Surrounding Requirements" 
+        Description="" />
+        
+        <DeltaMovementPartialSurroundingRequirements 
+        Name="Partial Surrounding Requirements" 
+        Description="" />
+        
+        <SpeedRequirements 
+        Name="Speed Requirements" 
+        Description="" />
+        
+        <DeltaMovementSurroundingRequirements 
+        Name="Speed Surrounding Requirements" 
+        Description="" />
+    </headers>
+	<entries>
+        <EntityClassName
+        Name="Entity Class Name"
+        Description="" />
+        
+        
+        <DeltaMovementDirectionThreshold
+        Name="Direction Threshold"
+        Description="" />
+        
+        <MoveTargetSmoothingThreshold
+        Name="Move Target Smoothing Threshold"
+        Description="" />
+        
+        <StartMoveTargetSmoothingThreshold2D
+        Name="Start Move Target Smoothing Threshold (2D)"
+        Description="" />
+        
+        <MinDistanceToPathEnd
+        Name="Minimum Distance to Path End"
+        Description="" />
+        
+        
+        <LogicalSpeedId
+        Name="Logical Speed ID"
+        Description="" />
+        
+        <MoveTargetSmoothingAngularSpeed 
+        Name="Move Target Smoothing Angular Speed"
+        Description="" />
+        
+        
+        <MinAngularDiff
+        Name="Minimum Angular Difference"
+        Description="" />
+        
+        <MaxAngularDiff
+        Name="Maximum Angular Difference"
+        Description="" />
+        
+        <MinAngularSpeed
+        Name="Minimum Angular Speed"
+        Description="" />
+        
+        <MaxAngularSpeed
+        Name="Maximum Angular Speed"
+        Description="" />
+        
+        <AngularSpeedSmothingTime
+        Name="Angular Speed Smoothing Time"
+        Description="" />
+        
+        
+        
+        <InputMin
+        Name="Minimum Input"
+        Description="" />
+        
+        <InputMax
+        Name="Maximum Input"
+        Description="" />
+        
+        <PseudoSpeedSlowDown
+        Name="Pseudo-Speed Slow Down"
+        Description="" />
+        
+        <TargetThrottleMin
+        Name="Minimum Target Throttle"
+        Description="" />
+        
+        <TargetThrottleMax
+        Name="Maximum Target Throttle"
+        Description="" />
+        
+        
+        <Distance
+        Name="Distance"
+        Description="" />
+        
+        <SectorEndAnglesDeg
+        Name="Sector End Angles"
+        Description="In degrees." />
+        
+        
+        <CoveredSectorCount
+        Name="Covered Sector Count"
+        Description="In degrees." />
+        
+        <SlowDownThresholdLogicalSpeedId
+        Name="Slowdown Threshold Logical Speed ID"
+        Description="In degrees." />
+        
+        <RequiredDistancesSQ
+        Name="Required Distance Squared"
+        Description="" />
+	</entries>
+</meta>

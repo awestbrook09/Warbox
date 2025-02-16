@@ -300,12 +300,56 @@ public static class TextDataHandler
         TaskLogs.AddLog($"{fileName} saved.");
     }
 
+    public static void SavePTF()
+    {
+        var curLocalization = GetCurrentLocalization();
+        var curVanillaLocalization = GetCurrentVanillaLocalization();
+
+        if (curLocalization == null)
+            return;
+
+        if (curVanillaLocalization == null)
+            return;
+
+        var resDesc = Warbox.TextEditor.FileSelectionView.SelectedStatus;
+        var document = curLocalization[resDesc];
+        var vanillaDocument = curVanillaLocalization[resDesc];
+        var modName = Warbox.Project.ProjectID;
+
+        // Get a document with only the differences
+        (var valid, var patchDocument) = BuildPatchLocalization(vanillaDocument, document);
+
+        var writeDir = $"{Warbox.Project.ProjectDirectory}\\PTF\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
+        var writePath = $"{Warbox.Project.ProjectDirectory}\\PTF\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}__{modName}{resDesc.Extension}";
+
+        if (!Directory.Exists(writeDir))
+            Directory.CreateDirectory(writeDir);
+
+        if (valid)
+        {
+            patchDocument.Save(writePath);
+
+            var fileName = Path.GetFileName(writePath);
+            TaskLogs.AddLog($"Saved file at: {writePath}.");
+            TaskLogs.AddLog($"{fileName} saved.");
+        }
+        else
+        {
+            TaskLogs.AddLog($"Failed to contruct patch localization.");
+        }
+    }
+
     public static void Package()
     {
         Save();
 
         var sourceDir = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
         var writeDir = $"{Warbox.Project.ProjectDirectory}\\Localization\\";
+
+        if (!Directory.Exists(writeDir))
+        {
+            Directory.CreateDirectory(writeDir);
+        }
 
         var modName = Warbox.Project.ProjectID;
 
@@ -335,8 +379,8 @@ public static class TextDataHandler
 
         if (xmlDocuments.Count > 0)
         {
-            XmlUtils.ZipXmlDocuments(xmlDocuments, $"{sourceDir}\\{pakName}.pak");
-            TaskLogs.AddLog($"Packaged {xmlDocuments.Count} localization files at {sourceDir}\\{pakName}.pak");
+            XmlUtils.ZipXmlDocuments(xmlDocuments, $"{writeDir}\\{pakName}.pak");
+            TaskLogs.AddLog($"Packaged {xmlDocuments.Count} localization files at {writeDir}\\{pakName}.pak");
         }
 
         ManifestHandler.CreateManisfestIfMissing();
@@ -344,39 +388,20 @@ public static class TextDataHandler
 
     public static void PackagePTF()
     {
-        // Save first so the files are up to date.
         Save();
 
-        var sourceDir = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
+        var sourceDir = $"{Warbox.Project.ProjectDirectory}\\PTF\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
         var writeDir = $"{Warbox.Project.ProjectDirectory}\\Localization\\";
 
-        var modName = Warbox.Project.ProjectID;
-
-        var curLoc = GetCurrentLocalization();
-        var vanillaLoc = GetCurrentVanillaLocalization();
+        if (!Directory.Exists(writeDir))
+        {
+            Directory.CreateDirectory(writeDir);
+        }
 
         var pakName = GetLanguagePakName();
 
-        Dictionary<string, XDocument> xmlDocuments = new();
-
-        foreach (var entry in vanillaLoc)
-        {
-            var vanillaEntry = entry;
-            var modEntry = curLoc.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
-
-            (var isEdited, var diffDocument) = BuildPatchLocalization(vanillaEntry.Value, modEntry.Value);
-
-            if (isEdited)
-            {
-                xmlDocuments.Add($"{entry.Key.Name}__{modName}.xml", diffDocument);
-            }
-        }
-
-        if (xmlDocuments.Count > 0)
-        {
-            XmlUtils.ZipXmlDocuments(xmlDocuments, $"{sourceDir}\\{pakName}.pak");
-            TaskLogs.AddLog($"Packaged {xmlDocuments.Count} localization files at {sourceDir}\\{pakName}.pak");
-        }
+        XmlUtils.ZipDirectory(sourceDir, $"{writeDir}\\{pakName}.pak");
+        TaskLogs.AddLog($"Packaged patch localization files at {writeDir}\\{pakName}.pak");
 
         ManifestHandler.CreateManisfestIfMissing();
     }
@@ -385,20 +410,25 @@ public static class TextDataHandler
     {
         var isEdited = false;
 
-        var newFileString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<Table>\r\n</Table>";
+        var newFileString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Table><Row></Row></Table>";
         XDocument patchDoc = XDocument.Parse(newFileString);
 
         var tables = modDoc.Elements();
         var rows = modDoc.Elements().Elements();
+        var vanillaRows = vanillaDoc.Elements().Elements();
+        var modRowTop = patchDoc.Elements().Elements().FirstOrDefault();
 
         // Rows
         foreach (var entry in rows)
         {
-            var cells = entry.Elements();
+            var vanillaMatch = vanillaRows.Where(e => e.ToString() == entry.ToString()).FirstOrDefault();
 
-            var uiString = cells.ElementAt(0);
-            var refText = cells.ElementAt(1);
-            var locText = cells.ElementAt(2);
+            // Skip if the entry is the exact same as vanilla
+            if (vanillaMatch != null)
+                continue;
+
+            isEdited = true;
+            modRowTop.Add(entry);
         }
 
         return (isEdited, patchDoc);

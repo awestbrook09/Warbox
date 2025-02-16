@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ai_variable_form 
+        Name="AI Variable Form" 
+        Description="" />
+    </headers>
+	<entries>
+        <ai_variable_form_id
+        Name="ID"
+        Description="" />
+        
+        <ai_variable_form_name
+        Name="Name"
+        Description="" />
+	</entries>
+</meta>

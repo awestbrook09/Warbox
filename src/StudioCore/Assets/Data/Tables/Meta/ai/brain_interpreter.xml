@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <brain_interpreter 
+        Name="Brain Interpreter" 
+        Description="" />
+    </headers>
+	<entries>
+        <brain_interpreter_id
+        Name="ID"
+        Description="" />
+        
+        <brain_interpreter_name
+        Name="Name"
+        Description="" />
+        
+        <brain_interpreter_type
+        Name="Interpreter Type"
+        Description="" 
+        FileEnum="brain_interpreter_type,brain_interpreter_type,brain_interpreter_type_id,brain_interpreter_type_name" />
+	</entries>
+</meta>

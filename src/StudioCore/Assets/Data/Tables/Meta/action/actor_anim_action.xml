@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
     <headers>
-        <actor_action_standup 
-        Name="Actor Action Standup" 
+        <actor_anim_action 
+        Name="Actor Animation Action" 
         Description="" />
     </headers>
 	<entries>
+        <action_urgency
+        Name="Urgency"
+        Description="" />
+        
 		<actor_action_type_id 
         Name="Actor Action Type ID"
         Description="" 
@@ -13,35 +17,62 @@
         
 		<actor_action_type_id_request
         Name="Actor Action Type ID Request"
-        Description="" />
+        Description="" 
+        FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name" />
         
 		<actor_class_hash
         Name="Actor Class Hash"
         Description="" />
         
+        <actor_end_stance_id
+        Name="Actor End Stance ID"
+        Description="" />
+        
+        <actor_end_stance_side_id
+        Name="Actor End Side ID"
+        Description="" />
+        
+        <actor_start_stance_by_id
+        Name="Actor Start Stance by ID"
+        Description="" />
+        
+        <actor_start_stance_id
+        Name="Actor Start Stance ID"
+        Description="" />
+        
+        <actor_start_stance_on_id
+        Name="Actor Start Stance on ID"
+        Description="" />
+        
+        <allow_torch
+        Name="Allow Torch"
+        Description=""
+        IsBool="" />
+        
 		<animation_duration
         Name="Animation Duration"
         Description="" />
         
-		<animation_id
-        Name="Animation ID"
-        Description="" />
-        
-		<fade_in
-        Name="Fade-in Duration"
-        Description="" />
-        
-		<from_knockout
-        Name="Apply from Knockout"
+        <close_visor
+        Name="Can Close Visor"
         Description="" 
         IsBool="" />
         
-		<hasAlignProcclip
+        <fade_in
+        Name="Fade In"
+        Description="" />
+        
+        <has_camera_bone_animated
+        Name="Has Camera Bone Animation"
+        Description="" 
+        IsBool="" />
+        
+        <hasAlignProcclip
         Name="Has Alignment ProcClip"
         Description="" 
         IsBool="" />
         
-		<init_align0
+        <init_align0
         Name="Initialization Alignment: 0"
         Description="" />
         
@@ -57,6 +88,11 @@
         Name="Initialization Secondary Alignment: 1"
         Description="" />
         
+        <is_blendspace
+        Name="Is Blendspace"
+        Description=""
+        IsBool="" />
+        
 		<isfullbody
         Name="Is Full Body"
         Description="" 
@@ -69,6 +105,10 @@
         
         <l_man_id
         Name="Left Man ID"
+        Description="" />
+        
+        <l_pick_man_id
+        Name="Left Pick Man ID"
         Description="" />
         
 		<mn_fragment_guid
@@ -102,13 +142,26 @@
         Name="Right Man ID"
         Description="" />
         
+        <r_pick_man_id
+        Name="Right Pick Man ID"
+        Description="" />
+        
+        <relative_movement
+        Name="Relative Movement"
+        Description="" />
+        
+        <start_in_idle
+        Name="Start in Idle"
+        Description=""
+        IsBool="" />
+        
         <timestamp
         Name="Timestamp"
         Description="" />
         
-        <mn_fragment_id
-        Name=""
-        Description="" />
-        
+        <use_unprecise_position
+        Name="Use Unprecise Position"
+        Description=""
+        IsBool="" />
 	</entries>
 </meta>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <hit_reaction 
+        Name="Hit Reaction" 
+        Description="" />
+    </headers>
+	<entries>
+		<actor_action_type_id 
+        Name="Actor Action Type ID"
+        Description="" 
+        FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name" />
+        
+		<actor_action_type_id_request
+        Name="Actor Action Type ID Request"
+        Description="" 
+        FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name" />
+        
+		<actor_class_hash
+        Name="Actor Class Hash"
+        Description="" />
+        
+        <actor_state_id
+        Name="Actor State ID"
+        Description="" 
+        FileEnum="actor_state,actor_state,actor_state_id,actor_state_name" />
+        
+		<animation_duration
+        Name="Animation Duration"
+        Description="" />
+        
+		<animation_id
+        Name="Animation ID"
+        Description="" />
+        
+        <body_part_id
+        Name="Body Part ID"
+        Description="" />
+        
+        <damage_type
+        Name="Damage Type"
+        Description="" />
+        
+		<hasAlignProcclip
+        Name="Has Alignment ProcClip"
+        Description="" 
+        IsBool="" />
+        
+        <hasRagdoll
+        Name="Has Ragdoll"
+        Description=""
+        IsBool="" />
+        
+        <hit_direction
+        Name="Hit Direction"
+        Description="" />
+        
+        <hit_type
+        Name="Hit Type"
+        Description="" />
+        
+        <hitreaction_type_id
+        Name="Hit Reaction Type"
+        Description="" 
+        FileEnum="hit_reaction_type,hit_reaction_type,hit_reaction_type_id,hit_reaction_type_name" />
+        
+        <is_carryCorpse
+        Name="Is Carrying Corpse"
+        Description=""
+        IsBool="" />
+        
+		<isfullbody
+        Name="Is Full Body"
+        Description="" 
+        IsBool="" />
+        
+		<isOneShot
+        Name="Is One Shot"
+        Description="" 
+        IsBool="" />
+        
+        <l_man_id
+        Name="Left Man ID"
+        Description="" />
+        
+		<mn_fragment_guid
+        Name="Fragment GUID"
+        Description="" 
+        GuidTag="" />
+        
+        <mn_fragment_id
+        Name="Fragment ID"
+        Description="" />
+        
+        <mn_option_index
+        Name="Option Index"
+        Description="" />
+        
+        <mn_tags
+        Name="Tags"
+        Description="" />
+        
+        <mounted
+        Name="Mounted"
+        Description="" 
+        IsBool="" />
+        
+        <move_direction
+        Name="Move Direction"
+        Description="" />
+        
+        <player
+        Name="Player"
+        Description="" 
+        IsBool="" />
+        
+        <r_man_id
+        Name="Right Man ID"
+        Description="" />
+        
+        <speed_tag
+        Name="Speed Tag"
+        Description="" />
+        
+        <stance_tag
+        Name="Stance Tag"
+        Description="" />
+        
+        <timestamp
+        Name="Timestamp"
+        Description="" />
+        
+	</entries>
+</meta>

@@ -4,10 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Authors>Vawser</Authors>
-    <Version>1.0.0</Version>
+    <Version>0.0.1</Version>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <PackageVersion>1.0.0</PackageVersion>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <PackageVersion>0.0.1</PackageVersion>
+    <AssemblyVersion>0.0.1</AssemblyVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <LangVersion>12</LangVersion>
     <IsPackable>false</IsPackable>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <PackageReference Include="System.Text.Json" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>

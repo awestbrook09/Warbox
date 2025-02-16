@@ -57,7 +57,8 @@ public static class TableRowDecorators
         var rowDictionary = targetFile.Root.Elements("Row")
             .Select(row => row.Elements("Cell").ToList())
             .Where(cells => cells.Count >= 3)
-            .ToDictionary(cells => cells[0].Value, cells => cells[2].Value);
+            .GroupBy(cells => cells[0].Value)
+            .ToDictionary(group => group.Key, group => group.Last()[2].Value);
 
         int index = 0;
         foreach(var element in curView.GetContents())

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <hit_reaction_type 
+        Name="Hit Reaction Type" 
+        Description="" />
+    </headers>
+	<entries>
+        <hit_reaction_type_id
+        Name="ID"
+        Description="" />
+        
+        <hit_reaction_type_name
+        Name="Name"
+        Description="" />
+        
+        <is_death_reaction
+        Name="Is Death Reaction"
+        Description=""
+        IsBool="" />
+        
+        <mn_tag
+        Name="Tag"
+        Description="" />
+        
+        <physical_coef
+        Name="Physical Coefficient"
+        Description="" />
+        
+	</entries>
+</meta>

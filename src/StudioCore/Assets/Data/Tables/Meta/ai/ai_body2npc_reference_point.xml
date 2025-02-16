@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ai_body2npc_reference_point 
+        Name="AI Body to NPC Reference Point" 
+        Description="" />
+    </headers>
+	<entries>
+        <ai_body_id
+        Name="AI Body GUID"
+        Description="" 
+        FileEnum="ai_body,ai_body,ai_body_id,ai_body_name"/>
+        
+        <npc_reference_point_id
+        Name="NPC Reference Point GUID"
+        Description="" 
+        FileEnum="npc_reference_point,npc_reference_point,npc_reference_point_id,npc_reference_point_name"/>
+	</entries>
+</meta>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <brain_sensor 
+        Name="Brain Sensor" 
+        Description="" />
+    </headers>
+	<entries>
+        <brain_sensor_id
+        Name="GUID"
+        Description="" />
+        
+        <brain_sensor_name
+        Name="Name"
+        Description="" />
+        
+        <brain_sensor_type
+        Name="Type"
+        Description="" 
+        FileEnum="brain_sensor_type,brain_sensor_type,brain_sensor_type_id,brain_sensor_type_name" />
+        
+        <direction_x
+        Name="Direction: X"
+        Description="" />
+        
+        <direction_y
+        Name="Direction: Y"
+        Description="" />
+        
+        <direction_z
+        Name="Direction: Z"
+        Description="" />
+        
+        <field_of_view
+        Name="Field of View"
+        Description="" />
+        
+        <position_x
+        Name="Position: X"
+        Description="" />
+        
+        <position_y
+        Name="Position: Y"
+        Description="" />
+        
+        <position_z
+        Name="Position: Z"
+        Description="" />
+        
+        <range
+        Name="Range"
+        Description="" />
+	</entries>
+</meta>

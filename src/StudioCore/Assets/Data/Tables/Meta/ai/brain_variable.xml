@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <brain_variable 
+        Name="Brain Variable" 
+        Description="" />
+    </headers>
+	<entries>
+        <ai_variable_form_id
+        Name="Variable Form ID"
+        Description="" 
+        FileEnum="ai_variable_form,ai_variable_form,ai_variable_form_id,ai_variable_form_name"/>
+        
+        <ai_variable_sync_id
+        Name="Variable Sync ID"
+        Description="" 
+        FileEnum="ai_variable_sync,ai_variable_sync,ai_variable_sync_id,ai_variable_sync_name"/>
+        
+        <brain_id
+        Name="Brain ID"
+        Description="" 
+        FileEnum="brain,brain,brain_id,brain_name"/>
+        
+        <brain_variable_name
+        Name="Variable Name"
+        Description="" />
+        
+        <is_persistent
+        Name="Is Persistent"
+        Description="" 
+        IsBool="" />
+        
+        <type
+        Name="Type"
+        Description="" />
+        
+	</entries>
+</meta>

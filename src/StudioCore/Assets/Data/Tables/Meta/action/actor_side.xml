@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <actor_side 
+        Name="Actor Side" 
+        Description="" />
+    </headers>
+	<entries>
+        <actor_action_type_id
+        Name="Actor Action Type ID"
+        Description="" 
+        FileEnum="actor_action_type,actor_action_type,actor_action_type_id,actor_action_type_name"/>
+        
+        <actor_side_id
+        Name="Actor Side ID"
+        Description="" />
+        
+        <actor_side_name
+        Name="Actor Side Name"
+        Description="" />
+        
+        <angle_from
+        Name="Angle From"
+        Description="" />
+        
+        <angle_to
+        Name="Angle To"
+        Description="" />
+        
+        <mn_tag
+        Name="Tag"
+        Description="" />
+	</entries>
+</meta>

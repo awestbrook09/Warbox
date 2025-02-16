@@ -48,6 +48,14 @@ public class TextEditorScreen : EditorScreen
             }
             UIHelper.ShowHoverTooltip("Save the current localization file.");
 
+            if (ImGui.MenuItem($"Save Patch Localization", KeyBindings.Current.CORE_SavePatchLocalizationFile.HintText))
+            {
+                Warbox.Project.UpdateProjectJSON();
+                TextDataHandler.SavePTF();
+            }
+            UIHelper.ShowHoverTooltip("Save the current localization file.");
+
+
             ImGui.EndMenu();
         }
 
@@ -63,7 +71,7 @@ public class TextEditorScreen : EditorScreen
             }
             UIHelper.ShowHoverTooltip("Package the localization files for the current language.");
 
-            if (ImGui.MenuItem($"Package Patch Localization", KeyBindings.Current.CORE_PackageLocalizationFiles.HintText))
+            if (ImGui.MenuItem($"Package Patch Localization", KeyBindings.Current.CORE_PackagePatchedLocalizationFiles.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
                 TextDataHandler.PackagePTF();
@@ -175,10 +183,22 @@ public class TextEditorScreen : EditorScreen
             TextDataHandler.Save();
         }
 
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SavePatchLocalizationFile))
+        {
+            Warbox.Project.UpdateProjectJSON();
+            TextDataHandler.SavePTF();
+        }
+
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_PackageLocalizationFiles))
         {
             Warbox.Project.UpdateProjectJSON();
             TextDataHandler.Package();
+        }
+
+        if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_PackagePatchedLocalizationFiles))
+        {
+            Warbox.Project.UpdateProjectJSON();
+            TextDataHandler.PackagePTF();
         }
 
         if (EditorActionManager.CanUndo() && InputTracker.GetKeyDown(KeyBindings.Current.CORE_UndoAction))

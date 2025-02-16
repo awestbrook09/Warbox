@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <actor_state 
+        Name="Actor State" 
+        Description="" />
+    </headers>
+	<entries>
+        <actor_state_id
+        Name="Actor State ID"
+        Description="" />
+        
+        <actor_state_mn_tag
+        Name="Actor State Tag"
+        Description="" />
+        
+        <actor_state_name
+        Name="Actor State Name"
+        Description="" />
+	</entries>
+</meta>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <brain_message_type 
+        Name="Brain Message Type" 
+        Description="" />
+    </headers>
+	<entries>
+        <brain_message_type_id
+        Name="ID"
+        Description="" />
+        
+        <brain_message_type_name
+        Name="Name"
+        Description="" />
+	</entries>
+</meta>

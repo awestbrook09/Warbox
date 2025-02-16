@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <brain_interpreter2brain_message_type 
+        Name="Brain Interpreter to Brain Message Type" 
+        Description="" />
+    </headers>
+	<entries>
+        <brain_interpreter_id
+        Name="Interpreter GUID"
+        Description="" 
+        FileEnum="brain_interpreter,brain_interpreter,brain_interpreter_id,brain_interpreter_name" />
+        
+        <brain_message_type_id
+        Name="Message Type"
+        Description="" 
+        FileEnum="brain_message_type,brain_message_type,brain_message_type_id,brain_message_type_name" />
+	</entries>
+</meta>

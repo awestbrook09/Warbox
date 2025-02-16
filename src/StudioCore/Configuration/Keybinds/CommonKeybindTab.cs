@@ -63,6 +63,10 @@ public static class CommonKeybindTab
                 KeyBindings.Current.CORE_SaveLocalizationFile,
                 KeyBindings.Default.CORE_SaveLocalizationFile);
 
+            KeyBindings.Current.CORE_SavePatchLocalizationFile = InputTracker.KeybindLine(17,
+                KeyBindings.Current.CORE_SavePatchLocalizationFile,
+                KeyBindings.Default.CORE_SavePatchLocalizationFile);
+
             KeyBindings.Current.CORE_SaveAllLocalizationFiles = InputTracker.KeybindLine(15,
                 KeyBindings.Current.CORE_SaveAllLocalizationFiles,
                 KeyBindings.Default.CORE_SaveAllLocalizationFiles);
@@ -70,6 +74,10 @@ public static class CommonKeybindTab
             KeyBindings.Current.CORE_PackageLocalizationFiles = InputTracker.KeybindLine(16,
                 KeyBindings.Current.CORE_PackageLocalizationFiles,
                 KeyBindings.Default.CORE_PackageLocalizationFiles);
+
+            KeyBindings.Current.CORE_PackagePatchedLocalizationFiles = InputTracker.KeybindLine(18,
+                KeyBindings.Current.CORE_PackagePatchedLocalizationFiles,
+                KeyBindings.Default.CORE_PackagePatchedLocalizationFiles);
         }
 
         if (ImGui.CollapsingHeader("Windows", ImGuiTreeNodeFlags.DefaultOpen))

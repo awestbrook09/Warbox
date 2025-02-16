@@ -166,6 +166,13 @@ public class KeyBindings
             Key.S,
             true);
 
+        public KeyBind CORE_SavePatchLocalizationFile = new(
+            "Save Patch Localization File",
+            "Save the current localization file as a patch file.",
+            Key.S,
+            false,
+            true);
+
         public KeyBind CORE_SaveAllLocalizationFiles = new(
             "Save All Localization Files",
             "Save all localization files in their entirety.",
@@ -175,6 +182,12 @@ public class KeyBindings
         public KeyBind CORE_PackageLocalizationFiles = new(
             "Package Localization Files",
             "Package all the localization files as a PAK file for the current language.",
+            Key.P,
+            true);
+
+        public KeyBind CORE_PackagePatchedLocalizationFiles = new(
+            "Package Patched Localization Files",
+            "Package all the patch localization files as a PAK file for the current language.",
             Key.P,
             true);
 

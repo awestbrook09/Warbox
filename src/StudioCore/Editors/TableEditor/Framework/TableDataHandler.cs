@@ -169,7 +169,7 @@ public static class TableDataHandler
 
                 if(result.Item1 && result.Item3 != null)
                 {
-                    SaveTable("Source\\PTF", entry.Key, entry.Value, result.Item3, $"__{Warbox.Project.ProjectID}");
+                    SaveTable("PTF\\Data", entry.Key, entry.Value, result.Item3, $"__{Warbox.Project.ProjectID}");
                 }
                 else if (result.Item2 != "")
                 {
@@ -327,7 +327,7 @@ public static class TableDataHandler
     
     public static void PackagePTF()
     {
-        if(!Directory.Exists($"{Warbox.Project.ProjectDirectory}\\Source\\PTF\\"))
+        if(!Directory.Exists($"{Warbox.Project.ProjectDirectory}\\PTF\\Data"))
         {
             TaskLogs.AddLog($"No PTF folder exists yet.");
             return;
@@ -341,7 +341,7 @@ public static class TableDataHandler
         // Output it in the normal Data folder so it can be read by the game
         // (assuming we are in the Game/Mods/<mod name>/ structure
         var outputPath = $"{Warbox.Project.ProjectDirectory}\\Data\\{Warbox.Project.ProjectID}.pak";
-        XmlUtils.ZipDirectory($"{Warbox.Project.ProjectDirectory}\\Source\\PTF\\", outputPath);
+        XmlUtils.ZipDirectory($"{Warbox.Project.ProjectDirectory}\\PTF\\Data", outputPath);
 
         TaskLogs.AddLog($"Created PAK file from PTF files: {outputPath}");
 

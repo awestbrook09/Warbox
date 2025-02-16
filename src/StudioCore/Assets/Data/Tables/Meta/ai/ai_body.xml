@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ai_body 
+        Name="AI Body" 
+        Description="" />
+    </headers>
+	<entries>
+        <ai_body_id
+        Name="GUID"
+        Description="" />
+        
+        <ai_body_name
+        Name="Name"
+        Description="" />
+	</entries>
+</meta>

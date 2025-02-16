@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ActorStanceGroupData 
+        Name="Actor Stance Group Data" 
+        Description="" />
+    </headers>
+	<entries>
+        <Name
+        Name="Name"
+        Description="" />
+        
+        <Stance
+        Name="Stance"
+        Description="" />
+        
+        <StanceBy
+        Name="Stance By"
+        Description="" />
+	</entries>
+</meta>

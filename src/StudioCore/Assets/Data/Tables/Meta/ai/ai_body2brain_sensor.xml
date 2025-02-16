@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ai_body2brain_sensor 
+        Name="AI Body to Brain Sensor" 
+        Description="" />
+    </headers>
+	<entries>
+        <ai_body_id
+        Name="AI Body GUID"
+        Description="" 
+        FileEnum="ai_body,ai_body,ai_body_id,ai_body_name"/>
+        
+        <brain_sensor_id
+        Name="Brain Sensor GUID"
+        Description="" 
+        FileEnum="brain_sensor,brain_sensor,brain_sensor_id,brain_sensor_name"/>
+	</entries>
+</meta>

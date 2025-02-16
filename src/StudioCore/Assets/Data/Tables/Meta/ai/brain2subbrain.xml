@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <brain2subbrain 
+        Name="Brain to Sub-Brain" 
+        Description="" />
+    </headers>
+	<entries>
+        <brain_id
+        Name="Brain ID"
+        Description="" 
+        FileEnum="brain,brain,brain_id,brain_name"/>
+        
+        <subbrain_id
+        Name="Sub-brain ID"
+        Description="" 
+        FileEnum="subbrain,subbrain,subbrain_id,subbrain_name" />
+        
+        <priority
+        Name="Priority"
+        Description="" />
+        
+	</entries>
+</meta>

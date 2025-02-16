@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ai_types
+        Name="AI Types" 
+        Description="" />
+        
+        <Type 
+        Name="Type" 
+        Description="" />
+        
+        <Member 
+        Name="Member" 
+        Description="" />
+    </headers>
+	<entries>
+        <Name
+        Name="Name"
+        Description="" />
+        
+        <Type
+        Name="Type"
+        Description="" />
+	</entries>
+</meta>
