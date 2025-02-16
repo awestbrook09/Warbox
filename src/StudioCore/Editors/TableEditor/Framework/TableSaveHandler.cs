@@ -150,7 +150,7 @@ public static class TableSaveHandler
             return (true, "Table is not defined in TableDefinitions.xml.", tempDoc);
         }
 
-        // Clear all entries in the output doc
+        // Remove all the existing entries in the output doc
         XElement container = outputDoc.Elements().Elements().FirstOrDefault();
         if(container == null)
         {
@@ -180,6 +180,8 @@ public static class TableSaveHandler
 
         foreach (var entry in baseEntries)
         {
+            var addEntry = false;
+
             var keyAtttribute = entry.Attribute(primaryKeyAttribute.Value);
 
             if (keyAtttribute == null)
@@ -192,73 +194,55 @@ public static class TableSaveHandler
                 e => e.Attribute(primaryKeyAttribute.Value) != null &&
                 e.Attribute(primaryKeyAttribute.Value).Value == primaryKey).FirstOrDefault();
 
+            // If no vanilla entry exists, we can assume that the base entry is unique, and thus should be added
             if (vanillaEntry == null)
-                continue;
-
-            var addEntry = false;
-
-            // Element Value check
-            if (entry.Value != vanillaEntry.Value)
             {
                 addEntry = true;
-                // Add this entry to output doc
             }
-
-            // Attribute Value check
-            var baseAttributes = entry.Attributes().ToList();
-            var vanillaAttributes = vanillaEntry.Attributes().ToList();
-
-            foreach(var bAttribute in baseAttributes)
+            else
             {
-                var attributeName = bAttribute.Name;
-                var vanillaEqual = vanillaAttributes.Where(e => e.Name == attributeName).FirstOrDefault();
-
-                if (vanillaEqual == null)
-                    continue;
-
-                if(bAttribute.Value != vanillaEqual.Value)
+                // Add if the value of the element is different
+                if (entry.Value != vanillaEntry.Value)
                 {
                     addEntry = true;
-                    // Add this entry to output doc
+                }
+
+                // Attribute Value check
+                var baseAttributes = entry.Attributes().ToList();
+                var vanillaAttributes = vanillaEntry.Attributes().ToList();
+
+                foreach (var bAttribute in baseAttributes)
+                {
+                    var attributeName = bAttribute.Name;
+                    var vanillaEqual = vanillaAttributes.Where(e => e.Name == attributeName).FirstOrDefault();
+
+                    // If no vanilla entry attribute exists, we can assume that an attribute has been added, and so this entry should be added
+                    if (vanillaEqual == null)
+                    {
+                        addEntry = true;
+                    }
+                    else
+                    {
+                        // Add if the value of the attribute is different
+                        if (bAttribute.Value != vanillaEqual.Value)
+                        {
+                            addEntry = true;
+                        }
+                    }
+                }
+
+                // Sub Elements
+                if (entry.Elements().Count() > 0)
+                {
+                    var stop = "";
                 }
             }
 
             // Add the entry to the output doc if there is a difference found
-            if(addEntry)
+            if (addEntry)
             {
                 container.Add(entry);
             }
-
-            // TODO: add checking for sub list and sub-sub list attributes so we can add the parent element if they differ
-            /*
-            // Inner tier 1
-            var subListTier = entry.Elements().ToList();
-            foreach (var subEntry in subListTier)
-            {
-                // Attributes on this tier
-                var subAttributes = subEntry.Attributes().ToList();
-
-                foreach (var subAttribute in subAttributes)
-                {
-                    var check = subAttribute.ToString();
-                    var stop = "";
-                }
-
-                // Inner tier 2
-                var subListTier2 = subListTier.Elements().ToList();
-                foreach (var subEntry2 in subListTier2)
-                {
-                    // Attributes on this tier
-                    var subAttributes2 = subEntry2.Attributes().ToList();
-
-                    foreach (var subAttribute2 in subAttributes2)
-                    {
-                        var check = subAttribute2.ToString();
-                        var stop = "";
-                    }
-                }
-            }
-            */
         }
 
         return (true, "", outputDoc);

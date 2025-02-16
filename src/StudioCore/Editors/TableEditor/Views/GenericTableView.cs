@@ -30,7 +30,7 @@ public class GenericTableView
 
     private string AliasNameKey = "";
 
-    private int CurrentRowIndex = -1;
+    public int CurrentRowIndex = -1;
 
     private bool selectRow = false;
     private bool focusRow = false;
@@ -40,7 +40,6 @@ public class GenericTableView
 
     public bool SetupAliasOverrides = false;
     public Dictionary<int, string> AliasOverrides = new Dictionary<int, string>();
-    public List<XElement> Contents = new();
 
     public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, bool noPrimaryKey, ResourceDescriptor viewStatus, XDocument viewDocument)
     {
@@ -54,9 +53,45 @@ public class GenericTableView
 
         ViewStatus = viewStatus;
         ViewDocument = viewDocument;
+    }
 
-        // Database -> List -> Entries
-        Contents = ViewDocument.Elements().Elements().Elements().ToList();
+    public XElement GetNextRow()
+    {
+        var curRow = GetCurrentRow();
+
+        if (curRow == null)
+        {
+            return null;
+        }
+
+        return ViewDocument.Elements().Elements().Elements().ElementAt(CurrentRowIndex).ElementsAfterSelf().FirstOrDefault();
+    }
+
+    public XElement GetPreviousRow()
+    {
+        var curRow = GetCurrentRow();
+
+        if (curRow == null)
+        {
+            return null;
+        }
+
+        return ViewDocument.Elements().Elements().Elements().ElementAt(CurrentRowIndex).ElementsBeforeSelf().LastOrDefault();
+    }
+
+    public XElement GetCurrentRow()
+    {
+        return ViewDocument.Elements().Elements().Elements().ElementAt(CurrentRowIndex);
+    }
+
+    public XElement GetContainer()
+    {
+        return ViewDocument.Elements().Elements().FirstOrDefault();
+    }
+
+    public IEnumerable<XElement> GetContents()
+    {
+        return ViewDocument.Elements().Elements().Elements();
     }
 
     /// <summary>
@@ -80,11 +115,12 @@ public class GenericTableView
 
         ImGui.BeginChild($"{ImGuiName}Section");
 
-        for (int i = 0; i < Contents.Count; i++)
+        int index = 0;
+        foreach(var element in GetContents())
         {
-            var entry = Contents[i];
+            var entry = element;
 
-            var key = $"{i}";
+            var key = $"{index}";
             var alias = "";
 
             if (!NoPrimaryKey)
@@ -99,9 +135,9 @@ public class GenericTableView
                     }
                 }
 
-                if (AliasOverrides.ContainsKey(i))
+                if (AliasOverrides.ContainsKey(index))
                 {
-                    alias = AliasOverrides[i];
+                    alias = AliasOverrides[index];
                 }
             }
 
@@ -111,23 +147,23 @@ public class GenericTableView
             }
 
             // Focus the newly selected row when set via command queue
-            if (focusRow && i == CurrentRowIndex)
+            if (focusRow && index == CurrentRowIndex)
             {
                 focusRow = false;
-                CurrentRowIndex = i;
+                CurrentRowIndex = index;
                 ImGui.SetScrollHereY();
             }
 
-            if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{i}", CurrentRowIndex == i))
+            if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{index}", CurrentRowIndex == index))
             {
-                CurrentRowIndex = i;
+                CurrentRowIndex = index;
             }
 
             // Arrow Selection
             if (ImGui.IsItemHovered() && selectRow)
             {
                 selectRow = false;
-                CurrentRowIndex = i;
+                CurrentRowIndex = index;
             }
             if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
             {
@@ -140,9 +176,9 @@ public class GenericTableView
             }
 
             // Context
-            if (CurrentRowIndex == i)
+            if (CurrentRowIndex == index)
             {
-                if (ImGui.BeginPopupContextItem($"##{ImGuiName}EntryContext{i}"))
+                if (ImGui.BeginPopupContextItem($"##{ImGuiName}EntryContext{index}"))
                 {
                     if (ImGui.Selectable("Duplicate"))
                     {
@@ -157,6 +193,8 @@ public class GenericTableView
                     ImGui.EndPopup();
                 }
             }
+
+            index++;
         }
 
         ImGui.EndChild();
@@ -193,11 +231,10 @@ public class GenericTableView
 
         ImGui.BeginChild($"{ImGuiName}PropertySection");
 
-        for(int i = 0; i < Contents.Count; i++)
+        int index = 0;
+        foreach(var element in GetContents())
         {
-            var element = Contents[i];
-
-            if(i == CurrentRowIndex)
+            if(index == CurrentRowIndex)
             {
                 if (ImGui.BeginTable($"{ImGuiName}AttributeTable", 2, ImGuiTableFlags.SizingFixedFit))
                 {
@@ -215,6 +252,8 @@ public class GenericTableView
                     DisplayMissingElementOptions(element);
                 }
             }
+
+            index++;
         }
 
         ImGui.EndChild();
@@ -616,7 +655,7 @@ public class GenericTableView
     /// </summary>
     public void DuplicateRow()
     {
-        var action = new AddTableRow(Contents, CurrentRowIndex, this);
+        var action = new AddTableRow(this);
         Screen.EditorActionManager.ExecuteAction(action);
     }
 
@@ -625,7 +664,7 @@ public class GenericTableView
     /// </summary>
     public void RemoveRow()
     {
-        var action = new RemoveTableRow(Contents, CurrentRowIndex, this);
+        var action = new RemoveTableRow(this);
         Screen.EditorActionManager.ExecuteAction(action);
     }
 

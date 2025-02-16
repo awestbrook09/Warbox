@@ -11,32 +11,67 @@ namespace StudioCore.Editors.TableEditor.Actions;
 
 public class RemoveTableRow : EditorAction
 {
-    private int RowIndex;
-    private List<XElement> Elements;
-    private XElement Row;
+    private XElement SourceRow;
+    private XElement PreviousRow;
+    private XElement NextRow;
+    private XElement OldRow;
+    private XElement ParentContainer;
     private GenericTableView CurrentView;
 
-    public RemoveTableRow(List<XElement> elements, int rowIndex, GenericTableView curView)
+    public RemoveTableRow(GenericTableView curView)
     {
-        Elements = elements;
-        RowIndex = rowIndex;
-        Row = new XElement(Elements.ElementAt(rowIndex));
         CurrentView = curView;
+        SourceRow = curView.GetCurrentRow();
+
+        if (SourceRow == null)
+        {
+            return; 
+        }
+
+
+        PreviousRow = curView.GetPreviousRow();
+        NextRow = curView.GetNextRow();
+        OldRow = new XElement(SourceRow);
+
+        ParentContainer = SourceRow.Parent;
     }
 
     public override ActionEvent Execute()
     {
-        Elements.RemoveAt(RowIndex);
-        CurrentView.Refresh();
+        if (SourceRow?.Parent != null)
+        {
+            SourceRow.Remove();
+        }
 
+        CurrentView.Refresh();
         return ActionEvent.NoEvent;
     }
 
+    // TODO: this fails to remove the row if when the original was a duplicate that was undone
     public override ActionEvent Undo()
     {
-        Elements.Insert(RowIndex, Row);
-        CurrentView.Refresh();
+        if (ParentContainer == null || OldRow == null)
+        {
+            return ActionEvent.NoEvent;
+        }
 
+        bool prevExists = PreviousRow?.Parent != null;
+        bool nextExists = NextRow?.Parent != null;
+
+        if (nextExists)
+        {
+            NextRow.AddBeforeSelf(OldRow);
+        }
+        else if (prevExists)
+        {
+            PreviousRow.AddAfterSelf(OldRow);
+        }
+        else
+        {
+            ParentContainer.Add(OldRow);
+        }
+
+        CurrentView.Refresh();
         return ActionEvent.NoEvent;
     }
 }

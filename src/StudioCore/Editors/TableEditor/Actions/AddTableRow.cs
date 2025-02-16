@@ -13,31 +13,56 @@ namespace StudioCore.Editors.TableEditor.Actions;
 
 public class AddTableRow : EditorAction
 {
-    private int RowIndex;
-    private List<XElement> Elements;
-    private XElement Row;
+    private XElement SourceRow;
+    private XElement NextRow;
+    private XElement NewRow;
     private GenericTableView CurrentView;
 
-    public AddTableRow(List<XElement> elements, int rowIndex, GenericTableView curView)
+    public AddTableRow(GenericTableView curView)
     {
-        Elements = elements;
-        RowIndex = rowIndex;
-        Row = new XElement(Elements.ElementAt(rowIndex));
         CurrentView = curView;
+        SourceRow = curView.GetCurrentRow();
+        NextRow = curView.GetNextRow();
+
+        if (SourceRow != null)
+        {
+            NewRow = new XElement(SourceRow);
+        }
     }
 
     public override ActionEvent Execute()
     {
-        Elements.Insert(RowIndex, Row);
-        CurrentView.Refresh();
+        var container = CurrentView.GetContainer();
 
+        if (container == null || NewRow == null)
+        {
+            return ActionEvent.NoEvent;
+        }
+
+        if (SourceRow != null && SourceRow.Parent != null)
+        {
+            SourceRow.AddAfterSelf(NewRow);
+        }
+        else if (NextRow != null)
+        {
+            NextRow.AddBeforeSelf(NewRow);
+        }
+        else
+        {
+            container.Add(NewRow);
+        }
+
+        CurrentView.Refresh();
         return ActionEvent.NoEvent;
     }
 
     public override ActionEvent Undo()
     {
-        Elements.RemoveAt(RowIndex);
-        CurrentView.Refresh();
+        if (NewRow?.Parent != null)
+        {
+            NewRow.Remove();
+            CurrentView.Refresh();
+        }
 
         return ActionEvent.NoEvent;
     }

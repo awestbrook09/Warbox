@@ -45,20 +45,17 @@ public class TableDataView
 
             foreach (var tbl in DataHandler.Tables)
             {
-                var status = tbl.Key;
-                var document = tbl.Value;
+                var docFullName = tbl.Key.Name;
+                var docName = tbl.Key.Name;
 
-                var docFullName = status.Name;
-                var docName = status.Name;
-
-                if (status.Name.Contains("__"))
+                if (tbl.Key.Name.Contains("__"))
                 {
-                    docName = status.Name.Split("__")[0];
+                    docName = tbl.Key.Name.Split("__")[0];
                 }
 
                 if (docName == defName)
                 {
-                    var newView = new GenericTableView(Screen, docFullName, aliasKey, noPrimaryKey, status, document);
+                    var newView = new GenericTableView(Screen, docFullName, aliasKey, noPrimaryKey, tbl.Key, tbl.Value);
 
                     TableViews.Add(docFullName, newView);
                 }

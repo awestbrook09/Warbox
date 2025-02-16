@@ -58,9 +58,10 @@ public static class TableRowDecorators
             .Where(cells => cells.Count >= 3)
             .ToDictionary(cells => cells[0].Value, cells => cells[2].Value);
 
-        for (int i = 0; i < curView.Contents.Count; i++)
+        int index = 0;
+        foreach(var element in curView.GetContents())
         {
-            var elementEntry = curView.Contents[i];
+            var elementEntry = element;
 
             var attribute = elementEntry.Attribute(targetAttribute.Value);
             if (attribute == null)
@@ -69,7 +70,9 @@ public static class TableRowDecorators
             }
 
             rowDictionary.TryGetValue(attribute.Value, out string displayedName);
-            curView.AliasOverrides[i] = displayedName ?? "";
+            curView.AliasOverrides[index] = displayedName ?? "";
+
+            index++;
         }
     }
 
