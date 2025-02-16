@@ -15,3 +15,4 @@ FEAT: add diff engine so modified can be implemented
 
 FEAT: add basic meta for all tables
 
+FEAT: add package action for localization - should diff loc with vanilla and create patch loc files that it places in the <language>.pak

@@ -12,32 +12,48 @@ using System.Xml.Linq;
 
 namespace StudioCore.Editors.TableEditor.Framework;
 
-public static class TableMeta
+public static class TableMetaHandler
 {
-    public static Dictionary<string, XDocument> Meta = new();
+    public static List<XElement> TableMetaDefinition = new List<XElement>();
 
-    public static Dictionary<string, string> DocumentMappings = new();
+    public static List<string> TableCategories = new List<string>();
+
+    public static Dictionary<string, XDocument> TableMetaData = new();
+
+    public static Dictionary<string, string> TableSubTypeMappings = new();
 
     public static void Setup()
     {
-        Meta = new();
-        DocumentMappings = new();
+        TableMetaDefinition = new();
+        TableCategories = new();
+        TableMetaData = new();
+        TableSubTypeMappings = new();
+
+        var dataDir = $"{AppContext.BaseDirectory}\\Assets\\Data\\Tables\\";
+
+        // Table Definitions
+        XDocument tableDefDoc = XDocument.Load($"{dataDir}\\Definitions.xml");
+        TableMetaDefinition = tableDefDoc.Descendants("tables").Elements("entry").ToList();
+
+        // Table Categories
+        var categories = tableDefDoc.Descendants("categories").Elements("entry").ToList();
+        foreach (var category in categories)
+        {
+            TableCategories.Add(category.Attribute("Name").Value);
+        }
 
         // Table Meta
-        var metaDir = $"{AppContext.BaseDirectory}\\Assets\\Data\\Meta\\";
-
-        string[] xmlFiles = Directory.GetFiles(metaDir, "*.xml", SearchOption.AllDirectories);
+        string[] xmlFiles = Directory.GetFiles($"{dataDir}\\Meta\\", "*.xml", SearchOption.AllDirectories);
         foreach (string file in xmlFiles)
         {
             var name = Path.GetFileNameWithoutExtension(file);
             XDocument doc = XDocument.Load(file);
 
-            Meta.Add(name, doc);
+            TableMetaData.Add(name, doc);
         }
 
         // Document Mappings
-        var documentMappingPath = $"{AppContext.BaseDirectory}\\Assets\\Data\\DocumentMappings.xml";
-        DocumentMappings = ReadXmlToDictionary(documentMappingPath);
+        TableSubTypeMappings = ReadXmlToDictionary($"{dataDir}\\SubTypeMappings.xml");
     }
 
     private static Dictionary<string, string> ReadXmlToDictionary(string filePath)
@@ -72,9 +88,9 @@ public static class TableMeta
             }
         }
 
-        if (Meta.ContainsKey(fileName))
+        if (TableMetaData.ContainsKey(fileName))
         {
-            return Meta[fileName];
+            return TableMetaData[fileName];
         }
 
         return null;
@@ -92,9 +108,9 @@ public static class TableMeta
     {
         var documentName = elementName;
 
-        if (DocumentMappings.ContainsKey(documentName))
+        if (TableSubTypeMappings.ContainsKey(documentName))
         {
-            documentName = DocumentMappings[documentName];
+            documentName = TableSubTypeMappings[documentName];
         }
 
         return documentName;

@@ -4,6 +4,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using StudioCore.Core.Data;
+using StudioCore.Editors.TableEditor.Framework;
+using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.UserProject;
 
 namespace StudioCore.Core.Project;
@@ -64,8 +66,8 @@ public class Project
         ProjectWarboxDirectory = $"{Config.ProjectDirectory}/.warbox";
 
         // Data
-        DataHandler.SetupTableEditor();
-        DataHandler.SetupTextEditor();
+        TableDataHandler.Setup();
+        TextDataHandler.Setup();
     }
 
     /// <summary>

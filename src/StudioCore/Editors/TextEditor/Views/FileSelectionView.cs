@@ -25,7 +25,6 @@ public class FileSelectionView
 
     public ResourceDescriptor SelectedStatus;
     public XDocument SelectedDocument;
-    public List<XElement> SelectedElements;
 
     public FileSelectionView(TextEditorScreen screen)
     {
@@ -37,9 +36,9 @@ public class FileSelectionView
         if (!Warbox.Project.IsValid())
             return;
 
-        var languageOptions = DataHandler.GetLanguageOptions();
+        var languageOptions = TextDataHandler.GetLanguageOptions();
         var curLanguage = CFG.Current.TextEditor_CurrentLanguage;
-        var curLocalization = DataHandler.GetCurrentLocalization();
+        var curLocalization = TextDataHandler.GetCurrentLocalization();
 
         if (curLocalization == null)
             return;
@@ -59,7 +58,6 @@ public class FileSelectionView
                         CFG.Current.TextEditor_CurrentLanguage = entry;
                         SelectedStatus = null;
                         SelectedDocument = null;
-                        SelectedElements = null;
                     }
                 }
 
@@ -121,7 +119,6 @@ public class FileSelectionView
     {
         SelectedStatus = entry.Key;
         SelectedDocument = entry.Value;
-        SelectedElements = entry.Value.Elements().Elements().ToList();
 
         if(focus)
             FocusFileEntry = true;
@@ -129,5 +126,43 @@ public class FileSelectionView
 
     public void Shortcuts()
     {
+    }
+
+    public XElement GetRowAtIndex(int index)
+    {
+        return SelectedDocument.Elements().Elements().ElementAt(index);
+    }
+    public XElement GetNextRow(int index)
+    {
+        var curRow = GetRowAtIndex(index);
+
+        if (curRow == null)
+        {
+            return null;
+        }
+
+        return SelectedDocument.Elements().Elements().ElementAt(index).ElementsAfterSelf().FirstOrDefault();
+    }
+
+    public XElement GetPreviousRow(int index)
+    {
+        var curRow = GetRowAtIndex(index);
+
+        if (curRow == null)
+        {
+            return null;
+        }
+
+        return SelectedDocument.Elements().Elements().ElementAt(index).ElementsBeforeSelf().LastOrDefault();
+    }
+
+    public XElement GetContainer()
+    {
+        return SelectedDocument.Elements().FirstOrDefault();
+    }
+
+    public IEnumerable<XElement> GetContents()
+    {
+        return SelectedDocument.Elements().Elements();
     }
 }

@@ -4,6 +4,7 @@ using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Actions;
 using StudioCore.Editors.TableEditor.Tools;
 using StudioCore.Editors.TableEditor.Views;
+using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Interface;
 using System;
 using System.Collections.Generic;
@@ -32,9 +33,9 @@ public static class TableMetaDecorators
     {
         var elementName = entry.Name.ToString();
         var attributeName = attribute.Name.ToString();
-        var documentName = TableMeta.GetDocumentName(elementName);
+        var documentName = TableMetaHandler.GetDocumentName(elementName);
 
-        var metaDoc = TableMeta.GetMetaDocument(documentName);
+        var metaDoc = TableMetaHandler.GetMetaDocument(documentName);
         if (metaDoc != null)
         {
             List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -101,8 +102,8 @@ public static class TableMetaDecorators
 
         var imguiKey = $"{imguiName}_{childDepth}_{enumName}_{curImguiKey}";
 
-        var targetMeta = TableMeta.GetMetaDocument(curView.ViewStatus.Name);
-        var enumOptions = TableMeta.GetEnumOptions(targetMeta, enumName);
+        var targetMeta = TableMetaHandler.GetMetaDocument(curView.ViewStatus.Name);
+        var enumOptions = TableMetaHandler.GetEnumOptions(targetMeta, enumName);
 
         var displayedName = "";
 
@@ -182,7 +183,7 @@ public static class TableMetaDecorators
 
             var imguiKey = $"{imguiName}_{childDepth}_{fileName}_{curImguiKey}";
 
-            var targetFile = DataHandler.Tables.Where(e => e.Key.Name == fileName).FirstOrDefault();
+            var targetFile = TableDataHandler.Tables.Where(e => e.Key.Name == fileName).FirstOrDefault();
             var targetDoc = targetFile.Value;
 
             var targetElements = targetDoc.Descendants($"{listKey}").ToList();
@@ -261,7 +262,7 @@ public static class TableMetaDecorators
 
         var imguiKey = $"{imguiName}_{childDepth}_{fileName}_{curImguiKey}";
 
-        var targetFile = DataHandler.Tables.Where(e => e.Key.Name == fileName).FirstOrDefault();
+        var targetFile = TableDataHandler.Tables.Where(e => e.Key.Name == fileName).FirstOrDefault();
         var targetDoc = targetFile.Value;
 
         var targetElements = targetDoc.Descendants($"{listKey}").ToList();
@@ -331,7 +332,7 @@ public static class TableMetaDecorators
     /// </summary>
     public static void DisplayTextRef(string imguiName, int childDepth, XAttribute attribute, XElement metaElement, string curImguiKey)
     {
-        var curLocalization = DataHandler.GetCurrentLocalization();
+        var curLocalization = TextDataHandler.GetCurrentLocalization();
 
         if (curLocalization == null)
             return;
@@ -479,7 +480,7 @@ public static class TableMetaDecorators
 
                 if (localizationFile != "null")
                 {
-                    var targetDoc = DataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage].Where(e => e.Key.Name == localizationFile).FirstOrDefault();
+                    var targetDoc = TextDataHandler.Localization[CFG.Current.TextEditor_CurrentLanguage].Where(e => e.Key.Name == localizationFile).FirstOrDefault();
 
                     if (targetDoc.Value != null)
                     {

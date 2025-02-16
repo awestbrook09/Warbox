@@ -41,8 +41,6 @@ public class TextRowView
 
         var width = ImGui.GetWindowWidth();
 
-        var curElements = Screen.FileSelectionView.SelectedElements;
-
         if (ImGui.Begin("Rows##textRowView"))
         {
             ImGui.SetNextItemWidth(width * 0.75f);
@@ -51,21 +49,27 @@ public class TextRowView
 
             ImGui.BeginChild("rowListSection");
 
-            if (curElements != null && curElements.Count > 0)
+            if (Screen.FileSelectionView.SelectedDocument != null)
             {
-                // Row
-                for (int i = 0; i < curElements.Count; i++)
+                var contents = Screen.FileSelectionView.GetContents();
+
+                if (contents != null && contents.Count() > 0)
                 {
-                    var entry = curElements[i];
-                    var cells = entry.Elements().ToList();
-
-                    var id = cells[0].Value;
-                    var text = cells[1].Value;
-                    var fallback_text = cells[2].Value;
-
-                    if (TextSearchFilters.FilterRowList(id, text, fallback_text, CFG.Current.TextEditor_RowFilterText))
+                    int index = 0;
+                    foreach (var entry in contents)
                     {
-                        SelectionRow(curElements, entry, id, text, fallback_text, i);
+                        var cells = entry.Elements().ToList();
+
+                        var id = cells[0].Value;
+                        var text = cells[1].Value;
+                        var fallback_text = cells[2].Value;
+
+                        if (TextSearchFilters.FilterRowList(id, text, fallback_text, CFG.Current.TextEditor_RowFilterText))
+                        {
+                            SelectionRow(entry, id, text, fallback_text, index);
+                        }
+
+                        index++;
                     }
                 }
             }
@@ -75,7 +79,7 @@ public class TextRowView
         }
     }
 
-    private void SelectionRow(List<XElement> elements, XElement entry, string id, string text, string fallback_text, int rowIndex)
+    private void SelectionRow(XElement entry, string id, string text, string fallback_text, int rowIndex)
     {
         // Focus the newly selected row when set via command queue
         if (FocusEntry && TextEntryIndex == rowIndex)
@@ -115,14 +119,14 @@ public class TextRowView
                 // Duplicate
                 if (ImGui.Selectable("Duplicate"))
                 {
-                    var action = new AddTextRow(elements, rowIndex);
+                    var action = new AddTextRow(rowIndex);
                     Screen.EditorActionManager.ExecuteAction(action);
                 }
 
                 // Remove
                 if (ImGui.Selectable("Remove"))
                 {
-                    var action = new RemoveTextRow(elements, rowIndex);
+                    var action = new RemoveTextRow(rowIndex);
                     Screen.EditorActionManager.ExecuteAction(action);
                 }
 
@@ -142,19 +146,17 @@ public class TextRowView
 
     public void Shortcuts()
     {
-        var curElements = Screen.FileSelectionView.SelectedElements;
-
         // Duplicate
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DuplicateSelectedEntry))
         {
-            var action = new AddTextRow(curElements, TextEntryIndex);
+            var action = new AddTextRow(TextEntryIndex);
             Screen.EditorActionManager.ExecuteAction(action);
         }
 
         // Remove
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DeleteSelectedEntry))
         {
-            var action = new RemoveTextRow(curElements, TextEntryIndex);
+            var action = new RemoveTextRow(TextEntryIndex);
             Screen.EditorActionManager.ExecuteAction(action);
         }
     }

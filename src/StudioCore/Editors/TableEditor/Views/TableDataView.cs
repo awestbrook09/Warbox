@@ -28,7 +28,7 @@ public class TableDataView
     {
         TableViews = new();
 
-        foreach (var entry in TableDefinition.Definitions)
+        foreach (var entry in TableMetaHandler.TableMetaDefinition)
         {
             var defName = entry.Attribute("Name").Value;
             var aliasKey = entry.Attribute("AliasNameKey").Value;
@@ -43,7 +43,7 @@ public class TableDataView
                 noPrimaryKey = true;
             }
 
-            foreach (var tbl in DataHandler.Tables)
+            foreach (var tbl in TableDataHandler.Tables)
             {
                 var docFullName = tbl.Key.Name;
                 var docName = tbl.Key.Name;

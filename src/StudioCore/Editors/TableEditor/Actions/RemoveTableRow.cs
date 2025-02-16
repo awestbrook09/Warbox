@@ -23,11 +23,6 @@ public class RemoveTableRow : EditorAction
         CurrentView = curView;
         SourceRow = curView.GetCurrentRow();
 
-        if (SourceRow == null)
-        {
-            return; 
-        }
-
         PreviousRow = curView.GetPreviousRow();
         NextRow = curView.GetNextRow();
         OldRow = new XElement(SourceRow);
@@ -54,14 +49,18 @@ public class RemoveTableRow : EditorAction
             return ActionEvent.NoEvent;
         }
 
-        bool prevExists = PreviousRow?.Parent != null;
-        bool nextExists = NextRow?.Parent != null;
+        // Source has been removed since this action occured
+        if(SourceRow == null)
+        {
+            ParentContainer.Add(OldRow);
+            return ActionEvent.NoEvent;
+        }
 
-        if (nextExists)
+        if (NextRow?.Parent != null)
         {
             NextRow.AddBeforeSelf(OldRow);
         }
-        else if (prevExists)
+        else if (PreviousRow?.Parent != null)
         {
             PreviousRow.AddAfterSelf(OldRow);
         }

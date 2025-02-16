@@ -1,5 +1,7 @@
 ﻿using ImGuiNET;
 using StudioCore.Core.Data;
+using StudioCore.Editors.TableEditor.Framework;
+using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Platform;
 using StudioCore.UserProject;
 using System;
@@ -49,7 +51,8 @@ public static class ProjectHandler
         Warbox.Project = new Project();
         Warbox.ProjectChanged = true;
 
-        DataHandler.ClearData();
+        TableDataHandler.Reset();
+        TextDataHandler.Reset();
     }
 
     /// <summary>

@@ -14,26 +14,53 @@ namespace StudioCore.Editors.TextEditor.Actions;
 public class AddTextRow : EditorAction
 {
     private int RowIndex;
-    private List<XElement> Elements;
-    private XElement Row;
+    private XElement SourceRow;
+    private XElement NextRow;
+    private XElement NewRow;
 
-    public AddTextRow(List<XElement> elements, int rowIndex)
+    public AddTextRow(int rowIndex)
     {
-        Elements = elements;
         RowIndex = rowIndex;
-        Row = new XElement(Elements.ElementAt(rowIndex));
+        SourceRow = Warbox.TextEditor.FileSelectionView.GetRowAtIndex(rowIndex);
+        NextRow = Warbox.TextEditor.FileSelectionView.GetNextRow(rowIndex);
+
+        if (SourceRow != null)
+        {
+            NewRow = new XElement(SourceRow);
+        }
     }
 
     public override ActionEvent Execute()
     {
-        Elements.Insert(RowIndex, Row);
+        var container = Warbox.TextEditor.FileSelectionView.GetContainer();
+
+        if (container == null || NewRow == null)
+        {
+            return ActionEvent.NoEvent;
+        }
+
+        if (SourceRow != null && SourceRow.Parent != null)
+        {
+            SourceRow.AddAfterSelf(NewRow);
+        }
+        else if (NextRow != null)
+        {
+            NextRow.AddBeforeSelf(NewRow);
+        }
+        else
+        {
+            container.Add(NewRow);
+        }
 
         return ActionEvent.NoEvent;
     }
 
     public override ActionEvent Undo()
     {
-        Elements.RemoveAt(RowIndex);
+        if (NewRow?.Parent != null)
+        {
+            NewRow.Remove();
+        }
 
         return ActionEvent.NoEvent;
     }

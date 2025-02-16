@@ -31,8 +31,6 @@ public class TextEditorScreen : EditorScreen
 
     public TextEditorScreen(Sdl2Window window, GraphicsDevice device)
     {
-        DataHandler.SetupTextEditor();
-
         FileSelectionView = new(this);
         TextRowView = new(this);
         TextCellView = new(this);
@@ -46,7 +44,7 @@ public class TextEditorScreen : EditorScreen
             if (ImGui.MenuItem($"Save Localization", KeyBindings.Current.CORE_SaveLocalizationFile.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
-                Save();
+                TextDataHandler.Save();
             }
             UIHelper.ShowHoverTooltip("Save the current localization file.");
 
@@ -61,9 +59,16 @@ public class TextEditorScreen : EditorScreen
             if (ImGui.MenuItem($"Package Localization", KeyBindings.Current.CORE_PackageLocalizationFiles.HintText))
             {
                 Warbox.Project.UpdateProjectJSON();
-                Package();
+                TextDataHandler.Package();
             }
             UIHelper.ShowHoverTooltip("Package the localization files for the current language.");
+
+            if (ImGui.MenuItem($"Package Patch Localization", KeyBindings.Current.CORE_PackageLocalizationFiles.HintText))
+            {
+                Warbox.Project.UpdateProjectJSON();
+                TextDataHandler.PackagePTF();
+            }
+            UIHelper.ShowHoverTooltip("Package the localization files for the current language, but utilise the patching method.");
 
             ImGui.EndMenu();
         }
@@ -151,55 +156,10 @@ public class TextEditorScreen : EditorScreen
     {
         FileSelectionView.SelectedStatus = null;
         FileSelectionView.SelectedDocument = null;
-        FileSelectionView.SelectedElements = null;
 
         TextRowView.TextEntryIndex = -1;
-        TextRowView.SelectedCells = null;
 
         ResetActionManager();
-    }
-
-    public void Save()
-    {
-        var curLocalization = DataHandler.GetCurrentLocalization();
-
-        if (curLocalization == null)
-            return;
-
-        var resDesc = FileSelectionView.SelectedStatus;
-        var document = curLocalization[resDesc];
-
-        var writeDir = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
-        var writePath = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\{resDesc.Name}{resDesc.Extension}";
-
-        if (!Directory.Exists(writeDir))
-            Directory.CreateDirectory(writeDir);
-
-        document.Save(writePath);
-
-        TaskLogs.AddLog($"{writePath} saved.");
-    }
-
-    public void Package()
-    {
-        // Save first so the files are up to date.
-        Save();
-
-        var sourceDir = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}";
-        var writeDir = $"{Warbox.Project.ProjectDirectory}\\Localization\\";
-
-        foreach(var entry in DataHandler.Localization)
-        {
-            var fileName = entry.Key;
-
-
-        }
-
-        var pakName = "English_xml"; // Only support English for now.
-
-        DataHandler.ZipXmlFiles(sourceDir, $"{sourceDir}\\{pakName}.pak");
-
-        ManifestHandler.CreateManisfestIfMissing();
     }
 
     private void ResetActionManager()
@@ -212,13 +172,13 @@ public class TextEditorScreen : EditorScreen
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_SaveLocalizationFile))
         {
             Warbox.Project.UpdateProjectJSON();
-            Save();
+            TextDataHandler.Save();
         }
 
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_PackageLocalizationFiles))
         {
             Warbox.Project.UpdateProjectJSON();
-            Package();
+            TextDataHandler.Package();
         }
 
         if (EditorActionManager.CanUndo() && InputTracker.GetKeyDown(KeyBindings.Current.CORE_UndoAction))
@@ -239,7 +199,7 @@ public class TextEditorScreen : EditorScreen
         {
             if (initcmd.Length > 2)
             {
-                var curLocalization = DataHandler.GetCurrentLocalization();
+                var curLocalization = TextDataHandler.GetCurrentLocalization();
 
                 if (curLocalization == null)
                     return;
@@ -254,12 +214,12 @@ public class TextEditorScreen : EditorScreen
                 // Set row selection
                 if (FileSelectionView.SelectedDocument != null)
                 {
-                    var curElements = FileSelectionView.SelectedElements;
+                    var contents = FileSelectionView.GetContents();
 
                     // Row
-                    for (int i = 0; i < curElements.Count; i++)
+                    int index = 0;
+                    foreach(var entry in contents)
                     {
-                        var entry = curElements[i];
                         var cells = entry.Elements().ToList();
 
                         var id = cells[0].Value;
@@ -268,8 +228,10 @@ public class TextEditorScreen : EditorScreen
 
                         if(id == targetUiString)
                         {
-                            TextRowView.UpdateSelection(entry, i, true);
+                            TextRowView.UpdateSelection(entry, index, true);
                         }
+
+                        index++;
                     }
                 }
             }

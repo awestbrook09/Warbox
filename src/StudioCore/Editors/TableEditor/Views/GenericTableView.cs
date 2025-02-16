@@ -249,7 +249,7 @@ public class GenericTableView
                     ImGui.EndTable();
                 }
 
-                if (!TableMeta.CheckMetaToggle("SuppressAdditionButtons", ViewStatus.Name))
+                if (!TableMetaHandler.CheckMetaToggle("SuppressAdditionButtons", ViewStatus.Name))
                 {
                     DisplayMissingElementOptions(element);
                 }
@@ -342,12 +342,12 @@ public class GenericTableView
 
                 if (CFG.Current.TableEditor_View_Properties_DisplayNames)
                 {
-                    displayName = TableMeta.GetElementNameValue(
+                    displayName = TableMetaHandler.GetElementNameValue(
                     "Name",
                     $"{entry.Name}");
                 }
 
-                var description = TableMeta.GetElementNameValue(
+                var description = TableMetaHandler.GetElementNameValue(
                     "Description",
                     $"{entry.Name}");
 
@@ -392,13 +392,13 @@ public class GenericTableView
 
                 if (CFG.Current.TableEditor_View_Properties_DisplayNames)
                 {
-                    displayName = TableMeta.GetAttributeNameValue(
+                    displayName = TableMetaHandler.GetAttributeNameValue(
                         "Name",
                         $"{entry.Name}",
                         $"{entry.Name}");
                 }
 
-                var description = TableMeta.GetAttributeNameValue(
+                var description = TableMetaHandler.GetAttributeNameValue(
                     "Description",
                     $"{entry.Name}",
                     $"{entry.Name}");
@@ -464,13 +464,13 @@ public class GenericTableView
 
                 if (CFG.Current.TableEditor_View_Properties_DisplayNames)
                 {
-                    displayName = TableMeta.GetAttributeNameValue(
+                    displayName = TableMetaHandler.GetAttributeNameValue(
                         "Name",
                         $"{entry.Name}",
                         $"{attribute.Name}");
                 }
 
-                var description = TableMeta.GetAttributeNameValue(
+                var description = TableMetaHandler.GetAttributeNameValue(
                     "Description",
                     $"{entry.Name}",
                     $"{attribute.Name}");
@@ -500,7 +500,7 @@ public class GenericTableView
                 ImGui.SetNextItemWidth(width * 0.5f);
 
                 // Handling for bool type
-                if (TableMeta.IsBoolAttribute("IsBool", $"{entry.Name}", $"{attribute.Name}"))
+                if (TableMetaHandler.IsBoolAttribute("IsBool", $"{entry.Name}", $"{attribute.Name}"))
                 {
                     var tBool = false;
 
@@ -553,7 +553,7 @@ public class GenericTableView
     /// </summary>
     private void DisplayMissingElementOptions(XElement entry)
     {
-        var allAttributes = TableMeta.GetAttributeList(entry);
+        var allAttributes = TableMetaHandler.GetAttributeList(entry);
         var curAttributes = entry.Attributes();
 
         var missingAttributes = new List<XElement>();
@@ -592,7 +592,7 @@ public class GenericTableView
 
             if (CFG.Current.TableEditor_View_Properties_DisplayNames)
             {
-                displayName = TableMeta.GetAttributeNameValue(
+                displayName = TableMetaHandler.GetAttributeNameValue(
                 "Name",
                 $"{entry.Name}",
                 $"{attrEntry.Name}");
@@ -617,9 +617,9 @@ public class GenericTableView
             {
                 var elementName = entry.Name.ToString();
                 var attributeName = attribute.Name.ToString();
-                var documentName = TableMeta.GetDocumentName(elementName);
+                var documentName = TableMetaHandler.GetDocumentName(elementName);
 
-                var metaDoc = TableMeta.GetMetaDocument(documentName);
+                var metaDoc = TableMetaHandler.GetMetaDocument(documentName);
                 List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
 
                 ImGui.TableNextRow();

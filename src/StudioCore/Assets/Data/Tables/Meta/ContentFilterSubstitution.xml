@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ContentFilterSubstitution 
+        Name="Content Filter Substitutions" 
+        Description="" />
+    </headers>
+	<entries>
+        <Filter
+        Name="Filter Category"
+        Description="The category this substitution is placed under." />
+        
+        <OriginalObjectPath
+        Name="Base Object Path"
+        Description="The base object to replace." />
+        
+        <SubstitutedObjectPath
+        Name="Substitute Object Path"
+        Description="The object that is used in place of the base object." />
+        
+	</entries>
+</meta>

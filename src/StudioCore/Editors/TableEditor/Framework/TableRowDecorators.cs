@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using StudioCore.Core.Data;
 using StudioCore.Editors.TableEditor.Views;
+using StudioCore.Editors.TextEditor.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,14 @@ public static class TableRowDecorators
     /// </summary>
     public static void ProcessAliasOverrides(GenericTableView curView)
     {
-        var curLocalization = DataHandler.GetCurrentLocalization();
+        var curLocalization = TextDataHandler.GetCurrentLocalization();
 
         if (curLocalization == null)
             return;
 
         curView.AliasOverrides = new();
 
-        var metaDoc = TableMeta.GetMetaDocument(curView.Screen.FileSelectionView.GetSelectedDocumentName());
+        var metaDoc = TableMetaHandler.GetMetaDocument(curView.Screen.FileSelectionView.GetSelectedDocumentName());
 
         if (metaDoc == null)
             return;
@@ -33,7 +34,7 @@ public static class TableRowDecorators
         if (targetAttribute == null)
             return;
 
-        var metaDocument = TableMeta.GetMetaDocument(curView.ViewStatus.Name);
+        var metaDocument = TableMetaHandler.GetMetaDocument(curView.ViewStatus.Name);
 
         if (metaDocument?.Root == null)
             return;

@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using StudioCore.Core.Data;
 using StudioCore.Editors.TextEditor.Views;
 using StudioCore.Platform;
+using StudioCore.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,13 +17,95 @@ using static Assimp.Metadata;
 using static DotNext.Threading.Tasks.DynamicTaskAwaitable;
 
 namespace StudioCore.Editors.TableEditor.Framework;
-public static class TableSaveHandler
+public static class TableDataHandler
 {
+    public static SortedDictionary<ResourceDescriptor, XDocument> Tables = new();
+    public static SortedDictionary<ResourceDescriptor, XDocument> Vanilla_Tables = new();
+
+    public static void Reset()
+    {
+        Tables = new();
+        Vanilla_Tables = new();
+    }
+
+    public static void Setup()
+    {
+        Tables = new();
+        Vanilla_Tables = new();
+
+        if (Warbox.Project.IsValid())
+        {
+            Tables = ReadTables("Data", "Tables");
+            Vanilla_Tables = ReadTables("Data", "Tables", true);
+
+            TableMetaHandler.Setup();
+            Warbox.TableEditor.TableDataView.SetupTableViews();
+        }
+    }
+
+    public static SortedDictionary<ResourceDescriptor, XDocument> ReadTables(string folderName, string pakName, bool ignoreProject = false)
+    {
+        var dataDir = $"{Warbox.Project.GameDirectory}\\{folderName}\\{pakName}.pak";
+        var projectDir = $"{Warbox.Project.ProjectDirectory}\\Source\\{folderName}\\";
+
+        var baseData = XmlUtils.ReadXmlFromZip(dataDir);
+        var projectData = XmlUtils.ReadXmlFromDirectory(projectDir);
+        var finalData = new SortedDictionary<ResourceDescriptor, XDocument>();
+
+        // Replace entries with project data if present
+        if (projectData.Count > 0 && !ignoreProject)
+        {
+            foreach (var bEntry in baseData)
+            {
+                var bDataStatus = bEntry.Key;
+                var hasProjectVersion = false;
+
+                foreach (var pEntry in projectData)
+                {
+                    var pDataStatus = pEntry.Key;
+
+                    // Is match for existing file, override
+                    if (bDataStatus.Name == pDataStatus.Name)
+                    {
+                        hasProjectVersion = true;
+
+                        pEntry.Key.IsProjectData = true;
+                        if (finalData.ContainsKey(pEntry.Key))
+                        {
+                            finalData[pEntry.Key] = pEntry.Value;
+                        }
+                    }
+                    // Is unique to project, new file
+                    else
+                    {
+                        if (!finalData.ContainsKey(pEntry.Key))
+                        {
+                            finalData.Add(pDataStatus, pEntry.Value);
+                        }
+                    }
+                }
+
+                // Is not affected by project, vanilla
+                if (!hasProjectVersion)
+                {
+                    finalData.Add(bDataStatus, bEntry.Value);
+                }
+            }
+        }
+        else
+        {
+            finalData = baseData;
+        }
+
+        return finalData;
+    }
+
+
     public static void Export()
     {
         var status = Warbox.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
 
-        foreach (var entry in DataHandler.Tables)
+        foreach (var entry in Tables)
         {
             // Only process the current table
             if (entry.Key.Name == status.Name)
@@ -34,7 +117,7 @@ public static class TableSaveHandler
 
     public static void ExportAll()
     {
-        foreach (var entry in DataHandler.Tables)
+        foreach (var entry in Tables)
         {
             SaveTable("Source\\Data", entry.Key, entry.Value, entry.Value);
         }
@@ -56,7 +139,7 @@ public static class TableSaveHandler
         // Output it in the normal Data folder so it can be read by the game
         // (assuming we are in the Game/Mods/<mod name>/ structure
         var outputPath = $"{Warbox.Project.ProjectDirectory}\\Data\\{Warbox.Project.ProjectID}.pak";
-        ZipDirectory($"{Warbox.Project.ProjectDirectory}\\Source\\Data\\", outputPath);
+        XmlUtils.ZipDirectory($"{Warbox.Project.ProjectDirectory}\\Source\\Data\\", outputPath);
 
         TaskLogs.AddLog($"Created PAK file from Data files: {outputPath}");
 
@@ -75,9 +158,9 @@ public static class TableSaveHandler
             return;
         }
 
-        foreach (var entry in DataHandler.Tables)
+        foreach (var entry in Tables)
         {
-            var vanillaEntry = DataHandler.Vanilla_Tables.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
+            var vanillaEntry = Vanilla_Tables.Where(e => e.Key.Name == entry.Key.Name).FirstOrDefault();
 
             if (entry.Key.Name == status.Name)
             {
@@ -140,7 +223,7 @@ public static class TableSaveHandler
 
     private static (bool, string, XDocument) BuildOutputDocument(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)
     {
-        var tableDef = TableDefinition.Definitions.Where(e => e.Attribute("Name").Value == resDesc.BaseName).FirstOrDefault();
+        var tableDef = TableMetaHandler.TableMetaDefinition.Where(e => e.Attribute("Name").Value == resDesc.BaseName).FirstOrDefault();
 
         var tempDoc = new XDocument(baseDoc);
         var outputDoc = new XDocument(baseDoc);
@@ -242,170 +325,6 @@ public static class TableSaveHandler
         return (true, "", outputDoc);
     }
     
-    private static Dictionary<string, List<RemovalTag>> Removals = new();
-
-    // TODO: fix this so it works with nested elements
-    private static (bool, string, XDocument) RemoveVanillaEntries(ResourceDescriptor resDesc, XDocument baseDoc, XDocument vanillaDoc)
-    {
-        Removals = new();
-
-        var tempDoc = new XDocument(baseDoc);
-
-        if(vanillaDoc == null)
-        {
-            return (false, "No valid vanilla counterpart document.", tempDoc);
-        }
-
-        // Check in reverse so we can remove child first
-        CheckElements(tempDoc, vanillaDoc, "3"); // Sub sub list iter
-        CheckElements(tempDoc, vanillaDoc, "2"); // Sub list tier
-        CheckElements(tempDoc, vanillaDoc, "1"); // Top list tier
-
-        var diffCount = 0;
-
-        List<XElement> RetainedElements = new();
-
-        if (Removals.ContainsKey("3"))
-        {
-            var removals = Removals["3"];
-            foreach(var entry in removals)
-            {
-                if(entry.Element.Parent != null)
-                {
-                    RetainedElements.Add(entry.Element.Parent);
-                    entry.Element.Remove();
-                    diffCount++;
-                }
-            }
-        }
-
-        if (Removals.ContainsKey("2"))
-        {
-            var removals = Removals["2"];
-            foreach (var entry in removals)
-            {
-                if (entry.Element.Parent != null && !RetainedElements.Contains(entry.Element))
-                {
-                    RetainedElements.Add(entry.Element.Parent);
-                    entry.Element.Remove();
-                    diffCount++;
-                }
-            }
-        }
-
-        if (Removals.ContainsKey("1"))
-        {
-            var removals = Removals["1"];
-            foreach (var entry in removals)
-            {
-                if (entry.Element.Parent != null && !RetainedElements.Contains(entry.Element))
-                {
-                    RetainedElements.Add(entry.Element.Parent);
-                    entry.Element.Remove();
-                    diffCount++;
-                }
-            }
-        }
-
-        // Return failed export if no differences are found
-        if (diffCount == 0)
-        {
-            return (false, $"No differences were found for {resDesc.Name}. PTF Export cancelled.", tempDoc);
-        }
-
-        return (true, "", tempDoc);
-    }
-
-    private static void CheckElements(XDocument tempDoc, XDocument vanillaDoc, string tier)
-    {
-        List<XElement> baseElements = new();
-        List<XElement> vanillaElements = new();
-
-        if(tier == "1")
-        {
-            baseElements = tempDoc.Elements().Elements().Descendants().ToList(); 
-            vanillaElements = vanillaDoc.Elements().Elements().Descendants().ToList();
-        }
-        if (tier == "2")
-        {
-            baseElements = tempDoc.Elements().Elements().Elements().Descendants().ToList();
-            vanillaElements = vanillaDoc.Elements().Elements().Elements().Descendants().ToList();
-        }
-        if (tier == "3")
-        {
-            baseElements = tempDoc.Elements().Elements().Elements().Elements().Descendants().ToList();
-            vanillaElements = vanillaDoc.Elements().Elements().Elements().Elements().Descendants().ToList();
-        }
-
-        foreach (var baseElement in baseElements.ToList())
-        {
-            // Check attributes
-            if (baseElement.HasAttributes)
-            {
-                if (vanillaElements.Any(vanillaElement => ElementAttributesMatch(baseElement, vanillaElement)))
-                {
-                    if (baseElement.Parent != null && baseElement != null)
-                    {
-                        var newRemoval = new RemovalTag(baseElement.Parent, baseElement);
-                        if (Removals.ContainsKey(tier))
-                        {
-                            Removals[tier].Add(newRemoval);
-                        }
-                        else
-                        {
-                            Removals.Add(tier, new List<RemovalTag>() { newRemoval });
-                        }
-                    }
-                }
-            }
-            // Element value check if no attributes are used
-            else if (vanillaElements.Any(vanillaElement => ElementValueMatch(baseElement, vanillaElement)))
-            {
-                if (baseElement.Parent != null && baseElement != null)
-                {
-                    var newRemoval = new RemovalTag(baseElement.Parent, baseElement);
-                    if (Removals.ContainsKey(tier))
-                    {
-                        Removals[tier].Add(newRemoval);
-                    }
-                    else
-                    {
-                        Removals.Add(tier, new List<RemovalTag>() { newRemoval });
-                    }
-                }
-            }
-        }
-    }
-
-    private static bool ElementValueMatch(XElement baseElement, XElement vanillaElement)
-    {
-        // Elements must have the same name
-        if (baseElement.Name != vanillaElement.Name)
-            return false;
-
-        if(baseElement.Value == vanillaElement.Value)
-            return true;
-
-        return false;
-    }
-
-    private static bool ElementAttributesMatch(XElement baseElement, XElement vanillaElement)
-    {
-        // Elements must have the same name
-        if (baseElement.Name != vanillaElement.Name)
-            return false;
-
-        var baseAttributes = baseElement.Attributes().OrderBy(a => a.Name.ToString()).ToList();
-        var vanillaAttributes = vanillaElement.Attributes().OrderBy(a => a.Name.ToString()).ToList();
-
-        // The number of attributes must be the same
-        if (baseAttributes.Count != vanillaAttributes.Count)
-            return false;
-
-        // All attributes and their values must match
-        return baseAttributes.Zip(vanillaAttributes, (b, v) => b.Name == v.Name && b.Value == v.Value).All(match => match);
-    }
-
     public static void PackagePTF()
     {
         if(!Directory.Exists($"{Warbox.Project.ProjectDirectory}\\Source\\PTF\\"))
@@ -422,51 +341,12 @@ public static class TableSaveHandler
         // Output it in the normal Data folder so it can be read by the game
         // (assuming we are in the Game/Mods/<mod name>/ structure
         var outputPath = $"{Warbox.Project.ProjectDirectory}\\Data\\{Warbox.Project.ProjectID}.pak";
-        ZipDirectory($"{Warbox.Project.ProjectDirectory}\\Source\\PTF\\", outputPath);
+        XmlUtils.ZipDirectory($"{Warbox.Project.ProjectDirectory}\\Source\\PTF\\", outputPath);
 
         TaskLogs.AddLog($"Created PAK file from PTF files: {outputPath}");
 
         ManifestHandler.CreateManisfestIfMissing();
     }
-
-    private static void ZipDirectory(string directoryPath, string zipFilePath)
-    {
-        // Create the ZIP archive and set the CompressionLevel
-        using (FileStream zipToCreate = new FileStream(zipFilePath, FileMode.Create))
-        using (ZipArchive archive = new ZipArchive(zipToCreate, ZipArchiveMode.Create))
-        {
-            // Get all XML files (including subdirectories)
-            string[] xmlFiles = Directory.GetFiles(directoryPath, "*.xml", SearchOption.AllDirectories);
-
-            foreach (var file in xmlFiles)
-            {
-                // Get the relative file path (preserve directory structure)
-                string relativePath = Path.GetRelativePath(directoryPath, file);
-
-                // Add the file to the archive
-                ZipArchiveEntry entry = archive.CreateEntry(relativePath);
-
-                // Set the time format to avoid high precision timestamps
-                entry.LastWriteTime = DateTime.Now;
-
-                using (Stream entryStream = entry.Open())
-                using (FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
-                {
-                    fileStream.CopyTo(entryStream);
-                }
-            }
-        }
-    }
 }
- public class RemovalTag
-{
-    public XElement Parent;
-    public XElement Element;
 
-    public RemovalTag(XElement parent, XElement element)
-    {
-        Parent = parent;
-        Element = element;
-    }
-}
     

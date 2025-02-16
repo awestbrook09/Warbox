@@ -97,7 +97,7 @@ public class TableFileSelectionView
         // Typically the name of the file is one of the headers, so just do this
         if (CFG.Current.TableEditor_View_Properties_DisplayNames)
         {
-            displayName = TableMeta.GetFileTitle("Name", $"{name}");
+            displayName = TableMetaHandler.GetFileTitle("Name", $"{name}");
         }
 
         // Focus the newly selected row when set via command queue
@@ -187,11 +187,11 @@ public class TableFileSelectionView
         if (CategoryLists.Count < 1)
         {
             // Build categories
-            foreach (var category in TableDefinition.Categories)
+            foreach (var category in TableMetaHandler.TableCategories)
             {
-                for (int i = 0; i < DataHandler.Tables.Count; i++)
+                for (int i = 0; i < TableDataHandler.Tables.Count; i++)
                 {
-                    var entry = DataHandler.Tables.ElementAt(i);
+                    var entry = TableDataHandler.Tables.ElementAt(i);
                     var status = entry.Key;
                     var name = entry.Key.Name;
 
@@ -236,7 +236,7 @@ public class TableFileSelectionView
         }
         else
         {
-            var tableEntry = TableDefinition.Definitions.Where(e => e.Attribute("Name").Value == name).FirstOrDefault();
+            var tableEntry = TableMetaHandler.TableMetaDefinition.Where(e => e.Attribute("Name").Value == name).FirstOrDefault();
 
             if (tableEntry != null && tableEntry.Attribute("Category") != null)
             {

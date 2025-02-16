@@ -1,5 +1,6 @@
 ﻿using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Views;
+using StudioCore.Interface;
 using StudioCore.KCD;
 using System;
 using System.Collections.Generic;
@@ -13,26 +14,61 @@ namespace StudioCore.Editors.TextEditor.Actions;
 public class RemoveTextRow : EditorAction
 {
     private int RowIndex;
-    private List<XElement> Elements;
-    private XElement Row;
+    private XElement SourceRow;
+    private XElement PreviousRow;
+    private XElement NextRow;
+    private XElement OldRow;
+    private XElement ParentContainer;
 
-    public RemoveTextRow(List<XElement> elements, int rowIndex)
+    public RemoveTextRow(int rowIndex)
     {
-        Elements = elements;
-        RowIndex = rowIndex;
-        Row = new XElement(Elements.ElementAt(rowIndex));
+        SourceRow = Warbox.TextEditor.FileSelectionView.GetRowAtIndex(rowIndex);
+
+        PreviousRow = Warbox.TextEditor.FileSelectionView.GetPreviousRow(rowIndex);
+        NextRow = Warbox.TextEditor.FileSelectionView.GetNextRow(rowIndex);
+
+        OldRow = new XElement(SourceRow);
+
+        ParentContainer = SourceRow.Parent;
     }
 
     public override ActionEvent Execute()
     {
-        Elements.RemoveAt(RowIndex);
+        if (SourceRow?.Parent != null)
+        {
+            SourceRow.Remove();
+        }
 
         return ActionEvent.NoEvent;
     }
 
+    // TODO: this fails to remove the row if when the original was a duplicate that was undone
     public override ActionEvent Undo()
     {
-        Elements.Insert(RowIndex, Row);
+        if (ParentContainer == null || OldRow == null)
+        {
+            return ActionEvent.NoEvent;
+        }
+
+        // Source has been removed since this action occured
+        if (SourceRow == null)
+        {
+            ParentContainer.Add(OldRow);
+            return ActionEvent.NoEvent;
+        }
+
+        if (NextRow?.Parent != null)
+        {
+            NextRow.AddBeforeSelf(OldRow);
+        }
+        else if (PreviousRow?.Parent != null)
+        {
+            PreviousRow.AddAfterSelf(OldRow);
+        }
+        else
+        {
+            ParentContainer.Add(OldRow);
+        }
 
         return ActionEvent.NoEvent;
     }

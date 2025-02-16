@@ -192,27 +192,27 @@ public class TableEditorScreen : EditorScreen
 
     public void Save()
     {
-        TableSaveHandler.Export();
+        TableDataHandler.Export();
     }
 
     public void SaveAll()
     {
-        TableSaveHandler.ExportAll();
+        TableDataHandler.ExportAll();
     }
 
     public void PackageAll()
     {
-        TableSaveHandler.PackageAll();
+        TableDataHandler.PackageAll();
     }
 
     public void ExportPTF()
     {
-        TableSaveHandler.ExportPTF();
+        TableDataHandler.ExportPTF();
     }
 
     public void PackagePTF()
     {
-        TableSaveHandler.PackagePTF();
+        TableDataHandler.PackagePTF();
     }
 
     private void ResetActionManager()
@@ -279,9 +279,9 @@ public class TableEditorScreen : EditorScreen
                 KeyValuePair<ResourceDescriptor, XDocument> targetEntry = new KeyValuePair<ResourceDescriptor, XDocument>();
 
                 // Set file selection
-                for (int i = 0; i < DataHandler.Tables.Count; i++)
+                for (int i = 0; i < TableDataHandler.Tables.Count; i++)
                 {
-                    targetEntry = DataHandler.Tables.ElementAt(i);
+                    targetEntry = TableDataHandler.Tables.ElementAt(i);
                     var name = targetEntry.Key.Name;
 
                     if (name == fileName)

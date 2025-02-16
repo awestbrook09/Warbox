@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using StudioCore.Core.Data;
+using StudioCore.Editors.TextEditor.Framework;
 using StudioCore.Interface;
 using System;
 using System.Collections.Generic;
@@ -59,8 +60,8 @@ public static class TextEditorTab
 
             if(ImGui.Button("Reload Languages"))
             {
-                DataHandler.SetupTextEditor();
-                TaskLogs.AddLog("Reloaded the localization files.");
+                TextDataHandler.Reset();
+                TextDataHandler.Setup();
             }
         }
     }

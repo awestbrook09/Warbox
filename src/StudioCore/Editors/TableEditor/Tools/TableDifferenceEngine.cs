@@ -1,4 +1,5 @@
 ﻿using StudioCore.Core.Data;
+using StudioCore.Editors.TableEditor.Framework;
 using StudioCore.Editors.TableEditor.Views;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ public static class TableDifferenceEngine
         var resDesc = curTableView.ViewStatus;
         var document = curTableView.ViewDocument;
 
-        var vanillaTable = DataHandler.Vanilla_Tables.Where(e => e.Key.Name == resDesc.Name).FirstOrDefault();
+        var vanillaTable = TableDataHandler.Vanilla_Tables.Where(e => e.Key.Name == resDesc.Name).FirstOrDefault();
 
         if (vanillaTable.Value == null)
             return;
