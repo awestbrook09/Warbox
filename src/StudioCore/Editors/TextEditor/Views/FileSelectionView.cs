@@ -20,12 +20,6 @@ public class FileSelectionView
 {
     private TextEditorScreen Screen;
 
-    public bool FocusFileEntry = false;
-    public bool SelectNextText = false;
-
-    public ResourceDescriptor SelectedStatus;
-    public XDocument SelectedDocument;
-
     public FileSelectionView(TextEditorScreen screen)
     {
         Screen = screen;
@@ -56,8 +50,7 @@ public class FileSelectionView
                     if(ImGui.Selectable($"{entry}"))
                     {
                         CFG.Current.TextEditor_CurrentLanguage = entry;
-                        SelectedStatus = null;
-                        SelectedDocument = null;
+                        TextSelection.ClearFileSelection();
                     }
                 }
 
@@ -91,78 +84,31 @@ public class FileSelectionView
     private void SelectionRow(int index, KeyValuePair<ResourceDescriptor, XDocument> entry, ResourceDescriptor status, string name)
     {
         // Focus the newly selected row when set via command queue
-        if (FocusFileEntry && SelectedStatus == status)
+        if (TextSelection.FocusFileSelection && TextSelection.FileSelectionDescriptor == status)
         {
-            FocusFileEntry = false;
-            UpdateSelection(entry);
+            TextSelection.FocusFileSelection = false;
+            TextSelection.SelectFile(entry.Key, entry.Value);
             ImGui.SetScrollHereY();
         }
 
-        if (ImGui.Selectable($"{name}##fileEntry{name}{index}", SelectedStatus == status))
+        if (ImGui.Selectable($"{name}##fileEntry{name}{index}", TextSelection.FileSelectionDescriptor == status))
         {
-            UpdateSelection(entry);
+            TextSelection.SelectFile(entry.Key, entry.Value);
         }
 
         // Arrow Selection
-        if (ImGui.IsItemHovered() && SelectNextText)
+        if (ImGui.IsItemHovered() && TextSelection.FileArrowSelect)
         {
-            SelectNextText = false;
-            UpdateSelection(entry);
+            TextSelection.FileArrowSelect = false;
+            TextSelection.SelectFile(entry.Key, entry.Value);
         }
         if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
         {
-            SelectNextText = true;
+            TextSelection.FileArrowSelect = true;
         }
-    }
-
-    public void UpdateSelection(KeyValuePair<ResourceDescriptor, XDocument> entry, bool focus = false)
-    {
-        SelectedStatus = entry.Key;
-        SelectedDocument = entry.Value;
-
-        if(focus)
-            FocusFileEntry = true;
     }
 
     public void Shortcuts()
     {
-    }
-
-    public XElement GetRowAtIndex(int index)
-    {
-        return SelectedDocument.Elements().Elements().ElementAt(index);
-    }
-    public XElement GetNextRow(int index)
-    {
-        var curRow = GetRowAtIndex(index);
-
-        if (curRow == null)
-        {
-            return null;
-        }
-
-        return SelectedDocument.Elements().Elements().ElementAt(index).ElementsAfterSelf().FirstOrDefault();
-    }
-
-    public XElement GetPreviousRow(int index)
-    {
-        var curRow = GetRowAtIndex(index);
-
-        if (curRow == null)
-        {
-            return null;
-        }
-
-        return SelectedDocument.Elements().Elements().ElementAt(index).ElementsBeforeSelf().LastOrDefault();
-    }
-
-    public XElement GetContainer()
-    {
-        return SelectedDocument.Elements().FirstOrDefault();
-    }
-
-    public IEnumerable<XElement> GetContents()
-    {
-        return SelectedDocument.Elements().Elements();
     }
 }

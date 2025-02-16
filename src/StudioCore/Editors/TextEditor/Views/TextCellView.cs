@@ -37,17 +37,15 @@ public class TextCellView
         var idInput = new Vector2(width * 0.75f, 24 * Warbox.GetUIScale());
         var textInput = new Vector2(width * 0.75f, 300 * Warbox.GetUIScale());
 
-        var curCells = Screen.TextRowView.SelectedCells;
-
         if (ImGui.Begin("Entries##textCellView"))
         {
-            if(curCells.Count > 0)
+            if(TextSelection.SelectedCells.Count > 0)
             {
                 if (ImGui.BeginTable($"CellEntries", 2, ImGuiTableFlags.SizingFixedFit))
                 {
-                    var id = curCells[0];
-                    var reference_text = curCells[1];
-                    var localized_text = curCells[2];
+                    var id = TextSelection.SelectedCells[0];
+                    var reference_text = TextSelection.SelectedCells[1];
+                    var localized_text = TextSelection.SelectedCells[2];
 
                     ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
                     ImGui.TableSetupColumn("Inputs", ImGuiTableColumnFlags.WidthFixed);

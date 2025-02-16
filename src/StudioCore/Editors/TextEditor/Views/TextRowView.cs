@@ -22,13 +22,6 @@ public class TextRowView
 {
     private TextEditorScreen Screen;
 
-    public int TextEntryIndex = -1;
-
-    private bool SelectNextTextRow = false;
-    public bool FocusEntry = false;
-
-    public List<XElement> SelectedCells = new List<XElement>();
-
     public TextRowView(TextEditorScreen screen)
     {
         Screen = screen;
@@ -49,9 +42,9 @@ public class TextRowView
 
             ImGui.BeginChild("rowListSection");
 
-            if (Screen.FileSelectionView.SelectedDocument != null)
+            if (TextSelection.FileSelectionDocument != null)
             {
-                var contents = Screen.FileSelectionView.GetContents();
+                var contents = TextSelection.GetRows();
 
                 if (contents != null && contents.Count() > 0)
                 {
@@ -82,51 +75,51 @@ public class TextRowView
     private void SelectionRow(XElement entry, string id, string text, string fallback_text, int rowIndex)
     {
         // Focus the newly selected row when set via command queue
-        if (FocusEntry && TextEntryIndex == rowIndex)
+        if (TextSelection.FocusRowSelection && TextSelection.RowSelectionIndex == rowIndex)
         {
-            FocusEntry = false;
-            UpdateSelection(entry, rowIndex);
+            TextSelection.FocusRowSelection = false;
+            TextSelection.SelectRow(entry, rowIndex);
             ImGui.SetScrollHereY();
         }
 
-        if (ImGui.Selectable($"{id}##textRow{id}{rowIndex}", TextEntryIndex == rowIndex))
+        if (ImGui.Selectable($"{id}##textRow{id}{rowIndex}", TextSelection.RowSelectionIndex == rowIndex))
         {
-            UpdateSelection(entry, rowIndex);
+            TextSelection.SelectRow(entry, rowIndex);
         }
 
         // Only display aliases for entries of reasonable length
-        if (Screen.FileSelectionView.SelectedStatus.Name != "text_ui_dialog")
+        if (TextSelection.FileSelectionDescriptor.Name != "text_ui_dialog")
         {
             UIHelper.DisplayAlias(text);
         }
 
         // Arrow Selection
-        if (ImGui.IsItemHovered() && SelectNextTextRow)
+        if (ImGui.IsItemHovered() && TextSelection.RowArrowSelect)
         {
-            SelectNextTextRow = false;
-            UpdateSelection(entry, rowIndex);
+            TextSelection.RowArrowSelect = false;
+            TextSelection.SelectRow(entry, rowIndex);
         }
         if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
         {
-            SelectNextTextRow = true;
+            TextSelection.RowArrowSelect = true;
         }
 
         // Context
-        if (TextEntryIndex == rowIndex)
+        if (TextSelection.RowSelectionIndex == rowIndex)
         {
             if (ImGui.BeginPopupContextItem($"##textRowContext{rowIndex}"))
             {
                 // Duplicate
                 if (ImGui.Selectable("Duplicate"))
                 {
-                    var action = new AddTextRow(rowIndex);
+                    var action = new AddTextRow();
                     Screen.EditorActionManager.ExecuteAction(action);
                 }
 
                 // Remove
                 if (ImGui.Selectable("Remove"))
                 {
-                    var action = new RemoveTextRow(rowIndex);
+                    var action = new RemoveTextRow();
                     Screen.EditorActionManager.ExecuteAction(action);
                 }
 
@@ -135,28 +128,19 @@ public class TextRowView
         }
     }
 
-    public void UpdateSelection(XElement entry, int rowIndex, bool focus = false)
-    {
-        TextEntryIndex = rowIndex;
-        SelectedCells = entry.Elements().ToList();
-
-        if (focus)
-            FocusEntry = true;
-    }
-
     public void Shortcuts()
     {
         // Duplicate
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DuplicateSelectedEntry))
         {
-            var action = new AddTextRow(TextEntryIndex);
+            var action = new AddTextRow();
             Screen.EditorActionManager.ExecuteAction(action);
         }
 
         // Remove
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DeleteSelectedEntry))
         {
-            var action = new RemoveTextRow(TextEntryIndex);
+            var action = new RemoveTextRow();
             Screen.EditorActionManager.ExecuteAction(action);
         }
     }

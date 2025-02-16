@@ -15,4 +15,3 @@ FEAT: add basic meta for all tables
 
 FIX: Duplicate entry undo in Table Editor will fail to undo action if the source row has disappeared (due to other actions changing the state of the row list).
 
-FEAT: add package action for localization - should diff loc with vanilla and create patch loc files that it places in the <language>.pak

@@ -284,7 +284,7 @@ public static class TextDataHandler
         if (curLocalization == null)
             return;
 
-        var resDesc = Warbox.TextEditor.FileSelectionView.SelectedStatus;
+        var resDesc = TextSelection.FileSelectionDescriptor;
         var document = curLocalization[resDesc];
 
         var writeDir = $"{Warbox.Project.ProjectDirectory}\\Source\\Localization\\{CFG.Current.TextEditor_CurrentLanguage}\\";
@@ -311,7 +311,7 @@ public static class TextDataHandler
         if (curVanillaLocalization == null)
             return;
 
-        var resDesc = Warbox.TextEditor.FileSelectionView.SelectedStatus;
+        var resDesc = TextSelection.FileSelectionDescriptor;
         var document = curLocalization[resDesc];
         var vanillaDocument = curVanillaLocalization[resDesc];
         var modName = Warbox.Project.ProjectID;

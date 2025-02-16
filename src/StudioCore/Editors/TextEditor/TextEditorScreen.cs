@@ -162,10 +162,8 @@ public class TextEditorScreen : EditorScreen
 
     public void OnProjectChanged()
     {
-        FileSelectionView.SelectedStatus = null;
-        FileSelectionView.SelectedDocument = null;
-
-        TextRowView.TextEntryIndex = -1;
+        TextSelection.ClearFileSelection();
+        TextSelection.ClearRowSelection();
 
         ResetActionManager();
     }
@@ -229,12 +227,13 @@ public class TextEditorScreen : EditorScreen
 
                 var targetFile = curLocalization.Where(e => e.Key.Name == fileName).FirstOrDefault();
 
-                FileSelectionView.UpdateSelection(targetFile, true);
+                TextSelection.SelectFile(targetFile.Key, targetFile.Value);
+                TextSelection.FocusFileSelection = true;
 
                 // Set row selection
-                if (FileSelectionView.SelectedDocument != null)
+                if (TextSelection.FileSelectionDocument != null)
                 {
-                    var contents = FileSelectionView.GetContents();
+                    var contents = TextSelection.GetRows();
 
                     // Row
                     int index = 0;
@@ -248,7 +247,8 @@ public class TextEditorScreen : EditorScreen
 
                         if(id == targetUiString)
                         {
-                            TextRowView.UpdateSelection(entry, index, true);
+                            TextSelection.SelectRow(entry, index);
+                            TextSelection.FocusRowSelection = true;
                         }
 
                         index++;
