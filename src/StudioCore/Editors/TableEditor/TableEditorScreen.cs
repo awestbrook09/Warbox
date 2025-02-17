@@ -184,8 +184,7 @@ public class TableEditorScreen : EditorScreen
 
     public void OnProjectChanged()
     {
-        FileSelectionView.SelectedStatus = null;
-        FileSelectionView.SelectedDocument = null;
+        TableSelection.ClearFileSelection();
 
         ResetActionManager();
     }
@@ -286,7 +285,8 @@ public class TableEditorScreen : EditorScreen
 
                     if (name == fileName)
                     {
-                        FileSelectionView.SetSelection(targetEntry, true);
+                        TableSelection.SelectFile(targetEntry.Key, targetEntry.Value, i);
+                        TableSelection.FocusFileSelection = true;
                         break;
                     }
                 }

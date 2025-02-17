@@ -90,7 +90,7 @@ public class TableDataView
 
     public GenericTableView GetSelectedTableView()
     {
-        var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
+        var selectedDocumentName = TableSelection.GetCurrentFileName();
 
         if (TableViews.ContainsKey(selectedDocumentName))
         {
@@ -107,7 +107,7 @@ public class TableDataView
         if (!Warbox.Project.IsValid())
             return;
 
-        var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
+        var selectedDocumentName = TableSelection.GetCurrentFileName();
 
         if (ImGui.Begin("Rows##tableRowView"))
         {
@@ -139,7 +139,7 @@ public class TableDataView
 
     public void Shortcuts()
     {
-        var selectedDocumentName = Screen.FileSelectionView.GetSelectedDocumentName();
+        var selectedDocumentName = TableSelection.GetCurrentFileName();
 
         foreach (var entry in TableViews)
         {

@@ -21,13 +21,6 @@ public class TableFileSelectionView
 {
     private TableEditorScreen Screen;
 
-    public ResourceDescriptor SelectedStatus;
-    public XDocument SelectedDocument;
-
-    private bool SelectNextTable = false;
-
-    public bool focusRow = false;
-
     public TableFileSelectionView(TableEditorScreen screen)
     {
         Screen = screen;
@@ -101,17 +94,15 @@ public class TableFileSelectionView
         }
 
         // Focus the newly selected row when set via command queue
-        if (focusRow && SelectedStatus == status)
+        if (TableSelection.FocusFileSelection && TableSelection.FileSelectionDescriptor == status)
         {
-            focusRow = false;
-            SelectedStatus = status;
-            SelectedDocument = entry.Value;
+            TableSelection.SelectFile(entry.Key, entry.Value, index);
             ImGui.SetScrollHereY();
         }
 
-        if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", SelectedStatus == status))
+        if (ImGui.Selectable($"{displayName}##tableFileEntry{name}{index}", TableSelection.FileSelectionDescriptor == status))
         {
-            SetSelection(entry);
+            TableSelection.SelectFile(entry.Key, entry.Value, index);
             Screen.TableDataView.RefreshTableViews();
         }
 
@@ -133,18 +124,18 @@ public class TableFileSelectionView
         */
 
         // Arrow Selection
-        if (ImGui.IsItemHovered() && SelectNextTable)
+        if (ImGui.IsItemHovered() && TableSelection.FileArrowSelect)
         {
-            SetSelection(entry);
+            TableSelection.SelectFile(entry.Key, entry.Value, index);
             Screen.TableDataView.RefreshTableViews();
         }
         if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
         {
-            SelectNextTable = true;
+            TableSelection.FileArrowSelect = true;
         }
 
         // Context
-        if (SelectedStatus == status)
+        if (TableSelection.FileSelectionDescriptor == status)
         {
             if (ImGui.BeginPopupContextItem($"##tableFileEntryContext{index}"))
             {
@@ -152,28 +143,6 @@ public class TableFileSelectionView
                 ImGui.EndPopup();
             }
         }
-    }
-
-    public void SetSelection(KeyValuePair<ResourceDescriptor, XDocument> entry, bool FocusRow = false)
-    {
-        SelectedStatus = entry.Key;
-        SelectedDocument = entry.Value;
-        focusRow = FocusRow;
-    }
-
-    public string GetSelectedDocumentName()
-    {
-        return SelectedStatus == null ? "" : SelectedStatus.Name;
-    }
-
-    public ResourceDescriptor GetSelectedDocumentStatus()
-    {
-        return SelectedStatus;
-    }
-
-    public XDocument GetSelectedDocument()
-    {
-        return SelectedDocument;
     }
 
     public void Shortcuts()

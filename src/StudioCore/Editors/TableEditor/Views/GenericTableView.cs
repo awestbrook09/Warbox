@@ -22,24 +22,24 @@ public class GenericTableView
 {
     public TableEditorScreen Screen;
 
-    public ResourceDescriptor ViewStatus;
-    public XDocument ViewDocument;
+    public ResourceDescriptor TableDescriptor;
+    public XDocument TableDocument;
 
     public string Name = "";
     private string ImGuiName = "";
-
     private string AliasNameKey = "";
 
-    public int CurrentRowIndex = -1;
-
-    private bool selectRow = false;
-    private bool focusRow = false;
-
     private bool NoPrimaryKey = false;
-    private int childDepth = 0;
+    private int TrackedDepth = 0;
 
     public bool SetupAliasOverrides = false;
     public Dictionary<int, string> AliasOverrides = new Dictionary<int, string>();
+
+    // Row
+    public int RowSelectionIndex = -1;
+
+    private bool RowArrowSelect = false;
+    private bool FocusRowSelection = false;
 
     public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, bool noPrimaryKey, ResourceDescriptor viewStatus, XDocument viewDocument)
     {
@@ -51,47 +51,44 @@ public class GenericTableView
 
         NoPrimaryKey = noPrimaryKey;
 
-        ViewStatus = viewStatus;
-        ViewDocument = viewDocument;
+        TableDescriptor = viewStatus;
+        TableDocument = viewDocument;
     }
 
-    public XElement GetNextRow()
+    public void SelectRow(XElement entry, int index)
     {
-        var curRow = GetCurrentRow();
-
-        if (curRow == null)
-        {
-            return null;
-        }
-
-        return ViewDocument.Elements().Elements().Elements().ElementAt(CurrentRowIndex).ElementsAfterSelf().FirstOrDefault();
+        RowSelectionIndex = index;
     }
 
-    public XElement GetPreviousRow()
+    public void ClearRowSelection()
     {
-        var curRow = GetCurrentRow();
-
-        if (curRow == null)
-        {
-            return null;
-        }
-
-        return ViewDocument.Elements().Elements().Elements().ElementAt(CurrentRowIndex).ElementsBeforeSelf().LastOrDefault();
+        RowSelectionIndex = -1;
     }
 
-    public XElement GetCurrentRow()
+    public int GetLastRowIndex()
     {
-        return ViewDocument.Elements().Elements().Elements().ElementAt(CurrentRowIndex);
+        var count = TableDocument.Elements().Elements().Elements().Count();
+        return count - 1;
     }
 
-    public XElement GetContainer()
+    public XElement GetRowAtIndex(int index)
     {
-        return ViewDocument.Elements().Elements().FirstOrDefault();
+        return TableDocument.Elements().Elements().Elements().ElementAt(index);
     }
 
-    public IEnumerable<XElement> GetContents()
+    public XElement GetRowContainer()
     {
-        return ViewDocument.Elements().Elements().Elements();
+        return TableDocument.Elements().Elements().FirstOrDefault();
+    }
+
+    public IEnumerable<XElement> GetRows()
+    {
+        return TableDocument.Elements().Elements().Elements();
+    }
+
+    public List<XElement> GetRowList()
+    {
+        return TableDocument.Elements().Elements().Elements().ToList();
     }
 
     /// <summary>
@@ -116,7 +113,7 @@ public class GenericTableView
         ImGui.BeginChild($"{ImGuiName}Section");
 
         int index = 0;
-        foreach(var element in GetContents())
+        foreach(var element in GetRows())
         {
             var entry = element;
 
@@ -147,27 +144,27 @@ public class GenericTableView
             }
 
             // Focus the newly selected row when set via command queue
-            if (focusRow && index == CurrentRowIndex)
+            if (FocusRowSelection && index == RowSelectionIndex)
             {
-                focusRow = false;
-                CurrentRowIndex = index;
+                FocusRowSelection = false;
+                SelectRow(entry, index);
                 ImGui.SetScrollHereY();
             }
 
-            if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{index}", CurrentRowIndex == index))
+            if (ImGui.Selectable($"Entry: {key}##{ImGuiName}selectEntry{index}", RowSelectionIndex == index))
             {
-                CurrentRowIndex = index;
+                SelectRow(entry, index);
             }
 
             // Arrow Selection
-            if (ImGui.IsItemHovered() && selectRow)
+            if (ImGui.IsItemHovered() && RowArrowSelect)
             {
-                selectRow = false;
-                CurrentRowIndex = index;
+                RowArrowSelect = false;
+                SelectRow(entry, index);
             }
             if (ImGui.IsItemFocused() && (InputTracker.GetKey(Veldrid.Key.Up) || InputTracker.GetKey(Veldrid.Key.Down)))
             {
-                selectRow = true;
+                RowArrowSelect = true;
             }
 
             if (alias != "")
@@ -176,7 +173,7 @@ public class GenericTableView
             }
 
             // Context
-            if (CurrentRowIndex == index)
+            if (RowSelectionIndex == index)
             {
                 if (ImGui.BeginPopupContextItem($"##{ImGuiName}EntryContext{index}"))
                 {
@@ -216,8 +213,8 @@ public class GenericTableView
     /// </summary>
     public void SetRowSelection(int index)
     {
-        CurrentRowIndex = index;
-        focusRow = true;
+        RowSelectionIndex = index;
+        FocusRowSelection = true;
     }
 
     /// <summary>
@@ -234,22 +231,22 @@ public class GenericTableView
         ImGui.BeginChild($"{ImGuiName}PropertySection");
 
         int index = 0;
-        foreach(var element in GetContents())
+        foreach(var element in GetRows())
         {
-            if(index == CurrentRowIndex)
+            if(index == RowSelectionIndex)
             {
                 if (ImGui.BeginTable($"{ImGuiName}AttributeTable", 2, ImGuiTableFlags.SizingFixedFit))
                 {
                     ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
                     ImGui.TableSetupColumn("Inputs", ImGuiTableColumnFlags.WidthFixed);
 
-                    childDepth = 0;
-                    HandleElementEntry(element, "root", CurrentRowIndex);
+                    TrackedDepth = 0;
+                    HandleElementEntry(element, "root", RowSelectionIndex);
 
                     ImGui.EndTable();
                 }
 
-                if (!TableMetaHandler.CheckMetaToggle("SuppressAdditionButtons", ViewStatus.Name))
+                if (!TableMetaHandler.CheckMetaToggle("SuppressAdditionButtons", TableDescriptor.Name))
                 {
                     DisplayMissingElementOptions(element);
                 }
@@ -311,7 +308,7 @@ public class GenericTableView
         {
             DisplayElementRow(entry, imguiElementName, rowIndex);
         }
-        childDepth += 1;
+        TrackedDepth += 1;
 
         foreach (var child in entry.Elements().ToList())
         {
@@ -355,7 +352,7 @@ public class GenericTableView
                 UIHelper.DisplayHeaderText(displayName);
                 UIHelper.ShowHoverTooltip(description);
 
-                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{imguiElementName}{childDepth}"))
+                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{imguiElementName}{TrackedDepth}"))
                 {
                     if (ImGui.Selectable("Copy Header Name"))
                     {
@@ -407,7 +404,7 @@ public class GenericTableView
                 UIHelper.DisplayHeaderText(displayName);
                 UIHelper.ShowHoverTooltip(description);
 
-                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{entry.Name}{imguiElementName}{childDepth}"))
+                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{entry.Name}{imguiElementName}{TrackedDepth}"))
                 {
                     if (ImGui.Selectable("Copy Property Name"))
                     {
@@ -427,7 +424,7 @@ public class GenericTableView
                 ImGui.AlignTextToFramePadding();
                 ImGui.SetNextItemWidth(width * 0.5f);
 
-                if (ImGui.InputText($"##{ImGuiName}_input_{entry.Name}{imguiElementName}{childDepth}", ref tValue, 255))
+                if (ImGui.InputText($"##{ImGuiName}_input_{entry.Name}{imguiElementName}{TrackedDepth}", ref tValue, 255))
                 {
                     isChanged = true;
                 }
@@ -479,7 +476,7 @@ public class GenericTableView
                 ImGui.Text(displayName);
                 UIHelper.ShowHoverTooltip(description);
 
-                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{attribute.Name}{imguiElementName}{childDepth}"))
+                if (ImGui.BeginPopupContextItem($"####{ImGuiName}_contextMenu_{attribute.Name}{imguiElementName}{TrackedDepth}"))
                 {
                     if (ImGui.Selectable("Copy Property Name"))
                     {
@@ -507,7 +504,7 @@ public class GenericTableView
                     if (oldValue == "true")
                         tBool = true;
 
-                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{attributeIndex}{imguiElementName}{childDepth}", ref tBool))
+                    if (ImGui.Checkbox($"##{ImGuiName}_inputBool_{attribute.Name}{attributeIndex}{imguiElementName}{TrackedDepth}", ref tBool))
                     {
                         isChanged = true;
                     }
@@ -531,7 +528,7 @@ public class GenericTableView
                 // Handling for string type
                 else
                 {
-                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{attributeIndex}{imguiElementName}{childDepth}", ref tValue, 255))
+                    if (ImGui.InputText($"##{ImGuiName}_input_{attribute.Name}{attributeIndex}{imguiElementName}{TrackedDepth}", ref tValue, 255))
                     {
                         isChanged = true;
                     }
@@ -642,7 +639,7 @@ public class GenericTableView
                     TableMetaDecorators.HandleRowDecorators(
                         entry, curElement,
                         ImGuiName,
-                        childDepth,
+                        TrackedDepth,
                         attribute,
                         curImguiKey,
                         this);
@@ -657,6 +654,9 @@ public class GenericTableView
     /// </summary>
     public void DuplicateRow()
     {
+        if (RowSelectionIndex == -1)
+            return;
+
         var action = new AddTableRow(this);
         Screen.EditorActionManager.ExecuteAction(action);
     }
@@ -666,8 +666,24 @@ public class GenericTableView
     /// </summary>
     public void RemoveRow()
     {
-        var action = new RemoveTableRow(this);
-        Screen.EditorActionManager.ExecuteAction(action);
+        if (RowSelectionIndex == -1)
+            return;
+
+        var rowList = GetRowList();
+        var curIndex = RowSelectionIndex;
+
+        if (rowList.Count > 0)
+        {
+            var action = new RemoveTableRow(this);
+            Screen.EditorActionManager.ExecuteAction(action);
+
+            if (curIndex > 0)
+            {
+                var prevEntry = rowList[curIndex - 1];
+
+                SelectRow(prevEntry, curIndex - 1);
+            }
+        }
     }
 
 }

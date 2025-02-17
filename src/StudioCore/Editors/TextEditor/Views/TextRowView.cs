@@ -112,15 +112,13 @@ public class TextRowView
                 // Duplicate
                 if (ImGui.Selectable("Duplicate"))
                 {
-                    var action = new AddTextRow();
-                    Screen.EditorActionManager.ExecuteAction(action);
+                    DuplicateRow();
                 }
 
                 // Remove
                 if (ImGui.Selectable("Remove"))
                 {
-                    var action = new RemoveTextRow();
-                    Screen.EditorActionManager.ExecuteAction(action);
+                    RemoveRow();
                 }
 
                 ImGui.EndPopup();
@@ -133,15 +131,44 @@ public class TextRowView
         // Duplicate
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DuplicateSelectedEntry))
         {
-            var action = new AddTextRow();
-            Screen.EditorActionManager.ExecuteAction(action);
+            DuplicateRow();
         }
 
         // Remove
         if (InputTracker.GetKeyDown(KeyBindings.Current.CORE_DeleteSelectedEntry))
         {
+            RemoveRow();
+        }
+    }
+
+    public void DuplicateRow()
+    {
+        if (TextSelection.RowSelectionIndex == -1)
+            return;
+
+        var action = new AddTextRow();
+        Screen.EditorActionManager.ExecuteAction(action);
+    }
+
+    public void RemoveRow()
+    {
+        if (TextSelection.RowSelectionIndex == -1)
+            return;
+
+        var rowList = TextSelection.GetRowList();
+        var curIndex = TextSelection.RowSelectionIndex;
+
+        if (rowList.Count > 0)
+        {
             var action = new RemoveTextRow();
             Screen.EditorActionManager.ExecuteAction(action);
+
+            if (curIndex > 0)
+            {
+                var prevEntry = rowList[curIndex - 1];
+
+                TextSelection.SelectRow(prevEntry, curIndex - 1);
+            }
         }
     }
 }

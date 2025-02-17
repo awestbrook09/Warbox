@@ -66,11 +66,6 @@ public static class TextSelection
         return FileSelectionDocument.Elements().Elements().ToList();
     }
 
-    public static void SetRows(List<XElement> rowList)
-    {
-
-    }
-
     // Cells
     public static List<XElement> SelectedCells = new List<XElement>();
 }

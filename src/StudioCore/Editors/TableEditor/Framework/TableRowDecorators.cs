@@ -25,7 +25,7 @@ public static class TableRowDecorators
 
         curView.AliasOverrides = new();
 
-        var metaDoc = TableMetaHandler.GetMetaDocument(curView.Screen.FileSelectionView.GetSelectedDocumentName());
+        var metaDoc = TableMetaHandler.GetMetaDocument(TableSelection.GetCurrentFileName());
 
         if (metaDoc == null)
             return;
@@ -34,7 +34,7 @@ public static class TableRowDecorators
         if (targetAttribute == null)
             return;
 
-        var metaDocument = TableMetaHandler.GetMetaDocument(curView.ViewStatus.Name);
+        var metaDocument = TableMetaHandler.GetMetaDocument(curView.TableDescriptor.Name);
 
         if (metaDocument?.Root == null)
             return;
@@ -61,7 +61,7 @@ public static class TableRowDecorators
             .ToDictionary(group => group.Key, group => group.Last()[2].Value);
 
         int index = 0;
-        foreach(var element in curView.GetContents())
+        foreach(var element in curView.GetRows())
         {
             var elementEntry = element;
 

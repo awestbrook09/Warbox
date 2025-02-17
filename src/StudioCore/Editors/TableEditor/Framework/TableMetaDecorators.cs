@@ -102,7 +102,7 @@ public static class TableMetaDecorators
 
         var imguiKey = $"{imguiName}_{childDepth}_{enumName}_{curImguiKey}";
 
-        var targetMeta = TableMetaHandler.GetMetaDocument(curView.ViewStatus.Name);
+        var targetMeta = TableMetaHandler.GetMetaDocument(curView.TableDescriptor.Name);
         var enumOptions = TableMetaHandler.GetEnumOptions(targetMeta, enumName);
 
         var displayedName = "";
@@ -438,11 +438,11 @@ public static class TableMetaDecorators
 
                 if (baseName == targetFileName)
                 {
-                    var results = TableGuidTools.FindAttributebyNameAndValue(curView.ViewDocument, targetProperty, targetGuid);
+                    var results = TableGuidTools.FindAttributebyNameAndValue(curView.TableDocument, targetProperty, targetGuid);
 
                     foreach (var res in results)
                     {
-                        var guidResult = new GuidSearchResult(curView.ViewStatus.Name, res.Item1, res.Item2, res.Item3, res.Item4);
+                        var guidResult = new GuidSearchResult(curView.TableDescriptor.Name, res.Item1, res.Item2, res.Item3, res.Item4);
 
                         GuidResults[imguiKey].Add(guidResult);
                     }

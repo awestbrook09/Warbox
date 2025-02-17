@@ -103,7 +103,7 @@ public static class TableDataHandler
 
     public static void Export()
     {
-        var status = Warbox.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
+        var status = TableSelection.FileSelectionDescriptor;
 
         foreach (var entry in Tables)
         {
@@ -150,7 +150,7 @@ public static class TableDataHandler
 
     public static void ExportPTF()
     {
-        var status = Warbox.TableEditor.FileSelectionView.GetSelectedDocumentStatus();
+        var status = TableSelection.FileSelectionDescriptor;
 
         if(ExcludedTables.Contains(status.Name))
         {

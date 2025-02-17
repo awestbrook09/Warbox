@@ -17,8 +17,8 @@ public static class TableDifferenceEngine
     {
         var curTableView = Warbox.TableEditor.TableDataView.GetSelectedTableView();
 
-        var resDesc = curTableView.ViewStatus;
-        var document = curTableView.ViewDocument;
+        var resDesc = curTableView.TableDescriptor;
+        var document = curTableView.TableDocument;
 
         var vanillaTable = TableDataHandler.Vanilla_Tables.Where(e => e.Key.Name == resDesc.Name).FirstOrDefault();
 

@@ -1,5 +1,6 @@
 ﻿using StudioCore.Editor;
 using StudioCore.Editors.TableEditor.Views;
+using StudioCore.Editors.TextEditor.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,65 +12,51 @@ namespace StudioCore.Editors.TableEditor.Actions;
 
 public class RemoveTableRow : EditorAction
 {
-    private XElement SourceRow;
-    private XElement PreviousRow;
-    private XElement NextRow;
-    private XElement OldRow;
-    private XElement ParentContainer;
     private GenericTableView CurrentView;
+
+    private int RowIndex;
+
+    private XElement Container;
+    private XElement StoredRow;
+    private List<XElement> ExistingRowList;
+    private List<XElement> WorkingRowList;
 
     public RemoveTableRow(GenericTableView curView)
     {
         CurrentView = curView;
-        SourceRow = curView.GetCurrentRow();
 
-        PreviousRow = curView.GetPreviousRow();
-        NextRow = curView.GetNextRow();
-        OldRow = new XElement(SourceRow);
+        RowIndex = CurrentView.RowSelectionIndex;
 
-        ParentContainer = SourceRow.Parent;
+        StoredRow = CurrentView.GetRowAtIndex(RowIndex);
+
+        Container = CurrentView.GetRowContainer();
+
+        ExistingRowList = CurrentView.GetRowList();
+        WorkingRowList = CurrentView.GetRowList();
     }
 
     public override ActionEvent Execute()
     {
-        if (SourceRow?.Parent != null)
-        {
-            SourceRow.Remove();
-        }
+        var index = WorkingRowList.IndexOf(StoredRow);
 
-        CurrentView.Refresh();
-        return ActionEvent.NoEvent;
-    }
-
-    // TODO: this fails to remove the row if when the original was a duplicate that was undone
-    public override ActionEvent Undo()
-    {
-        if (ParentContainer == null || OldRow == null)
+        if (index == -1)
         {
-            return ActionEvent.NoEvent;
-        }
-
-        // Source has been removed since this action occured
-        if(SourceRow == null)
-        {
-            ParentContainer.Add(OldRow);
-            return ActionEvent.NoEvent;
-        }
-
-        if (NextRow?.Parent != null)
-        {
-            NextRow.AddBeforeSelf(OldRow);
-        }
-        else if (PreviousRow?.Parent != null)
-        {
-            PreviousRow.AddAfterSelf(OldRow);
+            WorkingRowList.Remove(StoredRow);
         }
         else
         {
-            ParentContainer.Add(OldRow);
+            WorkingRowList.RemoveAt(index);
         }
 
-        CurrentView.Refresh();
+        Container.ReplaceNodes(WorkingRowList);
+
+        return ActionEvent.NoEvent;
+    }
+
+    public override ActionEvent Undo()
+    {
+        Container.ReplaceNodes(ExistingRowList);
+
         return ActionEvent.NoEvent;
     }
 }

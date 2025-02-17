@@ -52,10 +52,10 @@ public static class TableGuidTools
             var viewName = view.Key;
             var curView = view.Value;
 
-            var results = FindAttributesByValue(curView.ViewDocument, value);
+            var results = FindAttributesByValue(curView.TableDocument, value);
             foreach (var res in results)
             {
-                var guidResult = new GuidSearchResult(curView.ViewStatus.Name, res.Item1, res.Item2, res.Item3, res.Item4);
+                var guidResult = new GuidSearchResult(curView.TableDescriptor.Name, res.Item1, res.Item2, res.Item3, res.Item4);
 
                 GuidFinderResults.Add(guidResult);
             }

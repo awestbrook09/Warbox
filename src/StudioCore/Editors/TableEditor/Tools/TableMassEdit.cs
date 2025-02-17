@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using StudioCore.Editor;
+using StudioCore.Editors.TableEditor.Framework;
 using StudioCore.Interface;
 using StudioCore.Utilities;
 using System;
@@ -207,7 +208,7 @@ public static class TableMassEdit
     public static void ProcessMassEdit()
     {
         var fileView = Warbox.TableEditor.FileSelectionView;
-        var curDocument = fileView.GetSelectedDocument();
+        var curDocument = TableSelection.FileSelectionDocument;
 
         var actions = new List<EditorAction>();
 
