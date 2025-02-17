@@ -20,16 +20,26 @@ You will be prompted to create a project when first starting the program.
 There are two concepts you will need to understand with Warbox: Save and Package.
 
 Save is the process in which your edits are stored in your project folder. There are three saves options generally:
- - Save File: this will save the current file you have selected in the editor. Found in <project>/Source/
- - Save All Files: this will save all files. Found in <project>/Source/
- - Save Patch File: this will save the current file you have selected in the editor, but only include entries that differ to the base game. Found in <project>/PTF/
+ - Save File: this will save the current file you have selected in the editor.
+   - Found in /Source/
+ - Save All Files: this will save all files.
+   - Found in /Source/
+ - Save Patch File: this will save the current file you have selected in the editor, but only include entries that differ to the base game.
+   - Found in /PTF/
 
-Package is the process in which the stored files are packaged into a PAK file ready for the game to load (assuming your project directory is in \KingdomComeDeliverance2\Mods\).
- - Package Files: this will package all stored files into the relevant PAK file (for Tables, this will be <modname>.pak, for Localization this is <language>_xml.pak).
- - Package Patched Files: this will package all patch files into the relevant PAK file (for Tables, this will be <modname>.pak, for Localization this is <language>_xml.pak).
+Assuming your project directory is in \KingdomComeDeliverance2\Mods\:
+
+Package is the process in which the stored files are packaged into a PAK file ready for the game to load.
+ - Package Files: this will package all stored files into the relevant PAK file
+   - For Tables, this will be modname.pak
+   - For Localization this is language_xml.pak.
+ - Package Patched Files: this will package all patch files into the relevant PAK file
+   - For Tables, this will be modname.pak
+   - For Localization this is language_xml.pak.
 
 In general, you should alway save your edits. But when you want to test them in-game, you should save the patch file (for each file you edit), and then package the patched files.
-Warbox will create a mod.manifest if it is missing, and thus you should be able to immediately see your changes in-game (assuming your project directory is in \KingdomComeDeliverance2\Mods\).
+
+Warbox will create a mod.manifest if it is missing, and thus you should be able to immediately see your changes in-game.
 
 ## Requirements
 * Windows 7/8/8.1/10/11 (64-bit only)
