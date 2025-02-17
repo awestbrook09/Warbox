@@ -37,11 +37,6 @@ public class Project
     /// </summary>
     public ProjectConfiguration Config;
 
-    /// <summary>
-    /// Current project.json path.
-    /// </summary>
-    public string ProjectJsonPath;
-
     public Project()
     {
         ProjectName = "";

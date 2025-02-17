@@ -410,13 +410,14 @@ public static class TextDataHandler
     {
         var isEdited = false;
 
-        var newFileString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Table><Row></Row></Table>";
+        var newFileString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Table></Table>";
         XDocument patchDoc = XDocument.Parse(newFileString);
 
         var tables = modDoc.Elements();
         var rows = modDoc.Elements().Elements();
         var vanillaRows = vanillaDoc.Elements().Elements();
-        var modRowTop = patchDoc.Elements().Elements().FirstOrDefault();
+
+        var patchTop = patchDoc.Elements().FirstOrDefault();
 
         // Rows
         foreach (var entry in rows)
@@ -428,7 +429,7 @@ public static class TextDataHandler
                 continue;
 
             isEdited = true;
-            modRowTop.Add(entry);
+            patchTop.Add(entry);
         }
 
         return (isEdited, patchDoc);
