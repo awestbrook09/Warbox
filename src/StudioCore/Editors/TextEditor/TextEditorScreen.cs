@@ -53,7 +53,7 @@ public class TextEditorScreen : EditorScreen
                 Warbox.Project.UpdateProjectJSON();
                 TextDataHandler.SavePTF();
             }
-            UIHelper.ShowHoverTooltip("Save the current localization file.");
+            UIHelper.ShowHoverTooltip("Save the current localization file as a patch localization file.");
 
 
             ImGui.EndMenu();
@@ -76,7 +76,7 @@ public class TextEditorScreen : EditorScreen
                 Warbox.Project.UpdateProjectJSON();
                 TextDataHandler.PackagePTF();
             }
-            UIHelper.ShowHoverTooltip("Package the localization files for the current language, but utilise the patching method.");
+            UIHelper.ShowHoverTooltip("Package the patch localization files for the current language.");
 
             ImGui.EndMenu();
         }
