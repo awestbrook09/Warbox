@@ -106,7 +106,7 @@ public class GenericTableView
 
         ImGui.SetNextItemWidth(width);
         ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref CFG.Current.TableEditor_RowFilterText, 255);
-        UIHelper.ShowHoverTooltip($"Filters the list.\n\n{TextSearchFilters.SearchCommandsHint}");
+        UIHelper.ShowHoverTooltip($"Filters the list.\n\n{TableSearchFilters.SearchCommandsHint}");
 
         ImGui.Separator();
 
@@ -138,8 +138,9 @@ public class GenericTableView
                 }
             }
 
-            if (!TextSearchFilters.FilterTableRowEntry(entry, alias, CFG.Current.TableEditor_RowFilterText))
+            if (!TableSearchFilters.FilterTableRowEntry(entry, alias, CFG.Current.TableEditor_RowFilterText))
             {
+                index++;
                 continue;
             }
 
@@ -327,7 +328,7 @@ public class GenericTableView
 
         if (entry != null)
         {
-            if (TextSearchFilters.FilterTableEntry(entry.Name.ToString(), CFG.Current.TableEditor_PropertyFilterText))
+            if (TableSearchFilters.FilterTableEntry(entry.Name.ToString(), CFG.Current.TableEditor_PropertyFilterText))
             {
                 ImGui.TableNextRow();
 
@@ -377,7 +378,7 @@ public class GenericTableView
 
         if (entry != null)
         {
-            if (TextSearchFilters.FilterTableEntry(entry.Value, CFG.Current.TableEditor_PropertyFilterText))
+            if (TableSearchFilters.FilterTableEntry(entry.Value, CFG.Current.TableEditor_PropertyFilterText))
             {
                 ImGui.TableNextRow();
 
@@ -449,7 +450,7 @@ public class GenericTableView
 
         if (attribute != null)
         {
-            if (TextSearchFilters.FilterTableEntry(attribute.Value, CFG.Current.TableEditor_PropertyFilterText))
+            if (TableSearchFilters.FilterTableEntry(attribute.Value, CFG.Current.TableEditor_PropertyFilterText))
             {
                 ImGui.TableNextRow();
 
@@ -610,7 +611,7 @@ public class GenericTableView
 
         if (attribute != null)
         {
-            if (TextSearchFilters.FilterTableEntry(attribute.Value, CFG.Current.TableEditor_PropertyFilterText))
+            if (TableSearchFilters.FilterTableEntry(attribute.Value, CFG.Current.TableEditor_PropertyFilterText))
             {
                 var elementName = entry.Name.ToString();
                 var attributeName = attribute.Name.ToString();

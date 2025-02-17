@@ -68,6 +68,7 @@ public static class TableRowDecorators
             var attribute = elementEntry.Attribute(targetAttribute.Value);
             if (attribute == null)
             {
+                index++;
                 continue;
             }
 

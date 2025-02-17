@@ -71,7 +71,7 @@ public class TableFileSelectionView
                     if (name.Contains($"__{Warbox.Project.ProjectID}"))
                         continue;
 
-                    if (TextSearchFilters.FilterFileList(name, CFG.Current.TableEditor_FileFilterText))
+                    if (TableSearchFilters.FilterFileList(name, CFG.Current.TableEditor_FileFilterText))
                     {
                         SelectionRow(i, selectionRow);
                     }
