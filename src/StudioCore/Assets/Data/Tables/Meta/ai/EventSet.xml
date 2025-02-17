@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <TreeEventSet 
+        Name="Tree Event Set" 
+        Description="" />
+        
+        <Events 
+        Name="Events" 
+        Description="" />
+        
+        <CallbackEventDefinition 
+        Name="Callback Event Definition" 
+        Description="" />
+    </headers>
+	<entries>
+        <Name
+        Name="Name"
+        Description="" />
+        
+        <Atomic
+        Name="Is Atomic"
+        Description="" 
+        IsBool="" />
+        
+        <Signature
+        Name="Signature"
+        Description="" />
+	</entries>
+</meta>

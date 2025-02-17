@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <positioning_shape 
+        Name="Positioning Shape" 
+        Description="" />
+    </headers>
+	<entries>
+        <positioning_shape_id
+        Name="ID"
+        Description="" />
+        
+        <positioning_shape_name
+        Name="Name"
+        Description="" />
+        
+	</entries>
+</meta>

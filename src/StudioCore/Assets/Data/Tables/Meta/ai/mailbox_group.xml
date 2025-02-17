@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <mailbox_group 
+        Name="Mailbox Group" 
+        Description="" />
+    </headers>
+	<entries>
+        <mailbox_group_file_name
+        Name="Group File Name"
+        Description="" />
+        
+        <mailbox_group_id
+        Name="Group ID"
+        Description="" />
+        
+        <mailbox_group_tree_name
+        Name="Group Tree Name"
+        Description="" />
+        
+	</entries>
+</meta>

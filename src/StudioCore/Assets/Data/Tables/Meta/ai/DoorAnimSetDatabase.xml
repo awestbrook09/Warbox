@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <DoorAnimSet 
+        Name="Door Animation Set" 
+        Description="" />
+        
+        <OpenIn 
+        Name="Door Open In" 
+        Description="" />
+        
+        <Front 
+        Name="Door Front" 
+        Description="" />
+        
+        <Back 
+        Name="Door Back" 
+        Description="" />
+        
+        <DoorAnim 
+        Name="Door Animation" 
+        Description="" />
+    </headers>
+	<entries>
+        <Name
+        Name="Name"
+        Description="" />
+        
+        <DoorCloseAnim
+        Name="Door Close Animation"
+        Description="" />
+        
+        <Fragment
+        Name="Fragment"
+        Description="" />
+        
+        <Tags
+        Name="Tags"
+        Description="" />
+        
+        <ActorClassName
+        Name="Actor Class Name"
+        Description="" />
+        
+        <Anim
+        Name="Animation"
+        Description="" />
+        
+        <DirectionTag
+        Name="Direction Tag"
+        Description="" />
+        
+        <Distance
+        Name="Distance"
+        Description="" />
+        
+        <PseudoSpeed
+        Name="Pseudo-Speed"
+        Description="" />
+        
+        <IsStealth
+        Name="Is Stealth"
+        Description="" 
+        IsBool="" />
+	</entries>
+</meta>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <mailbox_group2mailbox 
+        Name="Mailbox Group to Mailbox" 
+        Description="" />
+    </headers>
+	<entries>
+        <mailbox_group_id
+        Name="Group ID"
+        Description="" 
+        FileEnum="mailbox_group,mailbox_group,mailbox_group_id,mailbox_group_tree_name" />
+        
+        <mailbox_id
+        Name="Mailbox ID"
+        Description="" 
+        FileEnum="mailbox,mailbox,mailbox_id,mailbox_name" />
+        
+        <priority
+        Name="Priority"
+        Description="" />
+        
+	</entries>
+</meta>

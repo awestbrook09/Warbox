@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <mailbox_action_type 
+        Name="Mailbox Action Type" 
+        Description="" />
+    </headers>
+	<entries>
+        <mailbox_action_type_id
+        Name="Action Type ID"
+        Description="" />
+        
+        <mailbox_action_type_name
+        Name="Action Type Name"
+        Description="" />
+	</entries>
+</meta>

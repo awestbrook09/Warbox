@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <mailbox_filter 
+        Name="Mailbox Filter" 
+        Description="" />
+    </headers>
+	<entries>
+        <mailbox_filter_id
+        Name="Filter ID"
+        Description="" />
+        
+        <mailbox_id
+        Name="Mailbox ID"
+        Description="" 
+        FileEnum="mailbox,mailbox,mailbox_id,mailbox_name" />
+        
+        <type
+        Name="Type"
+        Description="" />
+        
+	</entries>
+</meta>

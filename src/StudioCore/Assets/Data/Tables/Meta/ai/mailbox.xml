@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <mailbox 
+        Name="Mailbox" 
+        Description="" />
+    </headers>
+	<entries>
+        <mailbox_id
+        Name="ID"
+        Description="" />
+        
+        <mailbox_name
+        Name="Name"
+        Description="" />
+	</entries>
+</meta>

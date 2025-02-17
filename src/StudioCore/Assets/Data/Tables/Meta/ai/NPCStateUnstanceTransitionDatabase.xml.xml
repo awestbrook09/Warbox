@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <NPCStateStanceAnimDatabase 
+        Name="NPC State Stance Animation" 
+        Description="" />
+        
+        <StanceAnimData 
+        Name="Stance Animation Data" 
+        Description="" />
+    </headers>
+	<entries>
+        <ActorClassName
+        Name="Actor Class Name"
+        Description="" />
+        
+        <Stance
+        Name="Stance"
+        Description="" />
+        
+        <LoopFragment
+        Name="Loop Fragment"
+        Description="" />
+        
+        <LoopTags
+        Name="Loop Tags"
+        Description="" />
+	</entries>
+</meta>

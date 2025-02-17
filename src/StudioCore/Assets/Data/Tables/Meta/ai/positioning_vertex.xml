@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <positioning_vertex 
+        Name="Positioning Vertex" 
+        Description="" />
+    </headers>
+	<entries>
+        <direction_x
+        Name="Direction: X"
+        Description="" />
+        
+        <direction_y
+        Name="Direction: Y"
+        Description="" />
+        
+        <location_x
+        Name="Location: X"
+        Description="" />
+        
+        <location_y
+        Name="Location: Y"
+        Description="" />
+        
+        <order_by
+        Name="Order By"
+        Description="" />
+        
+        <positioning_shape_id
+        Name="Shape ID"
+        Description="" 
+        FileEnum="positioning_shape,positioning_shape,positioning_shape_id,positioning_shape_name"/>
+        
+	</entries>
+</meta>

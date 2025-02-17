@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <npc_reference_point 
+        Name="NPC Reference Point" 
+        Description="" />
+    </headers>
+	<entries>
+        <coord_x
+        Name="Coordinate: X"
+        Description="" />
+        
+        <coord_y
+        Name="Coordinate: Y"
+        Description="" />
+        
+        <coord_z
+        Name="Coordinate: Z"
+        Description="" />
+        
+        <npc_reference_point_id
+        Name="ID"
+        Description="" />
+        
+        <npc_reference_point_name
+        Name="Name"
+        Description="" />
+        
+        <priority
+        Name="Priority"
+        Description="" />
+        
+	</entries>
+</meta>
