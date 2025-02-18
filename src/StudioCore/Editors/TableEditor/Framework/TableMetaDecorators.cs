@@ -20,7 +20,7 @@ namespace StudioCore.Editors.TableEditor.Framework;
 
 public static class TableMetaDecorators
 {
-    private static Dictionary<string, List<GuidSearchResult>> GuidResults = new();
+    private static Dictionary<string, List<PropertyValueResult>> GuidResults = new();
 
     private static string EnumSearchText = "";
 
@@ -414,14 +414,14 @@ public static class TableMetaDecorators
         {
             if (GuidResults.Count < 1)
             {
-                GuidResults = new Dictionary<string, List<GuidSearchResult>>
+                GuidResults = new Dictionary<string, List<PropertyValueResult>>
                 {
-                    { imguiKey, new List<GuidSearchResult>() }
+                    { imguiKey, new List<PropertyValueResult>() }
                 };
             }
             else
             {
-                GuidResults.Add(imguiKey, new List<GuidSearchResult>());
+                GuidResults.Add(imguiKey, new List<PropertyValueResult>());
             }
 
             foreach (var view in Warbox.TableEditor.TableDataView.GetTableViews())
@@ -438,11 +438,11 @@ public static class TableMetaDecorators
 
                 if (baseName == targetFileName)
                 {
-                    var results = TableGuidTools.FindAttributebyNameAndValue(curView.TableDocument, targetProperty, targetGuid);
+                    var results = TablePropertyValueFinder.FindAttributebyNameAndValue(curView.TableDocument, targetProperty, targetGuid);
 
                     foreach (var res in results)
                     {
-                        var guidResult = new GuidSearchResult(curView.TableDescriptor.Name, res.Item1, res.Item2, res.Item3, res.Item4);
+                        var guidResult = new PropertyValueResult(curView.TableDescriptor.Name, res.Item1, res.Item2, res.Item3, res.Item4);
 
                         GuidResults[imguiKey].Add(guidResult);
                     }
@@ -452,7 +452,7 @@ public static class TableMetaDecorators
 
     }
 
-    private static void DisplayGuidRefEntry(List<GuidSearchResult> results, string targetValue, string[] guidParameters, string curImguiKey)
+    private static void DisplayGuidRefEntry(List<PropertyValueResult> results, string targetValue, string[] guidParameters, string curImguiKey)
     {
         var displayedName = "";
 

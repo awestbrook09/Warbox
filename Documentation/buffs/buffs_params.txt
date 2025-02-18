@@ -773,7 +773,7 @@ XP gain in Crafting
 XP gain in Survival
 
 # xhw
-XP gain in Heavy WEapon
+XP gain in Heavy Weapon
 
 # xma
 XP gain in Marksmanship
@@ -788,7 +788,7 @@ Stamina recovery (instant)
 ?
 
 # alp
-?
+Potion usage
 
 # atd
 ?
@@ -1073,7 +1073,7 @@ LockpickingLockpickBreakChance
 ObserverRecognitionSpeed
 
 # ptp
-?
+Pickpocketing fail chance
 
 # shr
 ?

@@ -39,19 +39,14 @@ public class TableToolsView
 
         if (ImGui.Begin("Tools##tableToolsView"))
         {
-            if (ImGui.CollapsingHeader("GUID Finder"))
+            if (ImGui.CollapsingHeader("Property Value Search"))
             {
-                DisplayGuidFinder();
+                DisplayPropertyValueSearch();
             }
 
             if (ImGui.CollapsingHeader("GUID Generator"))
             {
                 DisplayGuidGenerator();
-            }
-
-            if (ImGui.CollapsingHeader("Property Search"))
-            {
-                DisplayPropertySearch();
             }
 
             if (ImGui.CollapsingHeader("Mass Edit"))
@@ -68,33 +63,36 @@ public class TableToolsView
 
     }
 
-    private string guidInput = "";
+    private string propertyValueInput = "";
 
-    private void DisplayGuidFinder()
+    private void DisplayPropertyValueSearch()
     {
         var width = ImGui.GetWindowWidth();
         var buttonSize = new Vector2(width, 24);
         var childSectionSize = new Vector2(width, 500);
 
-        ImGui.Text("This tool will let you find all instances of a specified GUID and quickly navigate to them.");
+        UIHelper.WrappedText("This tool will let you find all instances of a specified property value and quickly navigate to them.");
         ImGui.Text("");
 
+        ImGui.Checkbox("Fuzzy Match", ref TablePropertyValueFinder.LooseMatch);
+        UIHelper.ShowHoverTooltip("If enabled, will match if the property value contains the input value, rather than matching exactly.");
+
         ImGui.SetNextItemWidth(width);
-        ImGui.InputText("##guidInput", ref guidInput, 255);
-        UIHelper.ShowHoverTooltip("Input the GUID you wish to search for.");
+        ImGui.InputText("##propertyValueInput", ref propertyValueInput, 255);
+        UIHelper.ShowHoverTooltip("Input the property value you wish to search for.");
 
         if (ImGui.Button("Search", buttonSize))
         {
-            TableGuidTools.FindGuids(guidInput);
+            TablePropertyValueFinder.FindPropertyValues(propertyValueInput);
         }
 
         ImGui.Separator();
 
-        ImGui.BeginChild("guidFinderResults", childSectionSize);
+        ImGui.BeginChild("propertyValueFinderResults", childSectionSize);
 
-        for (int i = 0; i < TableGuidTools.GuidFinderResults.Count; i++)
+        for (int i = 0; i < TablePropertyValueFinder.PropertyValueFinderResults.Count; i++)
         {
-            var result = TableGuidTools.GuidFinderResults[i];
+            var result = TablePropertyValueFinder.PropertyValueFinderResults[i];
             var filename = result.File;
             var rowIndex = result.RowIndex;
             var elementName = result.Element.Name;
@@ -130,11 +128,6 @@ public class TableToolsView
             var guid = TableGuidTools.GenerateGuidV4();
             guidOutput = guid.ToString();
         }
-    }
-
-    public void DisplayPropertySearch()
-    {
-
     }
 
     public void DisplayMassEdit()

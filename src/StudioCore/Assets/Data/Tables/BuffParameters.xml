@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<database>
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="horse_riding" 
+    Description="Horsemanship" />
+    
+    <Entry 
+    Name="fencing" 
+    Description="Warfare" />
+    
+    <Entry 
+    Name="bard" 
+    Description="Bard" />
+    
+    <Entry 
+    Name="thievery" 
+    Description="Thievery" />
+    
+    <Entry 
+    Name="pickpocketing_obsolete" 
+    Description="Pickpocketing" />
+    
+    <Entry 
+    Name="alchemy" 
+    Description="Alchemy" />
+    
+    <Entry 
+    Name="cooking" 
+    Description="Cooking" />
+    
+    <Entry 
+    Name="craftsmanship" 
+    Description="Craftsmanship" />
+    
+    <Entry 
+    Name="smithing_obsolete" 
+    Description="Smithing" />
+    
+    <Entry 
+    Name="fishing" 
+    Description="Fishing" />
+    
+    <Entry 
+    Name="mining" 
+    Description="Mining" />
+    
+    <Entry 
+    Name="first_aid" 
+    Description="First Aid" />
+    
+    <Entry 
+    Name="drinking" 
+    Description="Drinking" />
+    
+    <Entry 
+    Name="survival" 
+    Description="Survival" />
+    
+    <Entry 
+    Name="defense" 
+    Description="Overall Defense" />
+    
+    <Entry 
+    Name="weapon_sword" 
+    Description="Sword" />
+    
+    <Entry 
+    Name="heavy_weapons" 
+    Description="Heavy weapon" />
+    
+    <Entry 
+    Name="weapon_bow_obsolete" 
+    Description="Bow weapon" />
+    
+    <Entry 
+    Name="marksmanship" 
+    Description="Marksmanship" />
+    
+    <Entry 
+    Name="weapon_shield" 
+    Description="Shield weapon" />
+    
+    <Entry 
+    Name="weapon_mace_obsolete" 
+    Description="Mace weapon" />
+    
+    <Entry 
+    Name="weapon_dagger" 
+    Description="Dagger weapon" />
+    
+    <Entry 
+    Name="weapon_large" 
+    Description="Large weapon" />
+    
+    <Entry 
+    Name="weapon_unarmed" 
+    Description="Unarmed weapon" />
+    
+    <Entry 
+    Name="herbalism_obsolete" 
+    Description="Herbalism" />
+    
+    <Entry 
+    Name="scholarship" 
+    Description="Scholarship" />
+    
+    <Entry 
+    Name="tailoring" 
+    Description="Tailoring" />
+    
+    <Entry 
+    Name="armourer" 
+    Description="Armourer" />
+    
+    <Entry 
+    Name="weaponsmithing" 
+    Description="Weaponsmithing" />
+    
+    <Entry 
+    Name="shoemaking" 
+    Description="Shoemaking" />
+    
+    <Entry 
+    Name="gunsmithing" 
+    Description="Gunsmithing" />
+    
+    <Entry 
+    Name="bowyery" 
+    Description="Bowmaking" />
+    
+    <Entry 
+    Name="gambling" 
+    Description="Gambling" />
+    
+    <Entry 
+    Name="houndmaster" 
+    Description="Houndmaster" />
+    
+    <Entry 
+    Name="strength" 
+    Description="Strength" />
+    
+    <Entry 
+    Name="agility" 
+    Description="Agility" />
+    
+    <Entry 
+    Name="vitality" 
+    Description="Vitality" />
+    
+    <Entry 
+    Name="speech" 
+    Description="Speech" />
+    
+    <Entry 
+    Name="vision" 
+    Description="Vision" />
+    
+    <Entry 
+    Name="hearing" 
+    Description="Hearing" />
+    
+    <Entry 
+    Name="barter" 
+    Description="Barter" />
+    
+    <Entry 
+    Name="courage" 
+    Description="Courage" />
+    
+    <Entry 
+    Name="storyProgress" 
+    Description="Story progress" />
+    
+    <Entry 
+    Name="shadiness" 
+    Description="Shadiness" />
+    
+    <Entry 
+    Name="combatLevel" 
+    Description="Combat Level" />
+    
+    <Entry 
+    Name="charisma" 
+    Description="Charisma" />
+    
+    <Entry 
+    Name="initialDirtiness" 
+    Description="Initial Dirtiness" />
+    
+    <Entry 
+    Name="DistanceWalked" 
+    Description="Distance Walked" />
+    
+    <Entry 
+    Name="DistanceRan" 
+    Description="Distance Ran" />
+    
+    <Entry 
+    Name="DistanceSprinted" 
+    Description="Distance Sprinted" />
+    
+    <Entry 
+    Name="DistanceRidden" 
+    Description="Distance Ridden" />
+    
+    <Entry 
+    Name="DistanceFastTraveled" 
+    Description="Distance Fast Traveled" />
+    
+    <Entry 
+    Name="DistanceTraveledWithPlayerOnBack" 
+    Description="Distance traveled with Player on Back" />
+    
+    <Entry 
+    Name="DeltaDistanceForXPAward" 
+    Description="Delta Distance for XP Award" />
+    
+    <Entry 
+    Name="DeltaDistanceForShoeHealth" 
+    Description="Delta Distance for Shoe Health" />
+    
+    <Entry 
+    Name="DeltaDistanceForHorseRidingXPAward" 
+    Description="Delta Distance for Horse Riding XP Award" />
+    
+    <Entry 
+    Name="DeltaDistanceForClothingDirtying" 
+    Description="Delta Distance for Clothing Dirtying" />
+    
+    <Entry 
+    Name="DeltaDistanceForHorseEquipHealth" 
+    Description="Delta Distance for Horse Equipment Health" />
+    
+    <Entry 
+    Name="DeltaDistanceForEncumberanceXPAward" 
+    Description="Delta Distance for Encumberance XP Award" />
+    
+    <Entry 
+    Name="DeltaClothingDirtAccumulated" 
+    Description="Delta Clothing Dirt Accumulated" />
+    
+    <Entry 
+    Name="rch" 
+    Description="RelativeCharisma" 
+    Tooltip="Charisma / StatCap" />
+    
+    <Entry 
+    Name="cse" 
+    Description="Charisma by Level of Strength" 
+    Tooltip="Increase Charisma by X for each level of Strength" />
+    
+    <Entry 
+    Name="vib" 
+    Description="Visibility" 
+    Tooltip="EquipVisib + MovementVisibilityPenalization" />
+    
+    <Entry 
+    Name="evi" 
+    Description="Equipment Visibility" 
+    Tooltip="Derived from equipped items." />
+    
+    <Entry 
+    Name="con" 
+    Description="Conspicuousness" 
+    Tooltip="Derived from equipped items." />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+    
+    <Entry 
+    Name="stealth" 
+    Description="Stealth" />
+</database>
