@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <ai_fragment_exclude 
+        Name="AI Fragment Exclusion" 
+        Description="" />
+    </headers>
+	<entries>
+        <ai_fragment_exclude_id
+        Name="Exclusion ID"
+        Description="" 
+        IsBool="" />
+        
+        <ai_fragment_exclude_prefix
+        Name="Exclusion Prefix"
+        Description=""  />
+	</entries>
+</meta>

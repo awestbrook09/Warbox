@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <subbrain_dialog 
+        Name="Sub-brain Dialog" 
+        Description="" />
+    </headers>
+	<entries>
+        <file_name
+        Name="Filename"
+        Description="" />
+        
+        <subbrain_id
+        Name="Sub-brain ID"
+        Description="" 
+        FileEnum="subbrain,subbrain,subbrain_id,subbrain_name" />
+        
+        <tree_name
+        Name="Tree Name"
+        Description=""  />
+	</entries>
+</meta>

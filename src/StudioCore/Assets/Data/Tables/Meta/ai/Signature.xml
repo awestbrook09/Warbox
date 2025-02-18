@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <Signatures 
+        Name="Signatures" 
+        Description="" />
+        
+        <TreeSignature 
+        Name="Tree Signature" 
+        Description="" />
+        
+        <Parameters 
+        Name="Parameters" 
+        Description="" />
+        
+        <VariableInfo 
+        Name="Variable Info" 
+        Description="" />
+    </headers>
+	<entries>
+        <CallBehavior
+        Name="Call Behavior"
+        Description="" 
+        IsBool="" />
+        
+        <EnableBehavior
+        Name="Enable Behavior"
+        Description="" 
+        IsBool="" />
+        
+        <AddInterrupt
+        Name="Add Interrupt"
+        Description="" 
+        IsBool="" />
+        
+        <Name
+        Name="Name"
+        Description="" />
+        
+        <form
+        Name="Form"
+        Description="" />
+        
+        <isOptional
+        Name="Is Optional"
+        Description="" 
+        IsBool="" />
+        
+        <isPersistent
+        Name="Is Persistent"
+        Description="" 
+        IsBool="" />
+        
+        <name
+        Name="Name"
+        Description="" />
+        
+        <requirementType
+        Name="Requirement Type"
+        Description="" />
+        
+        <type
+        Name="Type"
+        Description="" />
+        
+        <values
+        Name="Values"
+        Description="" />
+	</entries>
+</meta>

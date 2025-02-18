@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
+    <ai_enums Name="AI Enums" />
+    
     <headers>
-        <ai_enums 
-        Name="AI Enums" 
-        Description="" />
-        
         <Enum 
         Name="Enum" 
         Description="" />

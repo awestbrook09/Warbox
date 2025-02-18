@@ -20,4 +20,11 @@
     <Die MapTo="item" />
     <DiceBadge MapTo="item" />
     <Ointment MapTo="item" />
+    
+    <Enum MapTo="ai_enums" />
+    <Type MapTo="ai_types" />
+    <DecisionLabel MapTo="DecisionLabelDatabase" />
+    <DeltaMovementParamsEntityClassNode MapTo="DeltaMovementParamsDatabase" />
+    <DoorAnimSet MapTo="DoorAnimSetDatabase" />
+    <TreeEventSet MapTo="EventSet" />
 </database>

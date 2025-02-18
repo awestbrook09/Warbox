@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <se_condition_type 
+        Name="Script Execution Condition Type" 
+        Description="" />
+    </headers>
+	<entries>
+        <se_condition_type_id
+        Name="ID"
+        Description="" />
+        
+        <se_condition_type_name
+        Name="Name"
+        Description="" />
+	</entries>
+</meta>

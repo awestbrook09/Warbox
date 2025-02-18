@@ -159,10 +159,10 @@ public static class TableMetaHandler
     /// <summary>
     /// Returns the header pretty name and description
     /// </summary>
-    public static string GetElementNameValue(string metaField, string elementName, bool useFullName = false)
+    public static string GetElementNameValue(string metaField, string parentElementName, string elementName, bool useFullName = false)
     {
         var displayedString = elementName;
-        var documentName = GetDocumentName(elementName);
+        var documentName = GetDocumentName(parentElementName);
 
         var metaDoc = GetMetaDocument(documentName, useFullName);
         if (metaDoc != null)

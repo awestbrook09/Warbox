@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <situation_role_condition 
+        Name="Situation Role Condition" 
+        Description="" />
+    </headers>
+	<entries>
+        <situation_role_condition_data
+        Name="Condition Data"
+        Description="" />
+        
+        <situation_role_condition_name
+        Name="Condition Name"
+        Description="" />
+        
+        <situation_role_condition_id
+        Name="Situation Role Condition ID"
+        Description="" />
+        
+        <situation_role_condition_type_id
+        Name="Situation Role Condition Type"
+        Description="" />
+	</entries>
+</meta>

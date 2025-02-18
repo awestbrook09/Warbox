@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
+    <EventSet Name="Event Set" />
+    
     <headers>
         <TreeEventSet 
         Name="Tree Event Set" 

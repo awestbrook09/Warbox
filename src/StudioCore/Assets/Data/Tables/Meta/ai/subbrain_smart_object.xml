@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <subbrain_smart_object 
+        Name="Sub-brain Smart Object" 
+        Description="" />
+    </headers>
+	<entries>
+        <file_name
+        Name="Filename"
+        Description="" />
+        
+        <subbrain_id
+        Name="Sub-brain ID"
+        Description="" 
+        FileEnum="subbrain,subbrain,subbrain_id,subbrain_name" />
+        
+        <on_enter_tree
+        Name="On Enter: Tree Name"
+        Description=""  />
+        
+        <on_exit_tree
+        Name="On Exit: Tree Name"
+        Description=""  />
+        
+        <on_release_tree
+        Name="On Release: Tree Name"
+        Description=""  />
+        
+        <on_request_tree
+        Name="On Request: Tree Name"
+        Description=""  />
+        
+        <on_update_tree
+        Name="On Update: Tree Name"
+        Description=""  />
+        
+        <on_mlwakeup_tree
+        Name="On ML Wakeup: Tree Name"
+        Description=""  />
+        
+        <system_variables
+        Name="System Variables"
+        Description=""
+        IsBool="" />
+	</entries>
+</meta>

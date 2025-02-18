@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
+    <DoorAnimSetDatabase Name="Door Animation Sets" />
+    
     <headers>
         <DoorAnimSet 
         Name="Door Animation Set" 

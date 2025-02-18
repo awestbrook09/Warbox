@@ -274,7 +274,7 @@ public class GenericTableView
                     ImGui.TableSetupColumn("Inputs", ImGuiTableColumnFlags.WidthFixed);
 
                     TrackedDepth = 0;
-                    HandleElementEntry(element, "root", RowSelectionIndex);
+                    HandleElementEntry(element, element, "root", RowSelectionIndex);
 
                     ImGui.EndTable();
                 }
@@ -310,43 +310,43 @@ public class GenericTableView
     /// <summary>
     /// Handle the overall display of the selected entry in the properties window
     /// </summary>
-    private void HandleElementEntry(XElement entry, string imguiElementName, int rowIndex)
+    private void HandleElementEntry(XElement parentEntry, XElement entry, string imguiElementName, int rowIndex)
     {
         var attributes = entry.Attributes().ToList();
 
         // Attribute data
         if (attributes.Count > 0)
         {
-            DisplayHeaderRow(entry, imguiElementName, rowIndex);
+            DisplayHeaderRow(parentEntry, entry, imguiElementName, rowIndex);
 
             for (int i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
 
-                DisplayAttributeRow(entry, attribute, i, imguiElementName, rowIndex);
+                DisplayAttributeRow(parentEntry, entry, attribute, i, imguiElementName, rowIndex);
 
                 if (TableMetaDecorators.HasRowDecorators(entry, attribute))
                 {
-                    DisplayMetaDataRow(entry, attribute, i, imguiElementName, rowIndex);
+                    DisplayMetaDataRow(parentEntry, entry, attribute, i, imguiElementName, rowIndex);
                 }
             }
         }
         // Element data - Show header only if it contains children
         else if (entry.Value != "" && entry.Descendants().Count() > 0)
         {
-            DisplayHeaderRow(entry, imguiElementName, rowIndex);
+            DisplayHeaderRow(parentEntry, entry, imguiElementName, rowIndex);
         }
         // Element data - Show data if the element is a child element
         else if(entry.Value != "" && entry.Descendants().Count() == 0)
         {
-            DisplayElementRow(entry, imguiElementName, rowIndex);
+            DisplayElementRow(parentEntry, entry, imguiElementName, rowIndex);
         }
         TrackedDepth += 1;
 
         foreach (var child in entry.Elements().ToList())
         {
             ImGui.Indent();
-            HandleElementEntry(child, child.Name.ToString(), rowIndex);
+            HandleElementEntry(parentEntry, child, child.Name.ToString(), rowIndex);
             ImGui.Unindent();
         }
     }
@@ -354,7 +354,7 @@ public class GenericTableView
     /// <summary>
     /// Handle the display of the header rows
     /// </summary>
-    private void DisplayHeaderRow(XElement entry, string imguiElementName, int rowIndex)
+    private void DisplayHeaderRow(XElement parentEntry, XElement entry, string imguiElementName, int rowIndex)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -381,11 +381,13 @@ public class GenericTableView
                 {
                     displayName = TableMetaHandler.GetElementNameValue(
                     "Name",
+                    $"{parentEntry.Name}",
                     $"{entry.Name}");
                 }
 
                 var description = TableMetaHandler.GetElementNameValue(
                     "Description",
+                    $"{parentEntry.Name}",
                     $"{entry.Name}");
 
                 ImGui.SetNextItemWidth(width * 0.25f);
@@ -411,7 +413,7 @@ public class GenericTableView
     /// <summary>
     /// Handle the display of the element rows
     /// </summary>
-    private void DisplayElementRow(XElement entry, string imguiElementName, int rowIndex)
+    private void DisplayElementRow(XElement parentEntry, XElement entry, string imguiElementName, int rowIndex)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -431,13 +433,13 @@ public class GenericTableView
                 {
                     displayName = TableMetaHandler.GetAttributeNameValue(
                         "Name",
-                        $"{entry.Name}",
+                        $"{parentEntry.Name}",
                         $"{entry.Name}");
                 }
 
                 var description = TableMetaHandler.GetAttributeNameValue(
                     "Description",
-                    $"{entry.Name}",
+                    $"{parentEntry.Name}",
                     $"{entry.Name}");
 
                 ImGui.SetNextItemWidth(width * 0.25f);
@@ -483,7 +485,7 @@ public class GenericTableView
     /// <summary>
     /// Handle the display of the attribute rows
     /// </summary>
-    private void DisplayAttributeRow(XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
+    private void DisplayAttributeRow(XElement parentEntry, XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -503,13 +505,13 @@ public class GenericTableView
                 {
                     displayName = TableMetaHandler.GetAttributeNameValue(
                         "Name",
-                        $"{entry.Name}",
+                        $"{parentEntry.Name}",
                         $"{attribute.Name}");
                 }
 
                 var description = TableMetaHandler.GetAttributeNameValue(
                     "Description",
-                    $"{entry.Name}",
+                    $"{parentEntry.Name}",
                     $"{attribute.Name}");
 
                 ImGui.SetNextItemWidth(width * 0.25f);
@@ -644,7 +646,7 @@ public class GenericTableView
     /// <summary>
     /// Handle the display of the meta text rows
     /// </summary>
-    private void DisplayMetaDataRow(XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
+    private void DisplayMetaDataRow(XElement parentEntry, XElement entry, XAttribute attribute, int attributeIndex, string imguiElementName, int rowIndex)
     {
         var width = ImGui.GetWindowWidth();
 
@@ -654,7 +656,7 @@ public class GenericTableView
             {
                 var elementName = entry.Name.ToString();
                 var attributeName = attribute.Name.ToString();
-                var documentName = TableMetaHandler.GetDocumentName(elementName);
+                var documentName = TableMetaHandler.GetDocumentName($"{parentEntry.Name}");
 
                 var metaDoc = TableMetaHandler.GetMetaDocument(documentName);
                 List<XElement> elements = metaDoc.Descendants($"{attributeName}").ToList();
@@ -677,7 +679,9 @@ public class GenericTableView
                     var curImguiKey = $"{imguiElementName}{rowIndex}{attributeIndex}{i}";
 
                     TableMetaDecorators.HandleRowDecorators(
-                        entry, curElement,
+                        parentEntry,
+                        entry, 
+                        curElement,
                         ImGuiName,
                         TrackedDepth,
                         attribute,

@@ -68,7 +68,7 @@ public static class TableMetaDecorators
         return false;
     }
 
-    public static void HandleRowDecorators(XElement entry, XElement curElement, string imguiName, int childDepth, XAttribute attribute, string curImguiKey, GenericTableView curView)
+    public static void HandleRowDecorators(XElement parentEntry, XElement entry, XElement curElement, string imguiName, int childDepth, XAttribute attribute, string curImguiKey, GenericTableView curView)
     {
         if (curElement.Attribute("Enum") != null)
         {
@@ -80,7 +80,7 @@ public static class TableMetaDecorators
         }
         if (curElement.Attribute("ConditionalFileEnum") != null)
         {
-            DisplayConditionalFileEnum(imguiName, childDepth, entry, attribute, curElement, curImguiKey, curView);
+            DisplayConditionalFileEnum(imguiName, childDepth, parentEntry, attribute, curElement, curImguiKey, curView);
         }
         if (curElement.Attribute("TextRef") != null)
         {
@@ -88,7 +88,7 @@ public static class TableMetaDecorators
         }
         if (curElement.Attribute("GuidRef") != null)
         {
-            DisplayGuidRef(imguiName, childDepth, entry, attribute, curElement, curImguiKey);
+            DisplayGuidRef(imguiName, childDepth, parentEntry, attribute, curElement, curImguiKey);
         }
     }
 

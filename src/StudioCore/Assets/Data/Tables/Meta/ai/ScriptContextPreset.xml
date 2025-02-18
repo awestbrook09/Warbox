@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
-    <ScriptContext Name="Script Context" />
-    
     <headers>
+        <ScriptContextPresets 
+        Name="Script Context Presets" 
+        Description="" />
+        
+        <ScriptContextPresetDatabaseNode 
+        Name="Script Context Preset Node" 
+        Description="" />
+        
+        <Contexts 
+        Name="Script Contexts" 
+        Description="" />
+        
         <ScriptContextDatabaseNode 
         Name="Script Context Node" 
         Description="" />
@@ -15,10 +25,5 @@
         <Class
         Name="Class"
         Description="" />
-        
-        <SideEffect
-        Name="Side Effect"
-        Description="" />
-        
 	</entries>
 </meta>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <situation_frequency 
+        Name="Situation Frequency" 
+        Description="" />
+    </headers>
+	<entries>
+        <b_global_variation_per_npc
+        Name="Global Variation per NPC"
+        Description="" 
+        IsBool="" />
+        
+        <global_interval_variation
+        Name="Global Interval Variation"
+        Description="" />
+        
+        <global_minimal_interval
+        Name="Global Minimal Interval"
+        Description="" />
+        
+        <local_interval_variation
+        Name="Local Interval Variation"
+        Description="" />
+        
+        <local_minimal_interval
+        Name="Local Minimal Variation"
+        Description="" />
+        
+        <name
+        Name="Name"
+        Description="" />
+        
+        <time_type
+        Name="Time Type"
+        Description=""  />
+	</entries>
+</meta>

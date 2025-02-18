@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <subbrain_type 
+        Name="Sub-brain Type" 
+        Description="" />
+    </headers>
+	<entries>
+        <subbrain_type_id
+        Name="ID"
+        Description="" />
+        
+        <subbrain_type_name
+        Name="Name"
+        Description=""  />
+	</entries>
+</meta>

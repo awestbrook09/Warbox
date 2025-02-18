@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <situation_global_condition 
+        Name="Situation Global Condition" 
+        Description="" />
+    </headers>
+	<entries>
+        <data
+        Name="Data"
+        Description="" />
+        
+        <order_by
+        Name="Order By"
+        Description="" />
+        
+        <situation_global_condition_id
+        Name="Global Condition ID"
+        Description="" />
+        
+        <situation_id
+        Name="Situation ID"
+        Description="" 
+        FileEnum="situation,situation,situation_id,name" />
+        
+        <type
+        Name="Type"
+        Description="" />
+	</entries>
+</meta>

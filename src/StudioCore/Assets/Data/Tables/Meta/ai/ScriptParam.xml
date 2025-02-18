@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <meta>
     <headers>
-        <ai_types
-        Name="AI Types" 
+        <ScriptParams 
+        Name="Script Parameters" 
         Description="" />
         
-        <Type 
-        Name="Type" 
-        Description="" />
-        
-        <Member 
-        Name="Member" 
+        <ScriptParam 
+        Name="Script Parameter" 
         Description="" />
     </headers>
 	<entries>
@@ -18,12 +14,12 @@
         Name="Name"
         Description="" />
         
-        <Type
-        Name="Type"
+        <Value
+        Name="Value"
         Description="" />
         
-        <InitialValue
-        Name="Initial Value"
+        <Comment
+        Name="Comment"
         Description="" />
 	</entries>
 </meta>

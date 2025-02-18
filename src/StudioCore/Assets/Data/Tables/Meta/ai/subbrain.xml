@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <subbrain 
+        Name="Sub-brain" 
+        Description="" />
+    </headers>
+	<entries>
+        <always_active
+        Name="Always Active"
+        Description="" 
+        IsBool="" />
+        
+        <subbrain_id
+        Name="ID"
+        Description="" />
+        
+        <subbrain_name
+        Name="Name"
+        Description=""  />
+        
+        <subbrain_type
+        Name="Sub-Brain Type"
+        Description="" 
+        FileEnum="subbrain_type,subbrain_type,subbrain_type_id,subbrain_type_name" />
+        
+        <timeout
+        Name="Timeout"
+        Description="" />
+	</entries>
+</meta>

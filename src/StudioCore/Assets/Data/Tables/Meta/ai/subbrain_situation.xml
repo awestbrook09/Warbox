@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <subbrain_situation 
+        Name="Sub-brain Situation" 
+        Description="" />
+    </headers>
+	<entries>
+        <subbrain_id
+        Name="Sub-brain ID"
+        Description="" 
+        FileEnum="subbrain,subbrain,subbrain_id,subbrain_name" />
+	</entries>
+</meta>

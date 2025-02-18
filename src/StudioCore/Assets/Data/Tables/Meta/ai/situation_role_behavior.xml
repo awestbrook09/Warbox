@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <situation_role_behavior 
+        Name="Situation Role Behavior" 
+        Description="" />
+    </headers>
+	<entries>
+        <behavior_name
+        Name="Name"
+        Description="" />
+        
+        <situation_role_id
+        Name="Situation Role ID"
+        Description="" 
+        FileEnum="situation_role,situation_role,situation_role_id,name" />
+        
+        <situation_variant_id
+        Name="Situation Variant ID"
+        Description="" 
+        FileEnum="situation_variant,situation_variant,situation_variant_id,name" />
+	</entries>
+</meta>

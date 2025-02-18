@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <anim_fragment 
+        Name="Animation Fragment" 
+        Description="" />
+    </headers>
+	<entries>
+        <actor_class_hash
+        Name="Actor Class Hash"
+        Description="" 
+        IsBool="" />
+        
+        <align_secondary
+        Name="Alignment: Secondary"
+        Description=""  />
+        
+        <align_tm_pos
+        Name="Alignment: TM Position"
+        Description=""  />
+        
+        <align_tm_rotv
+        Name="Alignment: TM Vertical Rotation"
+        Description=""  />
+        
+        <align_tm_rotw
+        Name="Alignment: TM Horizontal Rotation"
+        Description=""  />
+        
+        <aligned
+        Name="Is Aligned"
+        Description=""  
+        IsBool="" />
+        
+        <fragment_guid
+        Name="Fragment GUID"
+        Description="" />
+        
+        <has_stance_change
+        Name="Has Stance Change"
+        Description="" 
+        IsBool="" />
+        
+        <looped
+        Name="Is Looped"
+        Description="" 
+        IsBool="" />
+        
+        <mn_fragment_id
+        Name="Fragment ID"
+        Description="" />
+        
+        <mn_option_index
+        Name="Option Index"
+        Description="" />
+        
+        <mn_tags
+        Name="Tags"
+        Description="" />
+        
+        <proc_clip_align
+        Name="ProcClip Alignment"
+        Description="" />
+        
+        <relative_movement
+        Name="Relative Movement"
+        Description="" />
+        
+        <relative_movement_y
+        Name="Relative Movement: Y"
+        Description="" />
+        
+        <resulting_stance
+        Name="Resulting Stance"
+        Description="" />
+        
+        <timestamp
+        Name="Timestamp"
+        Description="" />
+        
+        <total_duration
+        Name="Total Duration"
+        Description="" />
+	</entries>
+</meta>

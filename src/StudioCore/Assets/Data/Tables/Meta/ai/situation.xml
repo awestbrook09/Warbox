@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <situation 
+        Name="Situation" 
+        Description="" />
+    </headers>
+	<entries>
+        <enabled
+        Name="Enabled"
+        Description="" 
+        IsBool="" />
+        
+        <max_instances
+        Name="Max Instances"
+        Description="" />
+        
+        <name
+        Name="Name"
+        Description="" />
+        
+        <sa_smart_area_id
+        Name="Smart Area ID"
+        Description="" 
+        FileEnum="SmartEntity,SmartEntityTemplate,DatabaseId,Name" />
+        
+        <search_type
+        Name="Search Type"
+        Description="" />
+        
+        <situation_frequency_id
+        Name="Situation Frequency ID"
+        Description="" 
+        FileEnum="situation_frequency,situation_frequency,situation_frequency_id,name" />
+        
+        <search_type
+        Name="Search Type"
+        Description="" />
+        
+        <situation_id
+        Name="Situation ID"
+        Description="" />
+	</entries>
+</meta>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<meta>
+    <headers>
+        <situation_role 
+        Name="Situation Role" 
+        Description="" />
+    </headers>
+	<entries>
+        <name
+        Name="Name"
+        Description="" />
+        
+        <optional
+        Name="Is Optional"
+        Description="" 
+        IsBool="" />
+        
+        <order_by
+        Name="Order By"
+        Description="" />
+        
+        <passive
+        Name="Is Passive"
+        Description="" 
+        IsBool="" />
+        
+        <situation_id
+        Name="Situation ID"
+        Description="" 
+        FileEnum="situation,situation,situation_id,name" />
+        
+        <situation_role_condition_id
+        Name="Situation Role Condition ID"
+        Description="" 
+        FileEnum="situation_role_condition,situation_role_condition,situation_role_condition_id,situation_role_condition_name" />
+        
+        <situation_role_id
+        Name="Situation Role ID"
+        Description="" />
+	</entries>
+</meta>
