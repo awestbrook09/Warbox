@@ -56,13 +56,19 @@ public class TableToolsView
                 DisplayMassEdit();
             }
 
+            ImGui.Separator();
+
+            if (ImGui.CollapsingHeader("Jump Stack"))
+            {
+                TableJumpStack.Display();
+            }
+
             ImGui.End();
         }
     }
 
     public void Shortcuts()
     {
-
     }
 
     private string propertyValueInput = "";

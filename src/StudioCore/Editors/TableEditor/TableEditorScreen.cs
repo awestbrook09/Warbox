@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using static Assimp.Metadata;
 using StudioCore.Editors.TableEditor.Views;
 using StudioCore.Editors.TableEditor.Framework;
+using StudioCore.Editors.TableEditor.Tools;
 
 namespace StudioCore.Editors.TableEditor;
 
@@ -266,7 +267,7 @@ public class TableEditorScreen : EditorScreen
 
     public void EditorCommandQueue(string[] initcmd)
     {
-        if (initcmd != null && initcmd[0] == "select")
+        if (initcmd != null && (initcmd[0] == "select" || initcmd[0] == "silent_select"))
         {
             if (initcmd.Length > 4)
             {
@@ -313,6 +314,50 @@ public class TableEditorScreen : EditorScreen
                         }
                     }
                 }
+
+                // Ignore if silentselect is used
+                if(initcmd[0] == "select")
+                    TableJumpStack.AddJump(initcmd);
+            }
+        }
+        if (initcmd != null && (initcmd[0] == "index_select" || initcmd[0] == "silent_index_select"))
+        {
+            if (initcmd.Length > 2)
+            {
+                var fileName = initcmd[1];
+                var targetIndex = initcmd[2];
+
+                KeyValuePair<ResourceDescriptor, XDocument> targetEntry = new KeyValuePair<ResourceDescriptor, XDocument>();
+
+                // Set file selection
+                for (int i = 0; i < TableDataHandler.Tables.Count; i++)
+                {
+                    targetEntry = TableDataHandler.Tables.ElementAt(i);
+                    var name = targetEntry.Key.Name;
+
+                    if (name == fileName)
+                    {
+                        TableSelection.SelectFile(targetEntry.Key, targetEntry.Value, i);
+                        TableSelection.FocusFileSelection = true;
+                        break;
+                    }
+                }
+
+                // Set row selection
+                if (targetIndex != "-1")
+                {
+                    if (targetEntry.Key != null)
+                    {
+                        var rowIndex = int.Parse(targetIndex);
+
+                        var curTableView = TableDataView.GetSelectedTableView();
+                        curTableView.SetRowSelection(rowIndex);
+                    }
+                }
+
+                // Ignore if silentselect is used
+                if (initcmd[0] == "select")
+                    TableJumpStack.AddJump(initcmd);
             }
         }
     }

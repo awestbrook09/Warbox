@@ -196,6 +196,11 @@ public class GenericTableView
             {
                 if (ImGui.BeginPopupContextItem($"##{ImGuiName}EntryContext{index}"))
                 {
+                    if (ImGui.Selectable("Add Row Jump"))
+                    {
+                        TableJumpStack.AddRowJump($"{TableDescriptor.Name}", index);
+                    }
+
                     if (ImGui.Selectable("Duplicate"))
                     {
                         DuplicateRow();

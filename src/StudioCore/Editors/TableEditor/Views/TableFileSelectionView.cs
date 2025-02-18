@@ -179,6 +179,11 @@ public class TableFileSelectionView
         {
             if (ImGui.BeginPopupContextItem($"##tableFileEntryContext{index}"))
             {
+                if (ImGui.Selectable("Add Jump"))
+                {
+                    TableJumpStack.AddFileJump($"{name}");
+                }
+
                 if (!CFG.Current.TableEditor_PinnedFiles.Contains(name))
                 {
                     if (ImGui.Selectable("Pin"))
