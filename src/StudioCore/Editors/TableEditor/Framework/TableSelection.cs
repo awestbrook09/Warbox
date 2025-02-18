@@ -18,6 +18,8 @@ public static class TableSelection
     public static bool FileArrowSelect = false;
     public static bool FocusFileSelection = false;
 
+    public static List<string> PinnedFiles = new();
+
     // Row
     public static void SelectFile(ResourceDescriptor resDesc, XDocument doc, int index = -1)
     {

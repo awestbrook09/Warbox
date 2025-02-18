@@ -43,11 +43,46 @@ public class TableFileSelectionView
 
             ImGui.BeginChild("tableListSection");
 
+            DisplayPinnedEntries();
             DisplayCategories();
 
             ImGui.EndChild();
 
             ImGui.End();
+        }
+    }
+
+    private void DisplayPinnedEntries()
+    {
+        if (TableSelection.PinnedFiles.Count < 1)
+            return;
+
+        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen;
+
+        if (ImGui.CollapsingHeader("Pinned", flags))
+        {
+            foreach (var entry in CategoryLists)
+            {
+                var entries = entry.Value;
+
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    var selectionRow = entries[i];
+                    var name = selectionRow.Key.Name;
+
+                    if (TableSelection.PinnedFiles.Contains(name))
+                    {
+                        // Ignore PTF files that are exported for this mod
+                        if (name.Contains($"__{Warbox.Project.ProjectID}"))
+                            continue;
+
+                        if (TableSearchFilters.FilterFileList(name, CFG.Current.TableEditor_FileFilterText))
+                        {
+                            SelectionRow(i, selectionRow);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -66,6 +101,10 @@ public class TableFileSelectionView
                 {
                     var selectionRow = entries[i];
                     var name = selectionRow.Key.Name;
+
+                    // Skip here if in pinned list
+                    if (TableSelection.PinnedFiles.Contains(name))
+                        continue;
 
                     // Ignore PTF files that are exported for this mod
                     if (name.Contains($"__{Warbox.Project.ProjectID}"))
@@ -140,6 +179,21 @@ public class TableFileSelectionView
         {
             if (ImGui.BeginPopupContextItem($"##tableFileEntryContext{index}"))
             {
+                if (!TableSelection.PinnedFiles.Contains(name))
+                {
+                    if (ImGui.Selectable("Pin"))
+                    {
+                        TableSelection.PinnedFiles.Add(name);
+                    }
+                }
+
+                if (TableSelection.PinnedFiles.Contains(name))
+                {
+                    if (ImGui.Selectable("Unpin"))
+                    {
+                        TableSelection.PinnedFiles.Remove(name);
+                    }
+                }
 
                 ImGui.EndPopup();
             }

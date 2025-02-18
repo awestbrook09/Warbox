@@ -41,6 +41,9 @@ public class GenericTableView
     private bool RowArrowSelect = false;
     private bool FocusRowSelection = false;
 
+    private string RowFilterText = "";
+    private string PropertyFilterText = "";
+
     public GenericTableView(TableEditorScreen screen, string name, string aliasNameKey, bool noPrimaryKey, ResourceDescriptor viewStatus, XDocument viewDocument)
     {
         Screen = screen;
@@ -105,7 +108,15 @@ public class GenericTableView
         }
 
         ImGui.SetNextItemWidth(width);
-        ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref CFG.Current.TableEditor_RowFilterText, 255);
+
+        if (CFG.Current.TableEditor_UseSharedRowFilterText)
+        {
+            ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref CFG.Current.TableEditor_RowFilterText, 255);
+        }
+        else
+        {
+            ImGui.InputText($"##{ImGuiName}_KeySearchBar", ref RowFilterText, 255);
+        }
         UIHelper.ShowHoverTooltip($"Filters the list.\n\n{TableSearchFilters.SearchCommandsHint}");
 
         ImGui.Separator();
@@ -138,7 +149,14 @@ public class GenericTableView
                 }
             }
 
-            if (!TableSearchFilters.FilterTableRowEntry(entry, alias, CFG.Current.TableEditor_RowFilterText))
+            var filterText = RowFilterText;
+
+            if (CFG.Current.TableEditor_UseSharedRowFilterText)
+            {
+                filterText = CFG.Current.TableEditor_RowFilterText;
+            }
+
+            if (!TableSearchFilters.FilterTableRowEntry(entry, alias, filterText))
             {
                 index++;
                 continue;
@@ -226,7 +244,16 @@ public class GenericTableView
         var width = ImGui.GetWindowWidth();
 
         ImGui.SetNextItemWidth(width);
-        ImGui.InputText($"##{ImGuiName}_ValueSearchBar", ref CFG.Current.TableEditor_PropertyFilterText, 255);
+
+        if (CFG.Current.TableEditor_UseSharedPropertyFilterText)
+        {
+            ImGui.InputText($"##{ImGuiName}_ValueSearchBar", ref CFG.Current.TableEditor_PropertyFilterText, 255);
+        }
+        else
+        {
+            ImGui.InputText($"##{ImGuiName}_ValueSearchBar", ref PropertyFilterText, 255);
+        }
+
         UIHelper.ShowHoverTooltip("Filters the list.");
 
         ImGui.BeginChild($"{ImGuiName}PropertySection");
@@ -328,7 +355,14 @@ public class GenericTableView
 
         if (entry != null)
         {
-            if (TableSearchFilters.FilterTableEntry(entry.Name.ToString(), CFG.Current.TableEditor_PropertyFilterText))
+            var filterText = PropertyFilterText;
+
+            if (CFG.Current.TableEditor_UseSharedPropertyFilterText)
+            {
+                filterText = CFG.Current.TableEditor_PropertyFilterText;
+            }
+
+            if (TableSearchFilters.FilterTableEntry(entry.Name.ToString(), filterText))
             {
                 ImGui.TableNextRow();
 

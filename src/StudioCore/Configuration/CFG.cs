@@ -49,7 +49,9 @@ public class CFG
     public bool TableEditor_View_Properties_DisplayNames = true;
 
     public string TableEditor_FileFilterText = "";
+    public bool TableEditor_UseSharedRowFilterText = true;
     public string TableEditor_RowFilterText = "";
+    public bool TableEditor_UseSharedPropertyFilterText = true;
     public string TableEditor_PropertyFilterText = "";
 
     //**************
