@@ -45,6 +45,8 @@ public class CFG
     //**************
     // Table Editor
     //**************
+    public List<string> TableEditor_PinnedFiles = new();
+
     public bool TableEditor_View_Window_Tools = true;
     public bool TableEditor_View_Properties_DisplayNames = true;
 

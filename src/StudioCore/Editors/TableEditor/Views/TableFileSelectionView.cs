@@ -54,7 +54,7 @@ public class TableFileSelectionView
 
     private void DisplayPinnedEntries()
     {
-        if (TableSelection.PinnedFiles.Count < 1)
+        if (CFG.Current.TableEditor_PinnedFiles.Count < 1)
             return;
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen;
@@ -70,7 +70,7 @@ public class TableFileSelectionView
                     var selectionRow = entries[i];
                     var name = selectionRow.Key.Name;
 
-                    if (TableSelection.PinnedFiles.Contains(name))
+                    if (CFG.Current.TableEditor_PinnedFiles.Contains(name))
                     {
                         // Ignore PTF files that are exported for this mod
                         if (name.Contains($"__{Warbox.Project.ProjectID}"))
@@ -103,7 +103,7 @@ public class TableFileSelectionView
                     var name = selectionRow.Key.Name;
 
                     // Skip here if in pinned list
-                    if (TableSelection.PinnedFiles.Contains(name))
+                    if (CFG.Current.TableEditor_PinnedFiles.Contains(name))
                         continue;
 
                     // Ignore PTF files that are exported for this mod
@@ -179,19 +179,19 @@ public class TableFileSelectionView
         {
             if (ImGui.BeginPopupContextItem($"##tableFileEntryContext{index}"))
             {
-                if (!TableSelection.PinnedFiles.Contains(name))
+                if (!CFG.Current.TableEditor_PinnedFiles.Contains(name))
                 {
                     if (ImGui.Selectable("Pin"))
                     {
-                        TableSelection.PinnedFiles.Add(name);
+                        CFG.Current.TableEditor_PinnedFiles.Add(name);
                     }
                 }
 
-                if (TableSelection.PinnedFiles.Contains(name))
+                if (CFG.Current.TableEditor_PinnedFiles.Contains(name))
                 {
                     if (ImGui.Selectable("Unpin"))
                     {
-                        TableSelection.PinnedFiles.Remove(name);
+                        CFG.Current.TableEditor_PinnedFiles.Remove(name);
                     }
                 }
 
