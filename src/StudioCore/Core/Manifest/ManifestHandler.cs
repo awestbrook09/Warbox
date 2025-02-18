@@ -2,17 +2,40 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
-namespace StudioCore.Core.Data;
+namespace StudioCore.Core.Manifest;
 
 public static class ManifestHandler
 {
+    public static XDocument ManifestDocument { get; set; }
+
+    public static void LoadManifest()
+    {
+        var readPath = $"{Warbox.Project.ProjectDirectory}/mod.manifest";
+        if (File.Exists(readPath))
+        {
+            ManifestDocument = XDocument.Load(readPath);
+        }
+        else
+        {
+            TaskLogs.AddLog($"Could not find mod.manifest: {readPath}");
+        }
+    }
+
+    public static void WriteManifest()
+    {
+        var writePath = $"{Warbox.Project.ProjectDirectory}/mod.manifest";
+        ManifestDocument.Save(writePath);
+    }
+
     public static void CreateManisfestIfMissing()
     {
-        if(!HasManifest())
+        if (!HasManifest())
         {
             CreateManifest();
         }
@@ -22,7 +45,7 @@ public static class ManifestHandler
     {
         var path = $"{Warbox.Project.ProjectDirectory}\\mod.manifest";
 
-        if(File.Exists(path))
+        if (File.Exists(path))
         {
             return true;
         }

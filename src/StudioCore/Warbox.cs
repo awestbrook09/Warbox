@@ -3,6 +3,7 @@ using Silk.NET.SDL;
 using StudioCore.Configuration;
 using StudioCore.Configuration.Keybinds;
 using StudioCore.Configuration.Settings;
+using StudioCore.Core.Manifest;
 using StudioCore.Core.Project;
 using StudioCore.Editor;
 using StudioCore.Editors.TableEditor;
@@ -459,35 +460,6 @@ public class Warbox
         {
             ImGui.Separator();
 
-            // Settings
-            if (ImGui.BeginMenu("Settings"))
-            {
-                if (ImGui.MenuItem($"Configuration##SettingsWindow"))
-                {
-                    SettingsWindow.ToggleMenuVisibility();
-                }
-                UIHelper.ShowHoverTooltip($"Configuration\n{KeyBindings.Current.CORE_ConfigurationWindow.HintText}");
-
-                if (ImGui.MenuItem($"Keybinds##KeybindWindow"))
-                {
-                    KeybindWindow.ToggleMenuVisibility();
-                }
-                UIHelper.ShowHoverTooltip($"Keybinds\n{KeyBindings.Current.CORE_KeybindConfigWindow.HintText}");
-
-                if (CFG.Current.DisplayDebugTools)
-                {
-                    if (ImGui.MenuItem($"Debugging##DebugWindow"))
-                    {
-                        DebugWindow.ToggleMenuVisibility();
-                    }
-                    UIHelper.ShowHoverTooltip($"Debug Tools");
-                }
-
-                ImGui.EndMenu();
-            }
-
-            ImGui.Separator();
-
             // Project
             if (ImGui.BeginMenu("Project"))
             {
@@ -526,12 +498,52 @@ public class Warbox
                     ImGui.EndMenu();
                 }
 
+                // Edit Manifest
+                DisplayTaskStatus();
+                if (ImGui.MenuItem("Edit Manifest", "", false, MayChangeProject()))
+                {
+                    ManifestHandler.CreateManisfestIfMissing();
+                    ManifestHandler.LoadManifest();
+                    ManifestEditWindow.ToggleMenuVisibility();
+                }
+                UIHelper.ShowHoverTooltip("Create a new project.");
+
                 ImGui.EndMenu();
             }
 
             ImGui.Separator();
 
             FocusedEditor.DrawEditorMenu();
+
+            ImGui.Separator();
+
+            // Settings
+            if (ImGui.BeginMenu("Settings"))
+            {
+                if (ImGui.MenuItem($"Configuration##SettingsWindow"))
+                {
+                    SettingsWindow.ToggleMenuVisibility();
+                }
+                UIHelper.ShowHoverTooltip($"Configuration\n{KeyBindings.Current.CORE_ConfigurationWindow.HintText}");
+
+                if (ImGui.MenuItem($"Keybinds##KeybindWindow"))
+                {
+                    KeybindWindow.ToggleMenuVisibility();
+                }
+                UIHelper.ShowHoverTooltip($"Keybinds\n{KeyBindings.Current.CORE_KeybindConfigWindow.HintText}");
+
+                if (CFG.Current.DisplayDebugTools)
+                {
+                    if (ImGui.MenuItem($"Debugging##DebugWindow"))
+                    {
+                        DebugWindow.ToggleMenuVisibility();
+                    }
+                    UIHelper.ShowHoverTooltip($"Debug Tools");
+                }
+
+                ImGui.EndMenu();
+            }
+
 
             TaskLogs.Display();
 
@@ -640,6 +652,7 @@ public class Warbox
 
         ColorPicker.DisplayColorPicker();
         ProjectCreationWindow.Display();
+        ManifestEditWindow.Display();
 
         ImGui.PopStyleVar(2);
         UnapplyStyle();

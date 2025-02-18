@@ -1,4 +1,5 @@
 ﻿using StudioCore.Core.Data;
+using StudioCore.Core.Manifest;
 using StudioCore.Editors.TableEditor.Framework;
 using StudioCore.Editors.TextEditor.Views;
 using StudioCore.Utilities;

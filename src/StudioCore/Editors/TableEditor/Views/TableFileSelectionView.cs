@@ -96,6 +96,7 @@ public class TableFileSelectionView
         // Focus the newly selected row when set via command queue
         if (TableSelection.FocusFileSelection && TableSelection.FileSelectionDescriptor == status)
         {
+            TableSelection.FocusFileSelection = false;
             TableSelection.SelectFile(entry.Key, entry.Value, index);
             ImGui.SetScrollHereY();
         }

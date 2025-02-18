@@ -166,6 +166,8 @@ public static class ProjectCreationWindow
                     Warbox.Project = NewProject;
 
                     ProjectHandler.LoadProject($"{NewProject.Config.ProjectDirectory}/project.json");
+
+                    ToggleMenuVisibility();
                 }
             }
 

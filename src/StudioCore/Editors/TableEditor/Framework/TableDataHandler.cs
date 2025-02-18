@@ -1,6 +1,7 @@
 ﻿using DotNext.Collections.Generic;
 using Microsoft.VisualBasic;
 using StudioCore.Core.Data;
+using StudioCore.Core.Manifest;
 using StudioCore.Editors.TextEditor.Views;
 using StudioCore.Platform;
 using StudioCore.Utilities;
