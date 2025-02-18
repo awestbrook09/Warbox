@@ -3,6 +3,7 @@ using NativeFileDialogSharp;
 using StudioCore.Configuration;
 using StudioCore.Core.Data;
 using StudioCore.Editor;
+using StudioCore.Editors.TableEditor.Framework;
 using StudioCore.Editors.TableEditor.Tools;
 using StudioCore.Editors.TextEditor;
 using StudioCore.Interface;
@@ -16,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using static Assimp.Metadata;
 
 namespace StudioCore.Editors.TableEditor.Views;
 
@@ -88,6 +90,10 @@ public class TableToolsView
 
         ImGui.Separator();
 
+        ImGui.SetNextItemWidth(width);
+        ImGui.InputText("##resultFilter", ref SearchText, 255);
+        UIHelper.ShowHoverTooltip("Filter the results by this input.");
+
         ImGui.BeginChild("propertyValueFinderResults", childSectionSize);
 
         for (int i = 0; i < TablePropertyValueFinder.PropertyValueFinderResults.Count; i++)
@@ -100,9 +106,12 @@ public class TableToolsView
             var attributeName = result.Attribute.Name;
             var attributeValue = result.Attribute.Value;
 
-            if (ImGui.Selectable($"{filename} [{rowIndex}] -> {elementName} -> {descendantName} -> {attributeName}##resultEntry{i}"))
+            if (TableSearchFilters.FilterResultEntry(SearchText, filename, $"{elementName}", $"{descendantName}", $"{attributeName}"))
             {
-                EditorCommandQueue.AddCommand($"table/select/{filename}/{attributeName}/{attributeValue}/{rowIndex}");
+                if (ImGui.Selectable($"{filename} [{rowIndex}] -> {elementName} -> {descendantName} -> {attributeName}##resultEntry{i}"))
+                {
+                    EditorCommandQueue.AddCommand($"table/select/{filename}/{attributeName}/{attributeValue}/{rowIndex}");
+                }
             }
         }
 

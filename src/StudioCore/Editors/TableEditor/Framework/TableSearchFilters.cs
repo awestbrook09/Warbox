@@ -26,6 +26,41 @@ public static class TableSearchFilters
 
         return isValid;
     }
+    public static bool FilterResultEntry(string input, string filename, string elementName, string descendantName, string attributeName)
+    {
+        var pInput = input.ToLower().Trim();
+        var pFilename = filename.ToLower().Trim();
+        var pElementName = elementName.ToLower().Trim();
+        var pDescendantName = descendantName.ToLower().Trim();
+        var pAttributeName = attributeName.ToLower().Trim();
+
+        if (input == "")
+            return true;
+
+        var isValid = false;
+
+        if (pFilename.Contains(pInput))
+        {
+            isValid = true;
+        }
+
+        if (pElementName.Contains(pInput))
+        {
+            isValid = true;
+        }
+
+        if (pDescendantName.Contains(pInput))
+        {
+            isValid = true;
+        }
+
+        if (pAttributeName.Contains(pInput))
+        {
+            isValid = true;
+        }
+
+        return isValid;
+    }
 
     public static string SearchCommandsHint = "There are three search commands you can use to perform complex filtering:\n\n" +
         "header: <header name>\n" +

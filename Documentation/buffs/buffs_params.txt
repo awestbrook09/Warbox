@@ -791,16 +791,16 @@ Stamina recovery (instant)
 Potion usage
 
 # atd
-?
+Allow Dodge
 
 # ams
-?
+Allow Masterstrike
 
 # rcx
-?
+Craftsmanship XP on repair by craftsman
 
 # lfb
-?
+Extra Lockpicks from Blacksmithing
 
 # tba
 Thunderous blast amount (X being the number of attacks per combat). The effect decreases enemy combat skill and morale
@@ -818,13 +818,13 @@ HP gain on potion/alcohol consumption
 ?
 
 # ano
-?
+Hangover relief
 
 # fpd
-?
+Forced drunkeness
 
 # eph
-?
+Healing effect on potion usage when drunk (value is max)
 
 # rpd
 ?
