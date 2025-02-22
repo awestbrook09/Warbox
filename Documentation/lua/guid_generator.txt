@@ -1,4 +1,4 @@
-ocal function generate_guid_v4()
+local function generate_guid_v4()
     local random = math.random
     local guid_bytes = {}
 
